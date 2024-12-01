@@ -15,6 +15,7 @@ public class Electricity_Bills_System {
      */
     public static void main(String[] args) {
         // TODO code application lodgic here
+        System.out.println("nuevo repositorio");
     }
     
 }
