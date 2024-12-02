@@ -59,69 +59,91 @@ public class Login extends JFrame {
     
     Login(){
     super("Inicio Sesion Usuario");
-    setContentPane(new BackgroundPanel("images/login.jpg"));    
-    
-    setLayout(null);
-    
-    JLabel label_usuario = new JLabel ("Usuario");
-    label_usuario.setBounds(450,200,500,100);
-    label_usuario.setForeground(Color.white);
-    label_usuario.setFont(new Font("Roboto", Font.PLAIN, 24)); 
-    add(label_usuario);
-    
-    JTextField cajon_usuario = new JTextField();
-    cajon_usuario.setBounds(550,230,200,40);
-    cajon_usuario.setFont(new Font("Roboto", Font.PLAIN, 22));
-    cajon_usuario.setHorizontalAlignment(JTextField.CENTER);
-    add(cajon_usuario);
+        setContentPane(new BackgroundPanel("images/login.jpg"));    
+        setLayout(new BorderLayout());
 
-    
-    JLabel label_contraseña = new JLabel ("Contraseña");
-    label_contraseña.setBounds(408,300,500,100);
-    label_contraseña.setForeground(Color.white);
-    label_contraseña.setFont(new Font("Roboto", Font.PLAIN, 24)); 
-    add(label_contraseña);
-    
-    JTextField cajon_contraseña = new JTextField();
-    cajon_contraseña.setBounds(550,330,200,40);
-    cajon_contraseña.setFont(new Font("Roboto", Font.PLAIN, 22));
-    cajon_contraseña.setHorizontalAlignment(JTextField.CENTER);
-    add(cajon_contraseña);
-    
-    
-    JLabel tipo_usuario = new JLabel ("Conectarse como");
-    tipo_usuario.setBounds(345,420,200,50);
-    tipo_usuario.setForeground(Color.white);
-    tipo_usuario.setFont(new Font("Roboto", Font.PLAIN, 24)); 
-    add(tipo_usuario);
-    
-    Choice tipousu = new Choice ();
-    tipousu.add("cliente");
-    tipousu.add("administrador");
-    tipousu.setBounds(550,434,200,50);
-    tipousu.setFont(new Font("Roboto", Font.PLAIN, 16));
+        JPanel panel = new JPanel(new GridBagLayout());
+        panel.setOpaque(false); // Hace que el panel sea transparente
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.insets = new Insets(45, 15, 25, 15);
+        
+        JLabel head = new JLabel("SESIÓN");
+        head.setForeground(Color.WHITE);
+        head.setFont(new Font("Roboto", Font.PLAIN, 24));
+        gbc.gridx = 0;
+        gbc.gridy = 0;
+        gbc.gridwidth = 2;
+        gbc.anchor = GridBagConstraints.CENTER;
+        panel.add(head, gbc);
+        
+        JLabel label_usuario = new JLabel("Usuario");
+        label_usuario.setForeground(Color.WHITE);
+        label_usuario.setFont(new Font("Roboto", Font.PLAIN, 24)); 
+        gbc.gridy = 1;
+        gbc.gridwidth = 1;
+        gbc.gridx = 0;
+        panel.add(label_usuario, gbc);
 
-    add(tipousu);
-    
-    RoundedButton Login =new RoundedButton("Conectarse");
-    Login.setBackground(new Color(222, 239, 255 ));
-    Login.setForeground(Color.black);
-    Login.setBounds(550,530,200,50);
-    Login.setFont(new Font("Roboto", Font.PLAIN, 18)); 
-    add(Login);
-    
-    RoundedButton Signup =new RoundedButton("Registrarse");
-    Signup.setBounds(1020,40,100,35);
-    Signup.setBackground(new Color(222, 239, 255 ));
-    Signup.setForeground(Color.black);
-    Signup.setFont(new Font("Roboto", Font.PLAIN, 13)); 
-    add(Signup);
+        JTextField cajon_usuario = new JTextField();
+        cajon_usuario.setFont(new Font("Roboto", Font.PLAIN, 14));
+        cajon_usuario.setHorizontalAlignment(JTextField.CENTER);
+        gbc.gridx = 1;
+        gbc.fill = GridBagConstraints.HORIZONTAL; 
+        gbc.weightx = 0;
+        panel.add(cajon_usuario, gbc);
 
-    
-    
-    setSize(1200, 800);
-    setLocationRelativeTo(null);
-    setVisible(true);
+        JLabel label_contraseña = new JLabel("Contraseña");
+        label_contraseña.setForeground(Color.WHITE);
+        label_contraseña.setFont(new Font("Roboto", Font.PLAIN, 24)); 
+        gbc.gridy = 2;
+        gbc.gridx = 0;
+        panel.add(label_contraseña, gbc);
+
+        JTextField cajon_contraseña = new JTextField();
+        cajon_contraseña.setFont(new Font("Roboto", Font.PLAIN, 14));
+        cajon_contraseña.setHorizontalAlignment(JTextField.CENTER);
+        gbc.gridx = 1;
+        gbc.fill = GridBagConstraints.HORIZONTAL; 
+        gbc.weightx = 0; 
+        panel.add(cajon_contraseña, gbc);
+
+        JLabel tipo_usuario = new JLabel("Conectarse como");
+        tipo_usuario.setForeground(Color.WHITE);
+        tipo_usuario.setFont(new Font("Roboto", Font.PLAIN, 24)); 
+        gbc.gridy = 3;
+        gbc.gridx = 0;
+        panel.add(tipo_usuario, gbc);
+
+        Choice tipousu = new Choice();
+        tipousu.add("cliente");
+        tipousu.add("administrador");
+        tipousu.setFont(new Font("Roboto", Font.PLAIN, 16));
+        gbc.gridx = 1;
+        gbc.fill = GridBagConstraints.HORIZONTAL; 
+        gbc.weightx = 0;
+        panel.add(tipousu, gbc);
+
+        RoundedButton loginButton = new RoundedButton("Conectarse");
+        loginButton.setBackground(new Color(222, 239, 255));
+        loginButton.setForeground(Color.BLACK);
+        loginButton.setFont(new Font("Roboto", Font.PLAIN, 18)); 
+        gbc.gridy = 4;
+        gbc.gridx = 0;
+        panel.add(loginButton, gbc);
+
+        RoundedButton signupButton = new RoundedButton("Registrarse");
+        signupButton.setBackground(new Color(222, 239, 255));
+        signupButton.setForeground(Color.BLACK);
+        signupButton.setFont(new Font("Roboto", Font.PLAIN, 18)); 
+        gbc.gridx = 1;
+        gbc.weightx = 0; ;
+        panel.add(signupButton, gbc);
+
+        add(panel, BorderLayout.PAGE_START);
+
+        setSize(1200, 800);
+        setLocationRelativeTo(null);
+        setVisible(true);
     }
     
     
