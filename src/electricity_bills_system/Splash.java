@@ -33,8 +33,10 @@ public class Splash extends JFrame  implements Runnable{
     public void run(){
         try{
             //tiempo de carga de frame
-            Thread.sleep(7000);
+            Thread.sleep(4000);
             setVisible(false);
+            //login
+            new Login();
         } catch(Exception e){
             e.printStackTrace();
         }
