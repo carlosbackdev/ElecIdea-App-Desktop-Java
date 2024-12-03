@@ -5,6 +5,7 @@ import javax.swing.*;
 import java.awt.*;
 import javax.swing.border.Border;
 import java.awt.Color;
+import java.awt.event.*;
 
 class RoundedButton extends JButton {
     public RoundedButton(String label) {
@@ -55,8 +56,8 @@ class BackgroundPanel extends JPanel {
     }
 }
 
-public class Login extends JFrame {
-    
+public class Login extends JFrame implements ActionListener{
+    RoundedButton login,signup;
     Login(){
     super("Inicio Sesion Usuario");
         setContentPane(new BackgroundPanel("images/login.jpg"));    
@@ -123,21 +124,22 @@ public class Login extends JFrame {
         gbc.weightx = 0;
         panel.add(tipousu, gbc);
 
-        RoundedButton loginButton = new RoundedButton("Conectarse");
-        loginButton.setBackground(new Color(222, 239, 255));
-        loginButton.setForeground(Color.BLACK);
-        loginButton.setFont(new Font("Roboto", Font.PLAIN, 18)); 
+        login = new RoundedButton("Conectarse");
+        login.setBackground(new Color(222, 239, 255));
+        login.setForeground(Color.BLACK);
+        login.setFont(new Font("Roboto", Font.PLAIN, 18)); 
         gbc.gridy = 4;
         gbc.gridx = 0;
-        panel.add(loginButton, gbc);
+        login.addActionListener(this);
+        panel.add(login, gbc);
 
-        RoundedButton signupButton = new RoundedButton("Registrarse");
-        signupButton.setBackground(new Color(222, 239, 255));
-        signupButton.setForeground(Color.BLACK);
-        signupButton.setFont(new Font("Roboto", Font.PLAIN, 18)); 
+        signup = new RoundedButton("Registrarse");
+        signup.setBackground(new Color(222, 239, 255));
+        signup.setForeground(Color.BLACK);
+        signup.setFont(new Font("Roboto", Font.PLAIN, 18)); 
         gbc.gridx = 1;
-        gbc.weightx = 0; ;
-        panel.add(signupButton, gbc);
+        signup.addActionListener(this);
+        panel.add(signup, gbc);
 
         add(panel, BorderLayout.PAGE_START);
 
@@ -146,7 +148,15 @@ public class Login extends JFrame {
         setVisible(true);
     }
     
-    
+    public void actionPerformed(ActionEvent ae){
+        if(ae.getSource() == login){
+        
+        }else if(ae.getSource() == signup){
+            setVisible(false);
+            new Signup();
+        }
+        
+    }
     
     public static void main(String[] args){
     new Login ();

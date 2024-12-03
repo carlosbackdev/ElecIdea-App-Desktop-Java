@@ -1,10 +1,11 @@
 
 package electricity_bills_system;
 import java.awt.*;
+import java.awt.event.*;
 import javax.swing.*;
 
-public class Signup extends JFrame {
-    
+public class Signup extends JFrame implements ActionListener {
+    RoundedButton volver,crear;
     Signup(){
          super("Crear Cuenta");
         setContentPane(new BackgroundPanel("images/login.jpg"));
@@ -84,12 +85,39 @@ public class Signup extends JFrame {
         gbc.fill = GridBagConstraints.HORIZONTAL; 
         gbc.weightx = 0; 
         panel.add(cajon_passwd, gbc);
+        
+        crear = new RoundedButton("Crear Cuenta");
+        crear.setBackground(new Color(222, 239, 255));
+        crear.setForeground(Color.BLACK);
+        crear.setFont(new Font("Roboto", Font.PLAIN, 18)); 
+        gbc.gridy = 5;
+        gbc.gridx = 0;
+        crear.addActionListener(this);
+        panel.add(crear, gbc);
+
+        volver = new RoundedButton("Volver");
+        volver.setBackground(new Color(222, 239, 255));
+        volver.setForeground(Color.BLACK);
+        volver.setFont(new Font("Roboto", Font.PLAIN, 18)); 
+        gbc.gridx = 1;
+        volver.addActionListener(this);
+        panel.add(volver, gbc);
 
         add(panel, BorderLayout.PAGE_START);
         
         setSize(1200, 800);
         setLocationRelativeTo(null);
         setVisible(true);
+        
+    }
+    
+    public void actionPerformed(ActionEvent ae){
+        if(ae.getSource() == crear){
+   
+        }else if(ae.getSource() == volver){
+                setVisible(false);
+                new Login();
+        }
         
     }
     
