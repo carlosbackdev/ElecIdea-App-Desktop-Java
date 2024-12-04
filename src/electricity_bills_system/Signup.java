@@ -6,6 +6,8 @@ import javax.swing.*;
 
 public class Signup extends JFrame implements ActionListener {
     RoundedButton volver,crear;
+    Choice tipousu;
+    JTextField cajon_usu,cajon_nombre,cajon_passwd;
     Signup(){
          super("Crear Cuenta");
         setContentPane(new BackgroundPanel("images/login.jpg"));
@@ -33,7 +35,7 @@ public class Signup extends JFrame implements ActionListener {
         gbc.gridx = 0;
         panel.add(tipo_usuario, gbc);
 
-        Choice tipousu = new Choice();
+        tipousu = new Choice();
         tipousu.add("cliente");
         tipousu.add("administrador");
         tipousu.setFont(new Font("Roboto", Font.PLAIN, 16));
@@ -48,7 +50,7 @@ public class Signup extends JFrame implements ActionListener {
         gbc.gridx = 0;
         panel.add(nombreusu, gbc);
 
-        JTextField cajon_usu = new JTextField();
+        cajon_usu = new JTextField();
         cajon_usu.setFont(new Font("Roboto", Font.PLAIN, 18));
         cajon_usu.setHorizontalAlignment(JTextField.CENTER);
         gbc.gridx = 1;
@@ -63,7 +65,7 @@ public class Signup extends JFrame implements ActionListener {
         gbc.gridx = 0;
         panel.add(nombrecompleto, gbc);
 
-        JTextField cajon_nombre = new JTextField();
+        cajon_nombre = new JTextField();
         cajon_nombre.setFont(new Font("Roboto", Font.PLAIN, 18));
         cajon_nombre.setHorizontalAlignment(JTextField.CENTER);
         gbc.gridx = 1;
@@ -78,7 +80,7 @@ public class Signup extends JFrame implements ActionListener {
         gbc.gridx = 0;
         panel.add(contraseña, gbc);
 
-        JTextField cajon_passwd = new JTextField();
+        cajon_passwd = new JTextField();
         cajon_passwd.setFont(new Font("Roboto", Font.PLAIN, 18));
         cajon_passwd.setHorizontalAlignment(JTextField.CENTER);
         gbc.gridx = 1;
@@ -113,7 +115,26 @@ public class Signup extends JFrame implements ActionListener {
     
     public void actionPerformed(ActionEvent ae){
         if(ae.getSource() == crear){
-   
+            String tipo_usuario = tipousu.getSelectedItem();
+            String nombre_usuario = cajon_usu.getText();
+            String nombre = cajon_nombre.getText();
+            String password = cajon_passwd.getText();
+            int ID=0;
+            if (!nombre_usuario.isEmpty() && !nombre.isEmpty() && !password.isEmpty()) {
+                ID =IDgenerador.generadorId();}
+            
+            
+            try{ Connect c = new Connect();
+                 String query = "insert into login values("+ID+", '"+nombre_usuario+"','"+nombre+"','"+password+"','"+tipo_usuario+"')";
+                 
+                 c.s.executeUpdate(query);
+                 
+                 JOptionPane.showMessageDialog(null,"cuenta creada con exito");
+                 setVisible(false);
+                 new Login();
+            }catch (Exception e){
+                e.printStackTrace();
+            }
         }else if(ae.getSource() == volver){
                 setVisible(false);
                 new Login();
