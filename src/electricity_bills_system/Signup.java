@@ -9,7 +9,7 @@ public class Signup extends JFrame implements ActionListener {
     Choice tipousu;
     JTextField cajon_usu,cajon_nombre,cajon_passwd;
     Signup(){
-         super("Crear Cuenta");
+        super("Crear Cuenta");
         setContentPane(new BackgroundPanel("images/login.jpg"));
         setLayout(new BorderLayout());
 
@@ -117,13 +117,32 @@ public class Signup extends JFrame implements ActionListener {
         if(ae.getSource() == crear){
             String tipo_usuario = tipousu.getSelectedItem();
             String nombre_usuario = cajon_usu.getText();
+            nombre_usuario=nombre_usuario.toLowerCase();
+            int nombre_usuarioleght=nombre_usuario.length();
             String nombre = cajon_nombre.getText();
+            nombre=nombre.toLowerCase();
+            int nombrelenght=nombre.length();
             String password = cajon_passwd.getText();
+            int passlenght=password.length();
             int ID=0;
             if (!nombre_usuario.isEmpty() && !nombre.isEmpty() && !password.isEmpty()) {
                 ID =IDgenerador.generadorId();}
             
+            if(passlenght<=7){
+            JOptionPane.showMessageDialog(null,"la contraseña debe ser de 8 carcateres mínimo");
+            }
+            if(nombrelenght<=2){
+            JOptionPane.showMessageDialog(null,"el nombre es muy corto");
+            }
+            if(nombre_usuarioleght<=4){
+            JOptionPane.showMessageDialog(null,"el nombre de usuario debe tener 5 letras mínimo");
+            }
+            if(ID<=0){
+            JOptionPane.showMessageDialog(null,"se deben rellenar todos los datos");
+            }
             
+            
+            if(ID>0 && passlenght>7 && nombrelenght>2 && nombre_usuarioleght>4){
             try{ Connect c = new Connect();
                  String query = "insert into login values("+ID+", '"+nombre_usuario+"','"+nombre+"','"+password+"','"+tipo_usuario+"')";
                  
@@ -135,6 +154,9 @@ public class Signup extends JFrame implements ActionListener {
             }catch (Exception e){
                 e.printStackTrace();
             }
+            
+            }
+        
         }else if(ae.getSource() == volver){
                 setVisible(false);
                 new Login();
