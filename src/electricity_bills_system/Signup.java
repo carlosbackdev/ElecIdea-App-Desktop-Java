@@ -3,6 +3,7 @@ package electricity_bills_system;
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
+import java.sql.*;
 
 public class Signup extends JFrame implements ActionListener {
     RoundedButton volver,crear;
@@ -142,7 +143,29 @@ public class Signup extends JFrame implements ActionListener {
             }
             
             
-            if(ID>0 && passlenght>7 && nombrelenght>2 && nombre_usuarioleght>4){
+            String rs3;
+            int nombre_exsistente=0;
+            try{ Connect c = new Connect();
+            String query="select USUARIO from login;";                
+              ResultSet rs2=c.s.executeQuery(query);   
+               while(rs2.next()){
+                   rs3=rs2.getString("USUARIO");
+                   if(rs3.equals(nombre)){
+                       nombre_exsistente=1;
+                       JOptionPane.showMessageDialog(null,"nombre de usuario ya existe, usa otro");
+
+                       break;
+                   }
+                   
+               }
+                rs2.close();
+                c.s.close();
+               
+            }catch (Exception e){
+                e.printStackTrace();
+            }
+             
+            if(ID>0 && passlenght>7 && nombrelenght>2 && nombre_usuarioleght>4 && nombre_exsistente==0){
             try{ Connect c = new Connect();
                  String query = "insert into login values("+ID+", '"+nombre_usuario+"','"+nombre+"','"+password+"','"+tipo_usuario+"')";
                  
