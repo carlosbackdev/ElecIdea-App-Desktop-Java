@@ -164,10 +164,13 @@ public class Signup extends JFrame implements ActionListener {
             }catch (Exception e){
                 e.printStackTrace();
             }
+            
+             String encrypted_password = contraseña.encryptPassword(password);          
+            
              
             if(ID>0 && passlenght>7 && nombrelenght>2 && nombre_usuarioleght>4 && nombre_exsistente==0){
             try{ Connect c = new Connect();
-                 String query = "insert into login values("+ID+", '"+nombre_usuario+"','"+nombre+"','"+password+"','"+tipo_usuario+"')";
+                 String query = "insert into login values("+ID+", '"+nombre_usuario+"','"+nombre+"','"+encrypted_password+"','"+tipo_usuario+"')";
                  
                  c.s.executeUpdate(query);
                  

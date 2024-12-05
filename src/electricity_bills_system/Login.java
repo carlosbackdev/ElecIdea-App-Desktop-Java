@@ -156,12 +156,12 @@ public class Login extends JFrame implements ActionListener{
             String username= cajon_usuario.getText();
             username = username.toLowerCase();
             String password= cajon_contra.getText();
-            password=password.toLowerCase();
+            String encrypted_password = contraseña.encryptPassword(password);      
             String user=tipousu.getSelectedItem();
             
             try{
                 Connect c=new Connect();
-                String query="select * from login where USUARIO ='"+username+"'and PASSWORD='"+password+"' and USER='"+user+"'";
+                String query="select * from login where USUARIO ='"+username+"'and PASSWORD='"+encrypted_password+"' and USER='"+user+"'";
                 
                ResultSet rs = c.s.executeQuery(query);
                if(rs.next()){
