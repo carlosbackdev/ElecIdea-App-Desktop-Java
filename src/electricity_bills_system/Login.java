@@ -6,6 +6,7 @@ import java.awt.*;
 import javax.swing.border.Border;
 import java.awt.Color;
 import java.awt.event.*;
+import java.sql.*;
 
 class RoundedButton extends JButton {
     public RoundedButton(String label) {
@@ -58,6 +59,8 @@ class BackgroundPanel extends JPanel {
 
 public class Login extends JFrame implements ActionListener{
     RoundedButton login,signup;
+    JTextField cajon_usuario,cajon_contra;
+    Choice tipousu;
     Login(){
     super("Inicio Sesion Usuario");
         setContentPane(new BackgroundPanel("images/login.jpg"));    
@@ -85,7 +88,7 @@ public class Login extends JFrame implements ActionListener{
         gbc.gridx = 0;
         panel.add(label_usuario, gbc);
 
-        JTextField cajon_usuario = new JTextField();
+        cajon_usuario = new JTextField();
         cajon_usuario.setFont(new Font("Roboto", Font.PLAIN, 14));
         cajon_usuario.setHorizontalAlignment(JTextField.CENTER);
         gbc.gridx = 1;
@@ -100,13 +103,13 @@ public class Login extends JFrame implements ActionListener{
         gbc.gridx = 0;
         panel.add(label_contraseña, gbc);
 
-        JTextField cajon_contraseña = new JTextField();
-        cajon_contraseña.setFont(new Font("Roboto", Font.PLAIN, 14));
-        cajon_contraseña.setHorizontalAlignment(JTextField.CENTER);
+        cajon_contra = new JTextField();
+        cajon_contra.setFont(new Font("Roboto", Font.PLAIN, 14));
+        cajon_contra.setHorizontalAlignment(JTextField.CENTER);
         gbc.gridx = 1;
         gbc.fill = GridBagConstraints.HORIZONTAL; 
         gbc.weightx = 0; 
-        panel.add(cajon_contraseña, gbc);
+        panel.add(cajon_contra, gbc);
 
         JLabel tipo_usuario = new JLabel("Conectarse como");
         tipo_usuario.setForeground(Color.WHITE);
@@ -115,7 +118,7 @@ public class Login extends JFrame implements ActionListener{
         gbc.gridx = 0;
         panel.add(tipo_usuario, gbc);
 
-        Choice tipousu = new Choice();
+        tipousu = new Choice();
         tipousu.add("cliente");
         tipousu.add("administrador");
         tipousu.setFont(new Font("Roboto", Font.PLAIN, 16));
@@ -150,6 +153,29 @@ public class Login extends JFrame implements ActionListener{
     
     public void actionPerformed(ActionEvent ae){
         if(ae.getSource() == login){
+            String username= cajon_usuario.getText();
+            String password= cajon_contra.getText();
+            String user=tipousu.getSelectedItem();
+            
+            try{
+                Connect c=new Connect();
+                String query="select * from login where USUARIO ='"+username+"'and PASSWORD='"+password+"' and USER='"+user+"'";
+                
+               ResultSet rs = c.s.executeQuery(query);
+               if(rs.next()){
+                   setVisible(false);
+                   new Project();
+               } else{
+                   JOptionPane.showMessageDialog(null,"Datos incorrectos");
+                   cajon_usuario.setText("");
+                   cajon_contra.setText("");
+               }
+                
+                
+            }catch(Exception e){
+                e.printStackTrace();
+            }
+            
         
         }else if(ae.getSource() == signup){
             setVisible(false);
