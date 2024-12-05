@@ -158,6 +158,8 @@ public class Signup extends JFrame implements ActionListener {
                    }
                    
                }
+                rs2.close();
+                c.s.close();
                
             }catch (Exception e){
                 e.printStackTrace();
