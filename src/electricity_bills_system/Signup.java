@@ -150,7 +150,7 @@ public class Signup extends JFrame implements ActionListener {
               ResultSet rs2=c.s.executeQuery(query);   
                while(rs2.next()){
                    rs3=rs2.getString("USUARIO");
-                   if(rs3.equals(nombre)){
+                   if(rs3.equals(nombre_usuario)){
                        nombre_exsistente=1;
                        JOptionPane.showMessageDialog(null,"nombre de usuario ya existe, usa otro");
 
