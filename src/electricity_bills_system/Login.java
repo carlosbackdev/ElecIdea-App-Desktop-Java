@@ -154,7 +154,9 @@ public class Login extends JFrame implements ActionListener{
     public void actionPerformed(ActionEvent ae){
         if(ae.getSource() == login){
             String username= cajon_usuario.getText();
+            username = username.toLowerCase();
             String password= cajon_contra.getText();
+            password=password.toLowerCase();
             String user=tipousu.getSelectedItem();
             
             try{
