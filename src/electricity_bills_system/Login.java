@@ -70,6 +70,7 @@ public class Login extends JFrame implements ActionListener{
         panel.setOpaque(false); // Hace que el panel sea transparente
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.insets = new Insets(45, 15, 25, 15);
+        gbc.ipadx = 0;
         
         JLabel head = new JLabel("SESIÓN");
         head.setForeground(Color.WHITE);
@@ -82,10 +83,12 @@ public class Login extends JFrame implements ActionListener{
         
         JLabel label_usuario = new JLabel("Usuario");
         label_usuario.setForeground(Color.WHITE);
-        label_usuario.setFont(new Font("Roboto", Font.PLAIN, 24)); 
+        label_usuario.setFont(new Font("Roboto", Font.PLAIN, 24));
+        gbc.fill = GridBagConstraints.HORIZONTAL; 
         gbc.gridy = 1;
         gbc.gridwidth = 1;
         gbc.gridx = 0;
+
         panel.add(label_usuario, gbc);
 
         cajon_usuario = new JTextField();

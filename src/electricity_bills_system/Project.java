@@ -9,9 +9,10 @@ public class Project extends JFrame{
     
     Project(){
         super("Proyectos");
-        setContentPane(new BackgroundPanel("images/login.jpg"));
+        setContentPane(new BackgroundPanel("images/fondo.png"));
         setLayout(new BorderLayout()); 
         setExtendedState(JFrame.MAXIMIZED_BOTH);
+        setMinimumSize(new Dimension(950, 650));
         Font menufont =new Font("Roboto", Font.PLAIN, 22);
         
         JMenuBar navegador=new JMenuBar();
