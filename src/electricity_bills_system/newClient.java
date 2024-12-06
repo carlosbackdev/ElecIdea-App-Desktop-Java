@@ -6,11 +6,13 @@ import javax.swing.*;
 import java.awt.*;
 import java.util.*;
 import java.awt.event.*;
+import java.sql.*;
 
 
 public class newClient extends JFrame implements ActionListener {
     JTextField cajon_nombre,cajon_direccion,cajon_ciudad,cajon_postal,cajon_mail,cajon_telf;
     RoundedButton guardar,cancelar;
+    JLabel numero;
     newClient(){
         
         setContentPane(new BackgroundPanel("images/Fichas.jpg"));  
@@ -58,7 +60,7 @@ public class newClient extends JFrame implements ActionListener {
         panel.add(numeroid, gbc);
         
 
-        JLabel numero = new JLabel("");
+        numero = new JLabel("");
         numero.setFont(fuente);
         numero.setForeground(Color.WHITE);
         gbc.gridx = 1;
@@ -186,12 +188,102 @@ public class newClient extends JFrame implements ActionListener {
     
     public void actionPerformed(ActionEvent ae){
     if(ae.getSource()==guardar){
+        String name =cajon_nombre.getText();
+        String ID = numero.getText();
+        String address=cajon_direccion.getText();
+        String city=cajon_ciudad.getText();
+        String postal=cajon_postal.getText();
+        String mail=cajon_mail.getText();
+        String phone = cajon_telf.getText();
+        int mailn=mail.length();
         
-        }else{
-            setVisible(false);
+        int condicion=0;
+        int tf=0;
+        int ml=0;
+        try{ Connect c = new Connect();
+            String query="select PHONE,EMAIL,POSTAL from client;";                
+              ResultSet rs=c.s.executeQuery(query);   
+               while(rs.next()){
+                   String rs2=rs.getString("PHONE");
+                   String rs3=rs.getString("EMAIL");
+                   if(rs2.equals(phone)){                      
+                       condicion=1;
+                       tf=1;
+                       
+                   }
+                   if(rs3.equals(mail)){                       
+                       condicion=1;
+                       ml=1;
+                       
+                   }
+                   
+               }
+                rs.close();
+                c.s.close();
+                if(tf>0){
+                JOptionPane.showMessageDialog(null,"numero de telefono ya existente");
+                }
+                if(ml>0){
+                JOptionPane.showMessageDialog(null,"email ya existente");
+                }
+               
+            }catch (Exception e){
+                e.printStackTrace();
+            }
+        if(postal.length()>5 || postal.length()<5){
+        condicion=1;
+        JOptionPane.showMessageDialog(null,"numero de postal incorrecto");
         }
+        if(phone.length()<9 || phone.length()>9 ){
+        condicion=1;
+        JOptionPane.showMessageDialog(null,"numero de telefono incorrecto");
+        }
+        
+        if(address.length()<5){
+        condicion=1;
+        JOptionPane.showMessageDialog(null,"direccion incorrecta");
+        }
+        if(city.length()<4){
+        condicion=1;
+        JOptionPane.showMessageDialog(null,"ciudad incorrecta");
+        }
+        if(name.length()<3){
+        condicion=1;
+        JOptionPane.showMessageDialog(null,"nombre incorrecta");
+        }
+        int condicion2=0;
+        for(int i=0;i<mailn;i++){
+        String a =""+ mail.charAt(i);
+        if(a.equals("@")){
+            condicion2=1;
+        }
+        }
+        if(condicion2==0){
+        condicion=1;
+        JOptionPane.showMessageDialog(null,"email incorrecto");
+        }
+       
+        if(condicion==0){
+            try {
+                Connect c= new Connect();
+                String query ="insert into client values('"+name+"', '"+ID+"', '"+address+"', '"+city+"', '"+postal+"', '"+mail+"', '"+phone+"')";
+                String query2 ="insert into login values('"+ID+"', '', '"+name+"', '','')";
+                c.s.executeUpdate(query);
+                c.s.executeUpdate(query2);
+            
+                JOptionPane.showMessageDialog(null,"Cliente Añadido Correctamente");
+                setVisible(false);
+            
+            }catch(Exception e){
+                e.printStackTrace();
+                }
+        
+            }else if(condicion == 0){
+            setVisible(false);
+            }
+        }else if(ae.getSource() == cancelar){
+            setVisible(false);}
     }
-    
     public static void main(String[]args){
         new newClient();
     }
