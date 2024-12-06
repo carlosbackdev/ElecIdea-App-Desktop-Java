@@ -18,6 +18,7 @@ public class Signup extends JFrame implements ActionListener {
         panel.setOpaque(false);
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.insets = new Insets(45, 15, 25, 15);
+        gbc.ipadx = 40;
 
         JLabel head = new JLabel("CREAR CUENTA");
         head.setForeground(Color.WHITE);
@@ -52,7 +53,7 @@ public class Signup extends JFrame implements ActionListener {
         panel.add(nombreusu, gbc);
 
         cajon_usu = new JTextField();
-        cajon_usu.setFont(new Font("Roboto", Font.PLAIN, 18));
+        cajon_usu.setFont(new Font("Roboto", Font.PLAIN, 17));
         cajon_usu.setHorizontalAlignment(JTextField.CENTER);
         gbc.gridx = 1;
         gbc.fill = GridBagConstraints.HORIZONTAL; 
@@ -67,7 +68,7 @@ public class Signup extends JFrame implements ActionListener {
         panel.add(nombrecompleto, gbc);
 
         cajon_nombre = new JTextField();
-        cajon_nombre.setFont(new Font("Roboto", Font.PLAIN, 18));
+        cajon_nombre.setFont(new Font("Roboto", Font.PLAIN, 17));
         cajon_nombre.setHorizontalAlignment(JTextField.CENTER);
         gbc.gridx = 1;
         gbc.fill = GridBagConstraints.HORIZONTAL; 
@@ -82,29 +83,43 @@ public class Signup extends JFrame implements ActionListener {
         panel.add(contraseña, gbc);
 
         cajon_passwd = new JTextField();
-        cajon_passwd.setFont(new Font("Roboto", Font.PLAIN, 18));
+        cajon_passwd.setFont(new Font("Roboto", Font.PLAIN, 17));
         cajon_passwd.setHorizontalAlignment(JTextField.CENTER);
         gbc.gridx = 1;
         gbc.fill = GridBagConstraints.HORIZONTAL; 
         gbc.weightx = 0; 
         panel.add(cajon_passwd, gbc);
         
-        crear = new RoundedButton("Crear Cuenta");
+        
+        
+        JPanel panelBotones = new JPanel(new BorderLayout());
+        panelBotones.setOpaque(false); 
+        gbc.gridx = 0;
+        gbc.gridy = 6; 
+        gbc.gridwidth = 2; 
+        gbc.fill = GridBagConstraints.NONE; 
+        gbc.anchor = GridBagConstraints.CENTER; 
+        panel.add(panelBotones, gbc);
+        
+        
+        
+        crear  = new RoundedButton("Guardar");
         crear.setBackground(new Color(222, 239, 255));
         crear.setForeground(Color.BLACK);
         crear.setFont(new Font("Roboto", Font.PLAIN, 18)); 
-        gbc.gridy = 5;
-        gbc.gridx = 0;
         crear.addActionListener(this);
-        panel.add(crear, gbc);
+        panelBotones.add(crear);
+        panelBotones.add(crear, BorderLayout.WEST);
 
-        volver = new RoundedButton("Volver");
+        volver = new RoundedButton("Cancelar");
         volver.setBackground(new Color(222, 239, 255));
         volver.setForeground(Color.BLACK);
         volver.setFont(new Font("Roboto", Font.PLAIN, 18)); 
-        gbc.gridx = 1;
         volver.addActionListener(this);
-        panel.add(volver, gbc);
+        panelBotones.add(volver);
+        panelBotones.add(volver, BorderLayout.EAST);
+        
+        
 
         add(panel, BorderLayout.PAGE_START);
         

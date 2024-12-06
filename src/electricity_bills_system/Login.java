@@ -70,11 +70,11 @@ public class Login extends JFrame implements ActionListener{
         panel.setOpaque(false); // Hace que el panel sea transparente
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.insets = new Insets(45, 15, 25, 15);
-        gbc.ipadx = 0;
+        gbc.ipadx = 40;
         
         JLabel head = new JLabel("SESIÓN");
         head.setForeground(Color.WHITE);
-        head.setFont(new Font("Roboto", Font.PLAIN, 24));
+        head.setFont(new Font("Roboto", Font.PLAIN, 28));
         gbc.gridx = 0;
         gbc.gridy = 0;
         gbc.gridwidth = 2;
@@ -129,23 +129,38 @@ public class Login extends JFrame implements ActionListener{
         gbc.fill = GridBagConstraints.HORIZONTAL; 
         gbc.weightx = 0;
         panel.add(tipousu, gbc);
-
-        login = new RoundedButton("Conectarse");
+        
+        JLabel margen = new JLabel();
+        gbc.gridy = 4;
+        gbc.gridx = 0;
+        panel.add(margen, gbc);
+        
+        JPanel panelBotones = new JPanel(new BorderLayout());
+        panelBotones.setOpaque(false); 
+        gbc.gridx = 0;
+        gbc.gridy = 5; 
+        gbc.gridwidth = 2; 
+        gbc.fill = GridBagConstraints.NONE; 
+        gbc.anchor = GridBagConstraints.CENTER; 
+        panel.add(panelBotones, gbc);
+        
+        
+        
+        login  = new RoundedButton("Guardar");
         login.setBackground(new Color(222, 239, 255));
         login.setForeground(Color.BLACK);
         login.setFont(new Font("Roboto", Font.PLAIN, 18)); 
-        gbc.gridy = 4;
-        gbc.gridx = 0;
         login.addActionListener(this);
-        panel.add(login, gbc);
+        panelBotones.add(login);
+        panelBotones.add(login, BorderLayout.WEST);
 
-        signup = new RoundedButton("Registrarse");
+        signup = new RoundedButton("Cancelar");
         signup.setBackground(new Color(222, 239, 255));
         signup.setForeground(Color.BLACK);
         signup.setFont(new Font("Roboto", Font.PLAIN, 18)); 
-        gbc.gridx = 1;
         signup.addActionListener(this);
-        panel.add(signup, gbc);
+        panelBotones.add(signup);
+        panelBotones.add(signup, BorderLayout.EAST);
 
         add(panel, BorderLayout.PAGE_START);
 
