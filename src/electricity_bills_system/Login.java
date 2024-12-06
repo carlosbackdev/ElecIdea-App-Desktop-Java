@@ -146,7 +146,7 @@ public class Login extends JFrame implements ActionListener{
         
         
         
-        login  = new RoundedButton("Guardar");
+        login  = new RoundedButton("Entrar");
         login.setBackground(new Color(222, 239, 255));
         login.setForeground(Color.BLACK);
         login.setFont(new Font("Roboto", Font.PLAIN, 18)); 
@@ -154,7 +154,7 @@ public class Login extends JFrame implements ActionListener{
         panelBotones.add(login);
         panelBotones.add(login, BorderLayout.WEST);
 
-        signup = new RoundedButton("Cancelar");
+        signup = new RoundedButton("Registro");
         signup.setBackground(new Color(222, 239, 255));
         signup.setForeground(Color.BLACK);
         signup.setFont(new Font("Roboto", Font.PLAIN, 18)); 

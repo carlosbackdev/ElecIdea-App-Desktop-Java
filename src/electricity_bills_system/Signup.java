@@ -103,7 +103,7 @@ public class Signup extends JFrame implements ActionListener {
         
         
         
-        crear  = new RoundedButton("Guardar");
+        crear  = new RoundedButton("Crear");
         crear.setBackground(new Color(222, 239, 255));
         crear.setForeground(Color.BLACK);
         crear.setFont(new Font("Roboto", Font.PLAIN, 18)); 
@@ -111,7 +111,7 @@ public class Signup extends JFrame implements ActionListener {
         panelBotones.add(crear);
         panelBotones.add(crear, BorderLayout.WEST);
 
-        volver = new RoundedButton("Cancelar");
+        volver = new RoundedButton("Volver");
         volver.setBackground(new Color(222, 239, 255));
         volver.setForeground(Color.BLACK);
         volver.setFont(new Font("Roboto", Font.PLAIN, 18)); 
