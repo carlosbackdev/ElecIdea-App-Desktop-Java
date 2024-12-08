@@ -10,8 +10,8 @@ import java.sql.*;
 
 public class meterinfo extends JFrame implements ActionListener {
     
-    RoundedButton guardar,cancelar;
-    Choice tipo,tipo_proyecto,codigo,tipo_cliente;
+    RoundedButton guardar;
+    Choice tipo,tipo_proyecto,codigo_s,tipo_cliente;
     String ID_info;
     meterinfo(String ID_info){
         this.ID_info= ID_info;
@@ -97,21 +97,21 @@ public class meterinfo extends JFrame implements ActionListener {
         gbc.gridx = 0;
         panel.add(codigo1, gbc);
         
-        codigo = new Choice();
-        codigo.setFont(fuente2);
-        codigo.add("01");
-        codigo.add("02");
-        codigo.add("03");
-        codigo.add("04");
-        codigo.add("05");
-        codigo.add("06");
-        codigo.add("07");
-        codigo.add("08");
-        codigo.add("09");
+        codigo_s = new Choice();
+        codigo_s.setFont(fuente2);
+        codigo_s.add("01");
+        codigo_s.add("02");
+        codigo_s.add("03");
+        codigo_s.add("04");
+        codigo_s.add("05");
+        codigo_s.add("06");
+        codigo_s.add("07");
+        codigo_s.add("08");
+        codigo_s.add("09");
         gbc.gridx = 1;
         gbc.fill = GridBagConstraints.HORIZONTAL; 
         gbc.weightx = 0;
-        panel.add(codigo, gbc);
+        panel.add(codigo_s, gbc);
       
         
         JLabel cliente_tipo = new JLabel("Tipo de Cliente");
@@ -195,7 +195,7 @@ public class meterinfo extends JFrame implements ActionListener {
         String ID = ID_info;
         String info_type=tipo.getSelectedItem();
         String project_type=tipo_proyecto.getSelectedItem();
-        String code=codigo.getSelectedItem();
+        String codec=codigo_s.getSelectedItem();
         String client_type=tipo_cliente.getSelectedItem();
         String days="30";
         
@@ -203,7 +203,7 @@ public class meterinfo extends JFrame implements ActionListener {
         
             try {
                 Connect c= new Connect();
-                String query ="insert into meter_info values('"+ID+"', '"+info_type+"', '"+project_type+"', '"+code+"', '"+client_type+"', '"+days+"')";
+                String query ="insert into meter_info values('"+ID+"', '"+info_type+"', '"+project_type+"', '"+codec+"', '"+client_type+"', '"+days+"')";
                 c.s.executeUpdate(query);
             
                 JOptionPane.showMessageDialog(null,"Información de Cliente Y Proyecto añadida correctamente");
