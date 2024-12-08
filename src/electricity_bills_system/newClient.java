@@ -64,6 +64,7 @@ public class newClient extends JFrame implements ActionListener {
         numero.setFont(fuente);
         numero.setForeground(Color.WHITE);
         gbc.gridx = 1;
+        gbc.fill = GridBagConstraints.CENTER;  
         gbc.weightx = 0;        
         panel.add(numero, gbc);
         
@@ -73,6 +74,7 @@ public class newClient extends JFrame implements ActionListener {
 
         JLabel direccion = new JLabel("Direccion");
         direccion.setForeground(Color.WHITE);
+        gbc.fill = GridBagConstraints.HORIZONTAL; 
         direccion.setFont(fuente); 
         gbc.gridy = 3;
         gbc.gridx = 0;
@@ -273,6 +275,8 @@ public class newClient extends JFrame implements ActionListener {
             
                 JOptionPane.showMessageDialog(null,"Cliente Añadido Correctamente");
                 setVisible(false);
+                
+                new meterinfo(ID);
             
             }catch(Exception e){
                 e.printStackTrace();
