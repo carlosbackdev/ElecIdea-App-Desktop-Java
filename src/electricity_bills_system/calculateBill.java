@@ -15,9 +15,9 @@ import javax.swing.event.DocumentListener;
 public class calculateBill extends JFrame implements ActionListener {
     JTextField cajon_nombre,cajon_horas,cajon_postal,cajon_mail,cajon_telf;
     JTextArea cajon_direccion;
-    RoundedButton guardar,cancelar;
+    RoundedButton guardar,cancelar,configurar;
     JLabel numero;
-    Choice ID_choice,mes;
+    Choice ID_choice,mes,parametros;
     JComboBox<String> nombre_combo;
     String ID_info;
     JPopupMenu nombre_popup;
@@ -160,10 +160,12 @@ public class calculateBill extends JFrame implements ActionListener {
         gbc.gridx = 1;
         gbc.fill = GridBagConstraints.HORIZONTAL;
         gbc.weightx = 0;
+        gbc.ipady = -3;
         panel.add(new JScrollPane(cajon_direccion), gbc);
          
         JScrollPane scrollPane = new JScrollPane(cajon_direccion);
         scrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+        
         panel.add(scrollPane, gbc); 
         scrollPane.setBorder(BorderFactory.createEmptyBorder()); // Sin borde
         
@@ -197,6 +199,7 @@ public class calculateBill extends JFrame implements ActionListener {
         cajon_horas= new JTextField();
         cajon_horas.setFont(fuente2);
         cajon_horas.setHorizontalAlignment(JTextField.CENTER);
+        gbc.ipady = 0;
         gbc.gridx = 1;
         gbc.fill = GridBagConstraints.HORIZONTAL; 
         gbc.weightx = 0;
@@ -228,15 +231,53 @@ public class calculateBill extends JFrame implements ActionListener {
         gbc.weightx = 0;
         panel.add(mes, gbc);
   
+        JPanel panelBotones2 = new JPanel(new BorderLayout());
+        panelBotones2.setOpaque(false); 
+        gbc.gridx = 0;
+        gbc.gridy = 6; 
+        gbc.gridwidth = 2; 
+        gbc.fill = GridBagConstraints.NONE; 
+        gbc.anchor = GridBagConstraints.WEST; 
+        panel.add(panelBotones2, gbc);
+        
+        configurar  = new RoundedButton("Agregar Parametros");
+        configurar.setBackground(new Color(222, 239, 255));
+        configurar.setForeground(Color.BLACK);
+        configurar.setFont(fuente2); 
+        configurar.addActionListener(this);
+        panelBotones2.add(configurar);
+        panelBotones2.add(configurar, BorderLayout.WEST);
+        
+        parametros=new Choice();
+        try{
+            Connect c=new Connect();
+            ResultSet rs= c.s.executeQuery("select * from setup_bill");
+            while(rs.next()){
+                parametros.add(rs.getString("NAME"));
+            }
+        } catch (Exception e){
+            e.printStackTrace();
+        }
+        
+        
+        parametros.setFont(fuente2);
+        gbc.gridx = 1;
+        gbc.fill = GridBagConstraints.HORIZONTAL; 
+        gbc.weightx = 0;
+        panel.add(parametros, gbc);
+        
+        
+        
         JLabel margen = new JLabel();
-        gbc.gridy = 6;
+        gbc.gridy = 7;
         gbc.gridx = 0;
         panel.add(margen, gbc);
+        
         
         JPanel panelBotones = new JPanel(new BorderLayout());
         panelBotones.setOpaque(false); 
         gbc.gridx = 0;
-        gbc.gridy = 7; 
+        gbc.gridy = 8; 
         gbc.gridwidth = 2; 
         gbc.fill = GridBagConstraints.NONE; 
         gbc.anchor = GridBagConstraints.CENTER; 
