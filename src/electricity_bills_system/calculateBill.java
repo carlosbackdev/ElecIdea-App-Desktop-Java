@@ -8,15 +8,21 @@ import java.awt.*;
 import java.util.*;
 import java.awt.event.*;
 import java.sql.*;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 
 
 public class calculateBill extends JFrame implements ActionListener {
-    JTextField cajon_direccion,cajon_ciudad,cajon_postal,cajon_mail,cajon_telf;
+    JTextField cajon_nombre,cajon_horas,cajon_postal,cajon_mail,cajon_telf;
+    JTextArea cajon_direccion;
     RoundedButton guardar,cancelar;
     JLabel numero;
-    Choice nombre_choice,ID_choice;
+    Choice ID_choice,mes;
+    JComboBox<String> nombre_combo;
+    String ID_info;
+    JPopupMenu nombre_popup;
     calculateBill(){
-        
+        this.ID_info = ID_info;
         setContentPane(new BackgroundPanel("images/Fichas.jpg"));  
         
         JPanel panel = new JPanel(new GridBagLayout());
@@ -25,10 +31,10 @@ public class calculateBill extends JFrame implements ActionListener {
         gbc.insets = new Insets(20, 0, 20, 0);
         gbc.weightx = 1.0;
         Font fuente=new Font("Roboto", Font.PLAIN, 20);
-        Font fuente2=new Font("Roboto", Font.PLAIN, 13);
-        gbc.ipadx = 80;
+        Font fuente2=new Font("Roboto", Font.PLAIN, 15);
+        gbc.ipadx = 119;
         
-        JLabel head = new JLabel("Calcular Factura Electrica");
+        JLabel head = new JLabel("                Calcular Factura Eléctrica");
         head.setForeground(Color.WHITE);
         head.setFont(new Font("Roboto", Font.PLAIN, 28));
         gbc.gridx = 0;
@@ -46,28 +52,80 @@ public class calculateBill extends JFrame implements ActionListener {
         gbc.gridx = 0;
         panel.add(nombre, gbc);
         
-        nombre_choice=new Choice();
+        // elegir nombre mientras se escribe
         
-        nombre_choice = new Choice();
-        nombre_choice.setFont(fuente2);
+        cajon_nombre = new JTextField();
+        cajon_nombre.setFont(fuente2);
+        cajon_nombre.setHorizontalAlignment(JTextField.CENTER);
+        cajon_nombre.setPreferredSize(new Dimension(150, 32));
         gbc.gridx = 1;
         gbc.fill = GridBagConstraints.HORIZONTAL; 
-        gbc.weightx = 0;
-        panel.add(nombre_choice, gbc);
+        gbc.weightx = 1.0;
+        panel.add(cajon_nombre, gbc);
         
-        //selecionar nombre de la base de datos
-        try{
-            Connect c=new Connect();
-            ResultSet rs= c.s.executeQuery("select NAME from client");
-            while(rs.next()){
-                nombre_choice.addItem(rs.getString("NAME"));
-                
-            }
-            
-        } catch(Exception e){
-            e.printStackTrace();
-        }
+        nombre_combo = new JComboBox<>();
+        nombre_combo.setFont(fuente2);
+        nombre_combo.setEditable(true);
+        nombre_combo.setVisible(false);
+        gbc.gridy = 2;
+        panel.add(nombre_combo, gbc);
+        
+         nombre_popup = new JPopupMenu();
+        nombre_popup.setFocusable(false);
 
+        cajon_nombre.getDocument().addDocumentListener(new DocumentListener() {
+            @Override
+            public void insertUpdate(DocumentEvent e) {
+                updatePopup();
+            }
+
+            @Override
+            public void removeUpdate(DocumentEvent e) {
+                updatePopup();
+            }
+
+            @Override
+            public void changedUpdate(DocumentEvent e) {
+                updatePopup();
+            }
+
+            private void updatePopup() {
+                String text = cajon_nombre.getText();
+                if (text.isEmpty()) {
+                    nombre_popup.setVisible(false);
+                } else {
+                    nombre_popup.removeAll();
+                    try {
+                        Connect c = new Connect();
+                        ResultSet rs = c.s.executeQuery("SELECT NAME FROM client WHERE NAME LIKE '" + text + "%'");
+                        while (rs.next()) {
+                            JMenuItem item = new JMenuItem(rs.getString("NAME"));
+                            item.setPreferredSize(new Dimension(200, 30)); // Establecer tamaño preferido para cada item
+                            item.addActionListener(new ActionListener() {
+                                @Override
+                                public void actionPerformed(ActionEvent e) {
+                                    cajon_nombre.setText(item.getText());
+                                    nombre_popup.setVisible(false);
+                                    updateID_choice(item.getText());
+                                }
+                            });
+                            nombre_popup.add(item);
+                        }
+                        rs.close();
+                        c.s.close();
+                    } catch (Exception ex) {
+                        ex.printStackTrace();
+                    }
+                    if (nombre_popup.getComponentCount() > 0) {
+                        nombre_popup.setPreferredSize(new Dimension(270, nombre_popup.getComponentCount() * 30)); // Establecer tamaño preferido del popup
+                        nombre_popup.show(cajon_nombre, 0, cajon_nombre.getHeight());
+                    } else {
+                        nombre_popup.setVisible(false);
+                    }
+                }
+            }
+        });
+        
 
         JLabel numeroid = new JLabel("Numero Identificacion");
         numeroid.setForeground(Color.WHITE);
@@ -85,27 +143,6 @@ public class calculateBill extends JFrame implements ActionListener {
         gbc.weightx = 0;
         panel.add(ID_choice, gbc);
         
-        nombre_choice.addItemListener(new ItemListener() {
-            @Override
-            public void itemStateChanged(ItemEvent e) {
-                if (e.getStateChange() == ItemEvent.SELECTED) {
-                    String selectedName = nombre_choice.getSelectedItem();
-                    ID_choice.removeAll(); // Limpiar las opciones anteriores
-                    try {
-                        Connect c = new Connect();
-                        ResultSet rs = c.s.executeQuery("SELECT ID FROM client WHERE NAME='" + selectedName + "'");
-                        while (rs.next()) {
-                        ID_choice.addItem(rs.getString("ID"));
-                    }
-                    rs.close();
-                    c.s.close();
-                    } catch (Exception ex) {
-                    ex.printStackTrace();
-                        }
-                    }
-                }
-            });
-        
        
         JLabel direccion = new JLabel("Direccion");
         direccion.setForeground(Color.WHITE);
@@ -115,83 +152,91 @@ public class calculateBill extends JFrame implements ActionListener {
         gbc.gridx = 0;
         panel.add(direccion, gbc);
 
-        cajon_direccion = new JTextField();
+        cajon_direccion = new JTextArea("SELECCIONA NUMERO DE ID");
         cajon_direccion.setFont(fuente2);
-        cajon_direccion.setHorizontalAlignment(JTextField.CENTER);
+        cajon_direccion.setOpaque(false);
+        cajon_direccion.setWrapStyleWord(true);
+        cajon_direccion.setEditable(false);
         gbc.gridx = 1;
-        gbc.fill = GridBagConstraints.HORIZONTAL; 
+        gbc.fill = GridBagConstraints.HORIZONTAL;
         gbc.weightx = 0;
-        panel.add(cajon_direccion, gbc);
+        panel.add(new JScrollPane(cajon_direccion), gbc);
+         
+        JScrollPane scrollPane = new JScrollPane(cajon_direccion);
+        scrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+        panel.add(scrollPane, gbc); 
+        scrollPane.setBorder(BorderFactory.createEmptyBorder()); // Sin borde
         
-        JLabel ciudad = new JLabel("Horas de mantenimiento");
-        ciudad.setForeground(Color.WHITE);
-        ciudad.setFont(fuente); 
+        
+        
+        ID_choice.addItemListener(new ItemListener(){
+            public void itemStateChanged(ItemEvent ie){
+                try{
+            Connect c= new Connect();
+            ResultSet rs=c.s.executeQuery("select * from client where ID='"+ID_choice.getSelectedItem()+"'");
+            while(rs.next()){
+                cajon_direccion.setText(rs.getString("ADDRESS"));
+                
+            }
+            rs.close();
+            c.s.close();
+            
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+            }
+        });
+        
+        JLabel horas = new JLabel("Horas de mantenimiento");
+        horas.setForeground(Color.WHITE);
+        horas.setFont(fuente); 
         gbc.gridy = 4;
         gbc.gridx = 0;
-        panel.add(ciudad, gbc);
+        panel.add(horas, gbc);
 
-        cajon_ciudad = new JTextField();
-        cajon_ciudad.setFont(fuente2);
-        cajon_ciudad.setHorizontalAlignment(JTextField.CENTER);
+        cajon_horas= new JTextField();
+        cajon_horas.setFont(fuente2);
+        cajon_horas.setHorizontalAlignment(JTextField.CENTER);
         gbc.gridx = 1;
         gbc.fill = GridBagConstraints.HORIZONTAL; 
         gbc.weightx = 0;
-        panel.add(cajon_ciudad, gbc);
+        panel.add(cajon_horas, gbc);
         
-        JLabel postal = new JLabel("Month");
+        JLabel postal = new JLabel("Mes");
         postal.setForeground(Color.WHITE);
         postal.setFont(fuente); 
         gbc.gridy = 5;
         gbc.gridx = 0;
         panel.add(postal, gbc);
 
-        cajon_postal = new JTextField();
-        cajon_postal.setFont(fuente2);
-        cajon_postal.setHorizontalAlignment(JTextField.CENTER);
+        mes = new Choice();
+        mes.add("Enero");
+        mes.add("Febrero");
+        mes.add("Marzo");
+        mes.add("Abril");
+        mes.add("Mayo");
+        mes.add("Junio");
+        mes.add("Julio");
+        mes.add("Agosto");
+        mes.add("Septiembre");
+        mes.add("Octubre");
+        mes.add("Novimbre");
+        mes.add("Diciembre");
+        mes.setFont(fuente2);
         gbc.gridx = 1;
         gbc.fill = GridBagConstraints.HORIZONTAL; 
         gbc.weightx = 0;
-        panel.add(cajon_postal, gbc);
-        
-        JLabel mail = new JLabel("Email");
-        mail.setForeground(Color.WHITE);
-        mail.setFont(fuente); 
-        gbc.gridy = 6;
-        gbc.gridx = 0;
-        panel.add(mail, gbc);
-
-        cajon_mail = new JTextField();
-        cajon_mail.setFont(fuente2);
-        cajon_mail.setHorizontalAlignment(JTextField.CENTER);
-        gbc.gridx = 1;
-        gbc.fill = GridBagConstraints.HORIZONTAL; 
-        gbc.weightx = 0;
-        panel.add(cajon_mail, gbc);
-        
-        JLabel telefono = new JLabel("Telefono");
-        telefono.setForeground(Color.WHITE);
-        telefono.setFont(fuente); 
-        gbc.gridy = 7;
-        gbc.gridx = 0;
-        panel.add(telefono, gbc);
-
-        cajon_telf = new JTextField();
-        cajon_telf.setFont(fuente2);
-        cajon_telf.setHorizontalAlignment(JTextField.CENTER);
-        gbc.gridx = 1;
-        gbc.fill = GridBagConstraints.HORIZONTAL; 
-        gbc.weightx = 0;
-        panel.add(cajon_telf, gbc);   
-        
+        panel.add(mes, gbc);
+  
         JLabel margen = new JLabel();
-        gbc.gridy = 8;
+        gbc.gridy = 6;
         gbc.gridx = 0;
         panel.add(margen, gbc);
         
         JPanel panelBotones = new JPanel(new BorderLayout());
         panelBotones.setOpaque(false); 
         gbc.gridx = 0;
-        gbc.gridy = 9; 
+        gbc.gridy = 7; 
         gbc.gridwidth = 2; 
         gbc.fill = GridBagConstraints.NONE; 
         gbc.anchor = GridBagConstraints.CENTER; 
@@ -222,17 +267,49 @@ public class calculateBill extends JFrame implements ActionListener {
         setVisible(true);
     
     }
+    public void updateID_choice(String selectedName) {
+        ID_choice.removeAll();
+    try {
+        Connect c = new Connect();
+        ResultSet rs = c.s.executeQuery("SELECT ID FROM client WHERE NAME='" + selectedName + "'");
+        while (rs.next()) {
+            ID_choice.add(rs.getString("ID"));
+        }
+        rs.close();
+        c.s.close();
+    } catch (Exception ex) {
+        ex.printStackTrace();
+    }
+
+    // Forzar la actualización de la dirección si solo hay un ID
+    if (ID_choice.getItemCount() == 1) {
+        ID_choice.select(0); // Seleccionar el único ID
+        updateAddress(ID_choice.getSelectedItem()); // Actualizar la dirección
+    }
+}
+    public void updateAddress(String selectedID) {
+    try {
+        Connect c = new Connect();
+        ResultSet rs = c.s.executeQuery("select * from client where ID='" + selectedID + "'");
+        if (rs.next()) {
+            cajon_nombre.setText(rs.getString("NAME"));
+            cajon_direccion.setText(rs.getString("ADDRESS"));
+        }
+        rs.close();
+        c.s.close();
+    } catch (Exception e) {
+        e.printStackTrace();
+    }
+}
+
     
     public void actionPerformed(ActionEvent ae){
+        //PARA CALCULAR LAS FACTURTAS SE DEBE HACER OTR TABLA DONDE SE PIDA COMO HACER LA FACTURA DE MANTENIMEINTO PIDIENDO LOS DATOS NECESARIOS 
+        //COMO EL COSTE POR HORA, IVA... Y TODO ESO PONER UN NOMBRE UNICO PARA SELECIONAR LUEGO EL TIPO DE FACTURA
 //    if(ae.getSource()==guardar){
-//        String name =nombre_choice.getText();
-//        String ID = numero.getText();
-//        String address=cajon_direccion.getText();
-//        String city=cajon_ciudad.getText();
-//        String postal=cajon_postal.getText();
-//        String mail=cajon_mail.getText();
-//        String phone = cajon_telf.getText();
-//        int mailn=mail.length();
+//        String ID =ID_choice.getSelectedItem();
+//        String time=cajon_horas.getText();
+//        String month=mes.getSelectedItem();
 //        
 //        int condicion=0;
 //        int tf=0;
@@ -323,6 +400,7 @@ public class calculateBill extends JFrame implements ActionListener {
 //        }else if(ae.getSource() == cancelar){
 //            setVisible(false);}
     }
+    
     public static void main(String[]args){
         new calculateBill();
     }
