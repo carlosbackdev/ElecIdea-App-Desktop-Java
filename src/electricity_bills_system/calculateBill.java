@@ -10,17 +10,19 @@ import java.awt.event.*;
 import java.sql.*;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 
 public class calculateBill extends JFrame implements ActionListener {
-    JTextField cajon_nombre,cajon_horas,cajon_postal,cajon_mail,cajon_telf;
+    JTextField cajon_nombre,cajon_horas;
     JTextArea cajon_direccion;
-    RoundedButton guardar,cancelar,configurar;
-    JLabel numero;
-    Choice ID_choice,mes,parametros;
+    RoundedButton guardar,cancelar,configurar,materiales_agregar;
+    Choice ID_choice,parametros, materiales;
     JComboBox<String> nombre_combo;
     String ID_info;
     JPopupMenu nombre_popup;
+    SimpleDateFormat dateFormat;
     calculateBill(){
         this.ID_info = ID_info;
         setContentPane(new BackgroundPanel("images/Fichas.jpg"));  
@@ -32,7 +34,7 @@ public class calculateBill extends JFrame implements ActionListener {
         gbc.weightx = 1.0;
         Font fuente=new Font("Roboto", Font.PLAIN, 20);
         Font fuente2=new Font("Roboto", Font.PLAIN, 15);
-        gbc.ipadx = 119;
+        gbc.ipadx = 100;
         
         JLabel head = new JLabel("                Calcular Factura Eléctrica");
         head.setForeground(Color.WHITE);
@@ -57,7 +59,7 @@ public class calculateBill extends JFrame implements ActionListener {
         cajon_nombre = new JTextField();
         cajon_nombre.setFont(fuente2);
         cajon_nombre.setHorizontalAlignment(JTextField.CENTER);
-        cajon_nombre.setPreferredSize(new Dimension(150, 32));
+        cajon_nombre.setPreferredSize(new Dimension(200, 28));
         gbc.gridx = 1;
         gbc.fill = GridBagConstraints.HORIZONTAL; 
         gbc.weightx = 1.0;
@@ -100,7 +102,7 @@ public class calculateBill extends JFrame implements ActionListener {
                         ResultSet rs = c.s.executeQuery("SELECT NAME FROM client WHERE NAME LIKE '" + text + "%'");
                         while (rs.next()) {
                             JMenuItem item = new JMenuItem(rs.getString("NAME"));
-                            item.setPreferredSize(new Dimension(200, 30)); // Establecer tamaño preferido para cada item
+                            item.setPreferredSize(new Dimension(280, 28)); // Establecer tamaño preferido para cada item
                             item.addActionListener(new ActionListener() {
                                 @Override
                                 public void actionPerformed(ActionEvent e) {
@@ -117,7 +119,7 @@ public class calculateBill extends JFrame implements ActionListener {
                         ex.printStackTrace();
                     }
                     if (nombre_popup.getComponentCount() > 0) {
-                        nombre_popup.setPreferredSize(new Dimension(270, nombre_popup.getComponentCount() * 30)); // Establecer tamaño preferido del popup
+                        nombre_popup.setPreferredSize(new Dimension(307, nombre_popup.getComponentCount() * 30)); // Establecer tamaño preferido del popup
                         nombre_popup.show(cajon_nombre, 0, cajon_nombre.getHeight());
                     } else {
                         nombre_popup.setVisible(false);
@@ -134,7 +136,6 @@ public class calculateBill extends JFrame implements ActionListener {
         gbc.gridx = 0;
         panel.add(numeroid, gbc);
         
-        ID_choice=new Choice();
 
         ID_choice = new Choice();
         ID_choice.setFont(fuente2);
@@ -165,7 +166,7 @@ public class calculateBill extends JFrame implements ActionListener {
          
         JScrollPane scrollPane = new JScrollPane(cajon_direccion);
         scrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
-        
+        scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER);
         panel.add(scrollPane, gbc); 
         scrollPane.setBorder(BorderFactory.createEmptyBorder()); // Sin borde
         
@@ -177,8 +178,12 @@ public class calculateBill extends JFrame implements ActionListener {
             Connect c= new Connect();
             ResultSet rs=c.s.executeQuery("select * from client where ID='"+ID_choice.getSelectedItem()+"'");
             while(rs.next()){
-                cajon_direccion.setText(rs.getString("ADDRESS"));
+                String direccion=rs.getString("ADDRESS");
+                String postal=rs.getString("POSTAL");
+                String ciudad=rs.getString("CITY");
                 
+                String direcion_completa=direccion+", "+postal+", "+ciudad;
+                cajon_direccion.setText(direcion_completa);
             }
             rs.close();
             c.s.close();
@@ -205,36 +210,61 @@ public class calculateBill extends JFrame implements ActionListener {
         gbc.weightx = 0;
         panel.add(cajon_horas, gbc);
         
-        JLabel postal = new JLabel("Mes");
-        postal.setForeground(Color.WHITE);
-        postal.setFont(fuente); 
+        JLabel fechala = new JLabel("Fecha");
+        fechala.setForeground(Color.WHITE);
+        fechala.setFont(fuente); 
         gbc.gridy = 5;
         gbc.gridx = 0;
-        panel.add(postal, gbc);
+        panel.add(fechala, gbc);
 
-        mes = new Choice();
-        mes.add("Enero");
-        mes.add("Febrero");
-        mes.add("Marzo");
-        mes.add("Abril");
-        mes.add("Mayo");
-        mes.add("Junio");
-        mes.add("Julio");
-        mes.add("Agosto");
-        mes.add("Septiembre");
-        mes.add("Octubre");
-        mes.add("Novimbre");
-        mes.add("Diciembre");
-        mes.setFont(fuente2);
+        dateFormat = new SimpleDateFormat("dd-MM-yyyy");
+        JFormattedTextField dateField = new JFormattedTextField(dateFormat);
+        dateField.setValue(new Date());
+        dateField.setFont(fuente2);
+        gbc.gridx = 1;
+        gbc.fill = GridBagConstraints.HORIZONTAL;
+        gbc.weightx = 0;
+        panel.add(dateField, gbc);
+        
+        JPanel panelBotones3 = new JPanel(new BorderLayout());
+        panelBotones3.setOpaque(false); 
+        gbc.gridx = 0;
+        gbc.gridy = 6; 
+        gbc.gridwidth = 2; 
+        gbc.fill = GridBagConstraints.NONE; 
+        gbc.anchor = GridBagConstraints.WEST; 
+        panel.add(panelBotones3, gbc);
+        
+        materiales_agregar  = new RoundedButton("Agregar Materiales");
+        materiales_agregar.setBackground(new Color(222, 239, 255));
+        materiales_agregar.setForeground(Color.BLACK);
+        materiales_agregar.setFont(fuente2); 
+        materiales_agregar.addActionListener(this);
+        panelBotones3.add(materiales_agregar);
+        panelBotones3.add(materiales_agregar, BorderLayout.WEST);
+        
+        materiales=new Choice();
+        try{
+            Connect c=new Connect();
+            ResultSet rs= c.s.executeQuery("select * from setup_bill");
+            while(rs.next()){
+                parametros.add(rs.getString("NAME"));
+            }
+        } catch (Exception e){
+            e.printStackTrace();
+        }
+        
+        
+        materiales.setFont(fuente2);
         gbc.gridx = 1;
         gbc.fill = GridBagConstraints.HORIZONTAL; 
         gbc.weightx = 0;
-        panel.add(mes, gbc);
+        panel.add(materiales, gbc);
   
         JPanel panelBotones2 = new JPanel(new BorderLayout());
         panelBotones2.setOpaque(false); 
         gbc.gridx = 0;
-        gbc.gridy = 6; 
+        gbc.gridy = 7; 
         gbc.gridwidth = 2; 
         gbc.fill = GridBagConstraints.NONE; 
         gbc.anchor = GridBagConstraints.WEST; 
@@ -269,7 +299,7 @@ public class calculateBill extends JFrame implements ActionListener {
         
         
         JLabel margen = new JLabel();
-        gbc.gridy = 7;
+        gbc.gridy = 8;
         gbc.gridx = 0;
         panel.add(margen, gbc);
         
@@ -333,8 +363,13 @@ public class calculateBill extends JFrame implements ActionListener {
         Connect c = new Connect();
         ResultSet rs = c.s.executeQuery("select * from client where ID='" + selectedID + "'");
         if (rs.next()) {
-            cajon_nombre.setText(rs.getString("NAME"));
-            cajon_direccion.setText(rs.getString("ADDRESS"));
+            
+            String direccion=rs.getString("ADDRESS");
+                String postal=rs.getString("POSTAL");
+                String ciudad=rs.getString("CITY");
+                
+                String direcion_completa=direccion+", "+postal+", "+ciudad;
+                cajon_direccion.setText(direcion_completa);
         }
         rs.close();
         c.s.close();
