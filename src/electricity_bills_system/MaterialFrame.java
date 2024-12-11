@@ -26,6 +26,7 @@ public class MaterialFrame extends JFrame implements ActionListener {
     JLabel total_materiales,numero_parte;
     int total_final=0;
     int numero_parte2;
+    String selectedID;
 
     public MaterialFrame() {
         super("Añadir Materiales");
@@ -38,6 +39,15 @@ public class MaterialFrame extends JFrame implements ActionListener {
 
         cliente = new JTextField(20);
         ID_choice = new Choice();
+        ID_choice.addItemListener(new ItemListener() {
+            @Override
+            public void itemStateChanged(ItemEvent e) {
+                if (e.getStateChange() == ItemEvent.SELECTED) {
+                    selectedID = ID_choice.getSelectedItem();
+                    updateRowCount(); 
+                }
+            }
+        });
         nombre_material = new JTextField(20);
         marca_nombre = new JTextField(20);
         precioField = new JTextField(20);
@@ -166,9 +176,46 @@ public class MaterialFrame extends JFrame implements ActionListener {
     }
 
     
-    public void actionPerformed(ActionEvent e) {
+    public void updateID_choice(String selectedName) {
+        ID_choice.removeAll();
+        try {
+            Connect c = new Connect();
+            ResultSet rs = c.s.executeQuery("SELECT ID FROM client WHERE NAME='" + selectedName + "'");
+            while (rs.next()) {
+                ID_choice.add(rs.getString("ID"));
+            }
+            rs.close();
+            c.s.close();
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+
+        // Forzar la actualización de la dirección si solo hay un ID
+        if (ID_choice.getItemCount() == 1) {
+            ID_choice.select(0); // Seleccionar el único ID
+        }
+    }
+    private void updateRowCount() {
+        int rowCount = 0;
+        try {
+            Connect c = new Connect();
+            ResultSet rsCount = c.s.executeQuery("SELECT COUNT(*) FROM material_bill WHERE ID_CLIENT='"+selectedID+"'");
+            if (rsCount.next()) {
+                rowCount = rsCount.getInt("COUNT(*)");
+            }
+            rsCount.close();
+            c.s.close();
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+
+        int numeroP = rowCount + 1;
+        numero_parte2 = numeroP;
+        numero_parte.setText("Número de Parte: " + numeroP);
+    }
+     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == agregarButton) {
-            // Obtener datos de los campos de texto
+            if (e.getSource() == agregarButton) {
             String refe = ref.getText();
             String nombre_material2 = nombre_material.getText();
             String marca2 = marca_nombre.getText();            
@@ -199,63 +246,30 @@ public class MaterialFrame extends JFrame implements ActionListener {
             ref.setText("");
             }
         }
-        if(e.getSource() == guardarButton){  
-                      
-            try{ Connect c = new Connect();
-            for (int i = 0; i < tableModel.getRowCount(); i++) {
-            String ID_2 = ID_choice.getSelectedItem();
-            String number = numero_parte.getText().split(": ")[1];
-            String ref_material = (String) tableModel.getValueAt(i, 0);
-            String nombre_material2 = (String) tableModel.getValueAt(i, 1);
-            String brand = (String) tableModel.getValueAt(i, 2);
-            String price_unit = (String) tableModel.getValueAt(i, 3);
-            String unit = (String) tableModel.getValueAt(i, 4);
-            String total_price = (String) tableModel.getValueAt(i, 5);
-            String date=dateField.getText();
-                 String query = "insert into material_bill values("+ID_2+", '"+number+"','"+nombre_material2+"','"+brand+"','"+price_unit+"','"+unit+"','"+ref_material+"','"+date+"','"+total_price+"')";
-                 
-                 c.s.executeUpdate(query);
-                 
-                 JOptionPane.showMessageDialog(null,"Materiales guardados con exito");
-                 setVisible(false);
-            }
-            }catch (Exception ea){
+        }
+        if (e.getSource() == guardarButton) {
+            try {
+                Connect c = new Connect();
+                for (int i = 0; i < tableModel.getRowCount(); i++) {
+                    String ID_2 = selectedID; // Usar el ID seleccionado
+                    String number = numero_parte.getText().split(": ")[1];
+                    String ref_material = (String) tableModel.getValueAt(i, 0);
+                    String nombre_material2 = (String) tableModel.getValueAt(i, 1);
+                    String brand = (String) tableModel.getValueAt(i, 2);
+                    String price_unit = (String) tableModel.getValueAt(i, 3);
+                    String unit = (String) tableModel.getValueAt(i, 4);
+                    String total_price = (String) tableModel.getValueAt(i, 5);
+                    String date = dateField.getText();
+                    String query = "INSERT INTO material_bill VALUES('" + ID_2 + "', '" + number + "','" + nombre_material2 + "','" + brand + "','" + price_unit + "','" + unit + "','" + ref_material + "','" + date + "','" + total_price + "')";
+
+                    c.s.executeUpdate(query);
+                }
+                JOptionPane.showMessageDialog(null, "Materiales guardados con éxito");
+                setVisible(false);
+            } catch (Exception ea) {
                 ea.printStackTrace();
             }
-            
-            
-        
         }
-    }
-    
-
-    public void updateID_choice(String selectedName) {
-        ID_choice.removeAll();
-        int rowCount = 0;
-        try {
-            Connect c = new Connect();
-            ResultSet rs = c.s.executeQuery("SELECT ID FROM client WHERE NAME='" + selectedName + "'");
-            while (rs.next()) {
-                ID_choice.add(rs.getString("ID"));
-            }
-            rs.close();
-            ResultSet rsCount = c.s.executeQuery("SELECT COUNT(*) AS rowcount FROM material_bill");
-            if (rsCount.next()) {
-                rowCount = rsCount.getInt("rowcount");
-            }
-            rsCount.close();
-            c.s.close();
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        }
-
-        // Forzar la actualización de la dirección si solo hay un ID
-        if (ID_choice.getItemCount() == 1) {
-            ID_choice.select(0); // Seleccionar el único ID
-        }
-        int numeroParte = rowCount + 1;
-        numero_parte2=numeroParte;
-        numero_parte.setText("Número de Parte: " + numeroParte);
     }
     
    
