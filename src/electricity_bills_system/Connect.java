@@ -8,7 +8,7 @@ public class Connect {
     Statement s;
     Connect(){
         try{
-            c = DriverManager.getConnection("jdbc:mysql://sql7.freemysqlhosting.net:3306/sql7749848","sql7749848","335YxJ5li8");
+            c = DriverManager.getConnection("jdbc:mysql://45-147-251-176.cloud-xip.com:3306/ebs","root","tH236HNfKCQqNjeeBvc9gO");
             s=c.createStatement();
         }catch(Exception e){
             e.printStackTrace();

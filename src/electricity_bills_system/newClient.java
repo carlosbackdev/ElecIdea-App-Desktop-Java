@@ -269,7 +269,7 @@ public class newClient extends JFrame implements ActionListener {
             try {
                 Connect c= new Connect();
                 String query ="insert into client values('"+name+"', '"+ID+"', '"+address+"', '"+city+"', '"+postal+"', '"+mail+"', '"+phone+"')";
-                String query2 ="insert into login values('"+ID+"', '', '"+name+"', '','')";
+                String query2 ="insert into login values('"+ID+"', '"+name+"_"+(ID)+"', '"+name+"', '','')";
                 c.s.executeUpdate(query);
                 c.s.executeUpdate(query2);
             

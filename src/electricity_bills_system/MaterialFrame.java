@@ -161,7 +161,7 @@ public class MaterialFrame extends JFrame implements ActionListener {
 
         add(inputPanel, BorderLayout.NORTH);
         add(scrollPane, BorderLayout.CENTER);
-        setSize(800, 600);
+        setSize(800, 900);
         setLocationRelativeTo(null);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setVisible(true);
@@ -177,42 +177,46 @@ public class MaterialFrame extends JFrame implements ActionListener {
 
     
     public void updateID_choice(String selectedName) {
-        ID_choice.removeAll();
-        try {
-            Connect c = new Connect();
-            ResultSet rs = c.s.executeQuery("SELECT ID FROM client WHERE NAME='" + selectedName + "'");
-            while (rs.next()) {
-                ID_choice.add(rs.getString("ID"));
-            }
-            rs.close();
-            c.s.close();
-        } catch (Exception ex) {
-            ex.printStackTrace();
+    ID_choice.removeAll();
+    try {
+        Connect c = new Connect();
+        ResultSet rs = c.s.executeQuery("SELECT ID FROM client WHERE NAME='" + selectedName + "'");
+        while (rs.next()) {
+            ID_choice.add(rs.getString("ID"));
         }
-
-        // Forzar la actualización de la dirección si solo hay un ID
-        if (ID_choice.getItemCount() == 1) {
-            ID_choice.select(0); // Seleccionar el único ID
-        }
+        rs.close();
+        c.s.close();
+    } catch (Exception ex) {
+        ex.printStackTrace();
     }
-    private void updateRowCount() {
-        int rowCount = 0;
-        try {
-            Connect c = new Connect();
-            ResultSet rsCount = c.s.executeQuery("SELECT COUNT(*) FROM material_bill WHERE ID_CLIENT='"+selectedID+"'");
-            if (rsCount.next()) {
-                rowCount = rsCount.getInt("COUNT(*)");
-            }
-            rsCount.close();
-            c.s.close();
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        }
 
-        int numeroP = rowCount + 1;
-        numero_parte2 = numeroP;
-        numero_parte.setText("Número de Parte: " + numeroP);
+    // Forzar la actualización de la dirección si solo hay un ID
+    if (ID_choice.getItemCount() == 1) {
+        ID_choice.select(0); // Seleccionar el único ID
     }
+
+    // Llamar a updateRowCount para actualizar el número de parte
+    updateRowCount();
+}
+
+private void updateRowCount() {
+    int rowCount = 0;
+    try {
+        Connect c = new Connect();
+        ResultSet rsCount = c.s.executeQuery("SELECT COUNT(*) FROM material_bill WHERE ID_CLIENT='" + selectedID + "'");
+        if (rsCount.next()) {
+            rowCount = rsCount.getInt("COUNT(*)");
+        }
+        rsCount.close();
+        c.s.close();
+    } catch (Exception ex) {
+        ex.printStackTrace();
+    }
+
+    int numeroP = rowCount + 1;
+    numero_parte2 = numeroP;
+    numero_parte.setText("Número de Parte: " + numeroP);
+}
      public void actionPerformed(ActionEvent e) {
         if (e.getSource() == agregarButton) {
             if (e.getSource() == agregarButton) {
