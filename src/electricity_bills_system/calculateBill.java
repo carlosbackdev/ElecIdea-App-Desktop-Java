@@ -106,7 +106,7 @@ public class calculateBill extends JFrame implements ActionListener {
                     nombre_popup.removeAll();
                     try {
                         Connect c = new Connect();
-                        ResultSet rs = c.s.executeQuery("SELECT NAME FROM client WHERE NAME LIKE '" + text + "%'");
+                        ResultSet rs = c.s.executeQuery("SELECT DISTINCT NAME FROM client WHERE NAME LIKE '" + text + "%'");
                         while (rs.next()) {
                             JMenuItem item = new JMenuItem(rs.getString("NAME"));
                             item.setPreferredSize(new Dimension(280, 28)); // Establecer tamaño preferido para cada item
@@ -365,13 +365,13 @@ public class calculateBill extends JFrame implements ActionListener {
     
     }
     public void updateID_choice(String selectedName) {
-        ID_choice.removeAll();
+    ID_choice.removeAll();
     try {
         Connect c = new Connect();
         ResultSet rs = c.s.executeQuery("SELECT ID FROM client WHERE NAME='" + selectedName + "'");
         while (rs.next()) {
             ID_choice.add(rs.getString("ID"));
-            selectedID=(rs.getString("ID"));
+            selectedID = rs.getString("ID"); // Actualizar selectedID
         }
         rs.close();
         c.s.close();
@@ -382,23 +382,28 @@ public class calculateBill extends JFrame implements ActionListener {
     // Forzar la actualización de la dirección si solo hay un ID
     if (ID_choice.getItemCount() == 1) {
         ID_choice.select(0); // Seleccionar el único ID
-        selectedID=ID_choice.getSelectedItem();
-        updateAddress(ID_choice.getSelectedItem()); // Actualizar la dirección
-        update_materiales(ID_choice.getSelectedItem());
+        selectedID = ID_choice.getSelectedItem(); // Actualizar selectedID
+        updateAddress(selectedID); // Actualizar la dirección
+        update_materiales(selectedID); // Actualizar materiales
+    } else if (ID_choice.getItemCount() > 1) {
+        // Si hay más de un ID, seleccionar el primero por defecto
+        ID_choice.select(0);
+        selectedID = ID_choice.getSelectedItem();
+        updateAddress(selectedID);
+        update_materiales(selectedID);
     }
 }
-    public void updateAddress(String selectedID) {
+
+public void updateAddress(String selectedID) {
     try {
         Connect c = new Connect();
         ResultSet rs = c.s.executeQuery("select * from client where ID='" + selectedID + "'");
         if (rs.next()) {
-            
-            String direccion=rs.getString("ADDRESS");
-                String postal=rs.getString("POSTAL");
-                String ciudad=rs.getString("CITY");
-                
-                String direcion_completa=direccion+", "+postal+", "+ciudad;
-                cajon_direccion.setText(direcion_completa);
+            String direccion = rs.getString("ADDRESS");
+            String postal = rs.getString("POSTAL");
+            String ciudad = rs.getString("CITY");
+            String direccion_completa = direccion + ", " + postal + ", " + ciudad;
+            cajon_direccion.setText(direccion_completa);
         }
         rs.close();
         c.s.close();
@@ -406,7 +411,8 @@ public class calculateBill extends JFrame implements ActionListener {
         e.printStackTrace();
     }
 }
-    public void update_materiales(String selectedID) {
+
+public void update_materiales(String selectedID) {
     materiales.removeAll();
     try {
         Connect c = new Connect();
@@ -417,37 +423,41 @@ public class calculateBill extends JFrame implements ActionListener {
             String materialDate = rs.getString("MES");
             String dia = rs.getString("DIA");
             String ano = rs.getString("ANO");
-            materiales.add("Parte 0" + materialNumber + ", del " + dia + " de " + materialDate + " de " + ano);
+            materiales.add("Parte " + materialNumber + ", del " + dia + " de " + materialDate + " de " + ano);
         }
         rs.close();
-        
+
         // Actualizar la suma total para el primer material seleccionado
         if (materiales.getItemCount() > 0) {
             String firstMaterialNumber = extractMaterialNumber(materiales.getItem(0)); // Extraer el número de material
             updateTotal(firstMaterialNumber);
+        } else {
+            total_materiales.setText("0$"); // Si no hay materiales, establecer total a 0
         }
-        
+
         c.s.close();
     } catch (Exception ex) {
         ex.printStackTrace();
     }
 }
-    public String extractMaterialNumber(String materialString) {
+
+public String extractMaterialNumber(String materialString) {
     // Usar una expresión regular para extraer el número de material
-    Pattern pattern = Pattern.compile("Parte 0(\\d+)");
+    Pattern pattern = Pattern.compile("Parte (\\d+)");
     Matcher matcher = pattern.matcher(materialString);
     if (matcher.find()) {
         return matcher.group(1);
     }
     return "";
 }
-    public void updateTotal(String materialNumber) {
+
+public void updateTotal(String materialNumber) {
     try {
         Connect c = new Connect();
-        ResultSet rs = c.s.executeQuery("SELECT SUM(TOTAL_PRICE) AS TOTAL FROM material_bill WHERE NUMBER='" + materialNumber + "'");
+        ResultSet rs = c.s.executeQuery("SELECT SUM(TOTAL_PRICE) AS TOTAL FROM material_bill WHERE NUMBER='" + materialNumber + "' AND ID_CLIENT='"+selectedID+"'");
         if (rs.next()) {
             double totalSum = rs.getDouble("TOTAL");
-            total_materiales.setText("    " + totalSum +"$");
+            total_materiales.setText("    " + totalSum + "$");
         }
         rs.close();
         c.s.close();
@@ -455,6 +465,10 @@ public class calculateBill extends JFrame implements ActionListener {
         ex.printStackTrace();
     }
 }
+
+
+
+
     
 
     

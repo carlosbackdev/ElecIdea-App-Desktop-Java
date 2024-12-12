@@ -40,14 +40,13 @@ public class MaterialFrame extends JFrame implements ActionListener {
         cliente = new JTextField(20);
         ID_choice = new Choice();
         ID_choice.addItemListener(new ItemListener() {
-            @Override
-            public void itemStateChanged(ItemEvent e) {
-                if (e.getStateChange() == ItemEvent.SELECTED) {
-                    selectedID = ID_choice.getSelectedItem();
-                    updateRowCount(); 
-                }
-            }
-        });
+    public void itemStateChanged(ItemEvent e) {
+        if (e.getStateChange() == ItemEvent.SELECTED) {
+            selectedID = (String) e.getItem();
+            updateRowCount();
+        }
+    }
+});
         nombre_material = new JTextField(20);
         marca_nombre = new JTextField(20);
         precioField = new JTextField(20);
@@ -193,6 +192,7 @@ public class MaterialFrame extends JFrame implements ActionListener {
     // Forzar la actualización de la dirección si solo hay un ID
     if (ID_choice.getItemCount() == 1) {
         ID_choice.select(0); // Seleccionar el único ID
+        selectedID = ID_choice.getItem(0); // Actualizar selectedID
     }
 
     // Llamar a updateRowCount para actualizar el número de parte
