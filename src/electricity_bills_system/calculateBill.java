@@ -509,8 +509,14 @@ public void updateTotal(String materialNumber) {
     public void actionPerformed(ActionEvent ae){
         String client=cajon_nombre.getText();
         String ID =ID_choice.getSelectedItem();
+        String bill_true="bill";
        if(ae.getSource()==materiales_agregar){
         new MaterialFrame(ID,client);
+        setVisible(false);
+       }
+       if(ae.getSource()==configurar){
+           
+        new setup_bill(bill_true);
         setVisible(false);
        }
 //    if(ae.getSource()==guardar){
