@@ -444,18 +444,19 @@ public void update_materiales(String selectedID) {
     try {
         Connect c = new Connect();
         c.s.executeUpdate("SET lc_time_names = 'es_ES'");
-        ResultSet rs = c.s.executeQuery("SELECT NUMBER, DAY(STR_TO_DATE(DATE, '%d-%m-%Y')) AS DIA, YEAR(STR_TO_DATE(DATE, '%d-%m-%Y')) AS ANO, MONTHNAME(STR_TO_DATE(DATE, '%d-%m-%Y')) AS MES FROM material_bill WHERE ID_CLIENT='" + selectedID + "'");
-        ResultSet rsCount = c.s.executeQuery("SELECT COUNT(DISTINCT NUMBER) as numero FROM material_bill WHERE ID_CLIENT='" + selectedID + "'");
-        while (rs.next()) {
+        Statement s1 = c.createStatement(); 
+        ResultSet rs = s1.executeQuery("SELECT DISTINCT NUMBER, DAY(STR_TO_DATE(DATE, '%d-%m-%Y')) AS DIA, " +
+                                   "YEAR(STR_TO_DATE(DATE, '%d-%m-%Y')) AS ANO, " +
+                                   "MONTHNAME(STR_TO_DATE(DATE, '%d-%m-%Y')) AS MES " +
+                                   "FROM material_bill WHERE ID_CLIENT='" + selectedID + "'");
+         while (rs.next()) {
             String materialNumber = rs.getString("NUMBER");
             String materialDate = rs.getString("MES");
             String dia = rs.getString("DIA");
             String ano = rs.getString("ANO");
-            String numero_mat_correcto=rsCount.getString("numero");
             materiales.add("Parte " + materialNumber + ", del " + dia + " de " + materialDate + " de " + ano);
         }
         rs.close();
-
         // Actualizar la suma total para el primer material seleccionado
         if (materiales.getItemCount() > 0) {
             String firstMaterialNumber = extractMaterialNumber(materiales.getItem(0)); // Extraer el número de material
@@ -464,7 +465,7 @@ public void update_materiales(String selectedID) {
             total_materiales.setText("0$"); // Si no hay materiales, establecer total a 0
         }
 
-        c.s.close();
+        s1.close();
     } catch (Exception ex) {
         ex.printStackTrace();
     }
