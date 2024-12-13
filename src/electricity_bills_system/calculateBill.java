@@ -25,7 +25,7 @@ public class calculateBill extends JFrame implements ActionListener {
     String ID_info,materiales_selected,selectedID;
     JPopupMenu nombre_popup;
     SimpleDateFormat dateFormat;
-    String suma_total,total_final,ID_info_update,client_info_update,numero_material;
+    String suma_total,total_final,ID_info_update,client_info_update,numero_material,direcion_completa;
     JLabel total_materiales;
     calculateBill(String ID_info_update, String client_info_update){
         this.ID_info = ID_info;
@@ -196,7 +196,7 @@ public class calculateBill extends JFrame implements ActionListener {
                 String postal=rs.getString("POSTAL");
                 String ciudad=rs.getString("CITY");
                 
-                String direcion_completa=direccion+", "+postal+", "+ciudad;
+                direcion_completa=direccion+", "+postal+", "+ciudad;
                 cajon_direccion.setText(direcion_completa);
             }
             rs.close();
@@ -387,7 +387,7 @@ public class calculateBill extends JFrame implements ActionListener {
         setLocationRelativeTo(null);
         setVisible(true);
         if(ID_info_update.length()>1){
-            update_materiales(ID_info_update);
+        update_materiales(ID_info_update);
         }
     
     }
@@ -443,9 +443,8 @@ public void update_materiales(String selectedID) {
     materiales.removeAll();
     try {
         Connect c = new Connect();
-        c.s.executeUpdate("SET lc_time_names = 'es_ES'");
-        Statement s1 = c.createStatement(); 
-        ResultSet rs = s1.executeQuery("SELECT DISTINCT NUMBER, DAY(STR_TO_DATE(DATE, '%d-%m-%Y')) AS DIA, " +
+        c.s.executeUpdate("SET lc_time_names = 'es_ES'");         
+        ResultSet rs = c.s.executeQuery("SELECT DISTINCT NUMBER, DAY(STR_TO_DATE(DATE, '%d-%m-%Y')) AS DIA, " +
                                    "YEAR(STR_TO_DATE(DATE, '%d-%m-%Y')) AS ANO, " +
                                    "MONTHNAME(STR_TO_DATE(DATE, '%d-%m-%Y')) AS MES " +
                                    "FROM material_bill WHERE ID_CLIENT='" + selectedID + "'");
@@ -465,7 +464,7 @@ public void update_materiales(String selectedID) {
             total_materiales.setText("0$"); // Si no hay materiales, establecer total a 0
         }
 
-        s1.close();
+        rs.close();
     } catch (Exception ex) {
         ex.printStackTrace();
     }
@@ -519,8 +518,16 @@ public void updateTotal(String materialNumber) {
         new setup_bill(bill_true);
         setVisible(false);
        }
-//    if(ae.getSource()==guardar){
-//        String ID =ID_choice.getSelectedItem();
+    if(ae.getSource()==guardar){
+        String ID_2 =ID_choice.getSelectedItem();
+        if (ID_info_update.length()>1){
+            ID_2=ID_info_update;
+        }
+        String NAME=cajon_nombre.getText();
+        if(client_info_update.length()>1){
+            NAME=client_info_update;
+        }
+    }
 //        String time=cajon_horas.getText();
 //        String month=mes.getSelectedItem();
 //        

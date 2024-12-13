@@ -298,7 +298,8 @@ private void updateRowCount() {
             } catch (Exception ea) {
                 ea.printStackTrace();
             }
-            new calculateBill(ID_info, client_info);
+            if(ID_info.length()>1){
+            new calculateBill(ID_info, client_info);}
         }
     }
     
