@@ -25,11 +25,12 @@ public class calculateBill extends JFrame implements ActionListener {
     String ID_info,materiales_selected,selectedID;
     JPopupMenu nombre_popup;
     SimpleDateFormat dateFormat;
-    String numero_material;
-    String suma_total,total_final;
+    String suma_total,total_final,ID_info_update,client_info_update,numero_material;
     JLabel total_materiales;
-    calculateBill(){
+    calculateBill(String ID_info_update, String client_info_update){
         this.ID_info = ID_info;
+        this.ID_info_update = ID_info_update;
+        this.client_info_update = client_info_update;
         setContentPane(new BackgroundPanel("images/Fichas.jpg"));  
         
         JPanel panel = new JPanel(new GridBagLayout());
@@ -63,7 +64,7 @@ public class calculateBill extends JFrame implements ActionListener {
         
         // elegir nombre mientras se escribe
         
-        cajon_nombre = new JTextField();
+        cajon_nombre = new JTextField(client_info_update);
         cajon_nombre.setFont(fuente2);
         cajon_nombre.setHorizontalAlignment(JTextField.CENTER);
         cajon_nombre.setPreferredSize(new Dimension(200, 28));
@@ -145,6 +146,7 @@ public class calculateBill extends JFrame implements ActionListener {
         
 
         ID_choice = new Choice();
+        ID_choice.add(ID_info_update);
         ID_choice.setFont(fuente2);
         gbc.gridx = 1;
         gbc.fill = GridBagConstraints.HORIZONTAL; 
@@ -265,6 +267,12 @@ public class calculateBill extends JFrame implements ActionListener {
                 }
             }
         });
+        if (materiales.getItemCount() > 0) {
+            materiales.select(materiales.getItemCount() - 1);
+            String selectedMaterial = materiales.getSelectedItem();
+            String materialNumber = extractMaterialNumber(selectedMaterial);
+            updateTotal(materialNumber);
+        }
         materiales.setFont(fuente4);
         gbc.gridx = 1;
         gbc.fill = GridBagConstraints.HORIZONTAL; 
@@ -305,13 +313,29 @@ public class calculateBill extends JFrame implements ActionListener {
         panelBotones2.add(configurar, BorderLayout.WEST);
         
         parametros=new Choice();
-        try{
-            Connect c=new Connect();
-            ResultSet rs= c.s.executeQuery("select * from setup_bill");
-            while(rs.next()){
+        parametros.add("Añadir Primero Parametros");
+         try {
+            int count;
+            Connect c = new Connect();
+            
+            // Ejecutar la consulta de count
+            ResultSet rs2 = c.s.executeQuery("select count(*) from setup_bill");
+            if (rs2.next()) {
+                count = rs2.getInt(1); // Obtener el valor de count
+                if (count > 0) {
+                    parametros.removeAll();
+                }
+            }
+            rs2.close();
+
+            // Ejecutar la consulta para obtener los nombres
+            ResultSet rs = c.s.executeQuery("select * from setup_bill");
+            while (rs.next()) {
                 parametros.add(rs.getString("NAME"));
             }
-        } catch (Exception e){
+            rs.close();
+            c.s.close();
+        } catch (Exception e) {
             e.printStackTrace();
         }
         
@@ -362,6 +386,9 @@ public class calculateBill extends JFrame implements ActionListener {
         setSize(900, 800);
         setLocationRelativeTo(null);
         setVisible(true);
+        if(ID_info_update.length()>1){
+            update_materiales(ID_info_update);
+        }
     
     }
     public void updateID_choice(String selectedName) {
@@ -412,17 +439,19 @@ public void updateAddress(String selectedID) {
     }
 }
 
-public void update_materiales(String selectedID) {
+public void update_materiales(String selectedID) { 
     materiales.removeAll();
     try {
         Connect c = new Connect();
         c.s.executeUpdate("SET lc_time_names = 'es_ES'");
         ResultSet rs = c.s.executeQuery("SELECT NUMBER, DAY(STR_TO_DATE(DATE, '%d-%m-%Y')) AS DIA, YEAR(STR_TO_DATE(DATE, '%d-%m-%Y')) AS ANO, MONTHNAME(STR_TO_DATE(DATE, '%d-%m-%Y')) AS MES FROM material_bill WHERE ID_CLIENT='" + selectedID + "'");
+        ResultSet rsCount = c.s.executeQuery("SELECT COUNT(DISTINCT NUMBER) as numero FROM material_bill WHERE ID_CLIENT='" + selectedID + "'");
         while (rs.next()) {
             String materialNumber = rs.getString("NUMBER");
             String materialDate = rs.getString("MES");
             String dia = rs.getString("DIA");
             String ano = rs.getString("ANO");
+            String numero_mat_correcto=rsCount.getString("numero");
             materiales.add("Parte " + materialNumber + ", del " + dia + " de " + materialDate + " de " + ano);
         }
         rs.close();
@@ -453,6 +482,9 @@ public String extractMaterialNumber(String materialString) {
 
 public void updateTotal(String materialNumber) {
     try {
+        if(ID_info_update.length()>1){
+        selectedID=ID_info_update;
+        }
         Connect c = new Connect();
         ResultSet rs = c.s.executeQuery("SELECT SUM(TOTAL_PRICE) AS TOTAL FROM material_bill WHERE NUMBER='" + materialNumber + "' AND ID_CLIENT='"+selectedID+"'");
         if (rs.next()) {
@@ -471,10 +503,15 @@ public void updateTotal(String materialNumber) {
 
     
 
-    
+    //al guardar el dinero del material si vino de material frame hay que hacerlo con
+// id_info_update creo, hay que probar
     public void actionPerformed(ActionEvent ae){
-        //PARA CALCULAR LAS FACTURTAS SE DEBE HACER OTR TABLA DONDE SE PIDA COMO HACER LA FACTURA DE MANTENIMEINTO PIDIENDO LOS DATOS NECESARIOS 
-        //COMO EL COSTE POR HORA, IVA... Y TODO ESO PONER UN NOMBRE UNICO PARA SELECIONAR LUEGO EL TIPO DE FACTURA
+        String client=cajon_nombre.getText();
+        String ID =ID_choice.getSelectedItem();
+       if(ae.getSource()==materiales_agregar){
+        new MaterialFrame(ID,client);
+        setVisible(false);
+       }
 //    if(ae.getSource()==guardar){
 //        String ID =ID_choice.getSelectedItem();
 //        String time=cajon_horas.getText();
@@ -571,7 +608,7 @@ public void updateTotal(String materialNumber) {
     }
     
     public static void main(String[]args){
-        new calculateBill();
+        new calculateBill("","");
     }
     
 }

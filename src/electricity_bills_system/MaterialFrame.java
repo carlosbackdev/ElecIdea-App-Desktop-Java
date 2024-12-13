@@ -20,25 +20,30 @@ public class MaterialFrame extends JFrame implements ActionListener {
     JTable materialTable;
     JComboBox<String> nombre_combo;
     JPopupMenu nombre_popup;
-    String ID_info;
     SimpleDateFormat dateFormat;
     JFormattedTextField dateField;
     JLabel total_materiales,numero_parte;
     int total_final=0;
     int numero_parte2;
-    String selectedID;
+    String selectedID,ID_info,client_info;
 
-    public MaterialFrame() {
+    public MaterialFrame(String ID_info, String client_info) {
         super("Añadir Materiales");
         setLayout(new BorderLayout());
-
+        this.ID_info = ID_info;
+        this.client_info = client_info;
+        
         JPanel inputPanel = new JPanel(new GridBagLayout());
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.insets = new Insets(10, 10, 10, 10);
         gbc.fill = GridBagConstraints.HORIZONTAL;
 
-        cliente = new JTextField(20);
+        cliente = new JTextField(client_info);
+        
         ID_choice = new Choice();
+        if(ID_info.length()<3){
+        ID_choice.add("Elige una ID");}
+        ID_choice.add(ID_info);
         ID_choice.addItemListener(new ItemListener() {
     public void itemStateChanged(ItemEvent e) {
         if (e.getStateChange() == ItemEvent.SELECTED) {
@@ -110,7 +115,7 @@ public class MaterialFrame extends JFrame implements ActionListener {
                     nombre_popup.removeAll();
                     try {
                         Connect c = new Connect();
-                        ResultSet rs = c.s.executeQuery("SELECT NAME FROM client WHERE NAME LIKE '" + text + "%'");
+                        ResultSet rs = c.s.executeQuery("SELECT DISTINCT NAME FROM client WHERE NAME LIKE '" + text + "%'");
                         while (rs.next()) {
                             JMenuItem item = new JMenuItem(rs.getString("NAME"));
                             item.setPreferredSize(new Dimension(280, 28)); // Establecer tamaño preferido para cada item
@@ -138,7 +143,23 @@ public class MaterialFrame extends JFrame implements ActionListener {
                 }
             }
         });
-        
+        if(ID_info.length()>1){
+            int rowCount = 0;
+           try {
+        Connect c = new Connect();
+        ResultSet rsCount = c.s.executeQuery("SELECT COUNT(DISTINCT NUMBER) as numero FROM material_bill WHERE ID_CLIENT='" + ID_info + "'");
+        if (rsCount.next()) {
+            rowCount = rsCount.getInt("numero");
+        }
+        rsCount.close();
+        c.s.close();
+    } catch (Exception ex) {
+        ex.printStackTrace();
+    }    
+           int numeroP = rowCount + 1;
+    numero_parte2 = numeroP;
+    numero_parte.setText("Número de Parte: " + numeroP);
+    }
       
         agregarButton = new JButton("Agregar Material");
         agregarButton.addActionListener(this);
@@ -177,6 +198,7 @@ public class MaterialFrame extends JFrame implements ActionListener {
     
     public void updateID_choice(String selectedName) {
     ID_choice.removeAll();
+    ID_choice.add("Elige una ID");
     try {
         Connect c = new Connect();
         ResultSet rs = c.s.executeQuery("SELECT ID FROM client WHERE NAME='" + selectedName + "'");
@@ -203,9 +225,9 @@ private void updateRowCount() {
     int rowCount = 0;
     try {
         Connect c = new Connect();
-        ResultSet rsCount = c.s.executeQuery("SELECT COUNT(*) FROM material_bill WHERE ID_CLIENT='" + selectedID + "'");
+        ResultSet rsCount = c.s.executeQuery("SELECT COUNT(DISTINCT NUMBER) as numero FROM material_bill WHERE ID_CLIENT='" + selectedID + "'");
         if (rsCount.next()) {
-            rowCount = rsCount.getInt("COUNT(*)");
+            rowCount = rsCount.getInt("numero");
         }
         rsCount.close();
         c.s.close();
@@ -264,21 +286,25 @@ private void updateRowCount() {
                     String unit = (String) tableModel.getValueAt(i, 4);
                     String total_price = (String) tableModel.getValueAt(i, 5);
                     String date = dateField.getText();
+                    if(ID_info.length()>1){
+                    ID_2=ID_choice.getSelectedItem();
+                    }
                     String query = "INSERT INTO material_bill VALUES('" + ID_2 + "', '" + number + "','" + nombre_material2 + "','" + brand + "','" + price_unit + "','" + unit + "','" + ref_material + "','" + date + "','" + total_price + "')";
 
                     c.s.executeUpdate(query);
                 }
                 JOptionPane.showMessageDialog(null, "Materiales guardados con éxito");
-                setVisible(false);
+                setVisible(false);                
             } catch (Exception ea) {
                 ea.printStackTrace();
             }
+            new calculateBill(ID_info, client_info);
         }
     }
     
    
 
     public static void main(String[] args) {
-        new MaterialFrame();
+        new MaterialFrame("","");
     }
 }
