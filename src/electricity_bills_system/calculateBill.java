@@ -27,6 +27,7 @@ public class calculateBill extends JFrame implements ActionListener {
     SimpleDateFormat dateFormat;
     String suma_total,total_final,ID_info_update,client_info_update,numero_material,direcion_completa;
     JLabel total_materiales;
+    JFormattedTextField dateField;
     calculateBill(String ID_info_update, String client_info_update){
         this.ID_info = ID_info;
         this.ID_info_update = ID_info_update;
@@ -146,6 +147,8 @@ public class calculateBill extends JFrame implements ActionListener {
         
 
         ID_choice = new Choice();
+        if(ID_info_update.length()<1){
+        ID_choice.add("seleciona ID");}
         ID_choice.add(ID_info_update);
         ID_choice.setFont(fuente2);
         gbc.gridx = 1;
@@ -232,7 +235,7 @@ public class calculateBill extends JFrame implements ActionListener {
         panel.add(fechala, gbc);
 
         dateFormat = new SimpleDateFormat("dd-MM-yyyy");
-        JFormattedTextField dateField = new JFormattedTextField(dateFormat);
+        dateField = new JFormattedTextField(dateFormat);
         dateField.setValue(new Date());
         dateField.setFont(fuente2);
         gbc.gridx = 1;
@@ -471,7 +474,6 @@ public void update_materiales(String selectedID) {
 }
 
 public String extractMaterialNumber(String materialString) {
-    // Usar una expresión regular para extraer el número de material
     Pattern pattern = Pattern.compile("Parte (\\d+)");
     Matcher matcher = pattern.matcher(materialString);
     if (matcher.find()) {
@@ -526,6 +528,27 @@ public void updateTotal(String materialNumber) {
         String NAME=cajon_nombre.getText();
         if(client_info_update.length()>1){
             NAME=client_info_update;
+        }
+        String ADDRESS = cajon_direccion.getText();
+        String HOUR = cajon_horas.getText();
+        String DATE= dateField.getText();
+        String NUMBER_MATERIAL=materiales.getSelectedItem();
+        String TOTAL_MATERIAL=total_materiales.getText();
+        String PARAMETROS=parametros.getSelectedItem();
+        int num_factura=0;
+        String NUMBER_FACTURA=""+num_factura;        
+        
+        try {        
+        Connect c = new Connect();
+        ResultSet rs = c.s.executeQuery("SELECT count(*) AS NUMERO_FACTURA FROM bill_standard WHERE NUMBER='" + ID_2 + "'");
+        if (rs.next()) {
+            num_factura = rs.getInt("NUMERO_FACTURA");
+            num_factura+=1;
+        }
+        rs.close();
+        c.s.close();
+        } catch (Exception ex) {
+        ex.printStackTrace();
         }
     }
 //        String time=cajon_horas.getText();
