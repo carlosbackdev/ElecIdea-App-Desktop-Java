@@ -28,6 +28,7 @@ public class calculateBill extends JFrame implements ActionListener {
     String suma_total,total_final,ID_info_update,client_info_update,numero_material,direcion_completa;
     JLabel total_materiales;
     JFormattedTextField dateField;
+    double totalSum;
     calculateBill(String ID_info_update, String client_info_update){
         this.ID_info = ID_info;
         this.ID_info_update = ID_info_update;
@@ -490,7 +491,7 @@ public void updateTotal(String materialNumber) {
         Connect c = new Connect();
         ResultSet rs = c.s.executeQuery("SELECT SUM(TOTAL_PRICE) AS TOTAL FROM material_bill WHERE NUMBER='" + materialNumber + "' AND ID_CLIENT='"+selectedID+"'");
         if (rs.next()) {
-            double totalSum = rs.getDouble("TOTAL");
+            totalSum = rs.getDouble("TOTAL");
             total_materiales.setText("    " + totalSum + "$");
         }
         rs.close();
@@ -531,26 +532,46 @@ public void updateTotal(String materialNumber) {
         }
         String ADDRESS = cajon_direccion.getText();
         String HOUR = cajon_horas.getText();
+        int h=Integer.parseInt(HOUR);
         String DATE= dateField.getText();
         String NUMBER_MATERIAL=materiales.getSelectedItem();
         String TOTAL_MATERIAL=total_materiales.getText();
         String PARAMETROS=parametros.getSelectedItem();
         int num_factura=0;
-        String NUMBER_FACTURA=""+num_factura;        
-        
+        int IVA_int=0;
+        int precio_hora=0;
+        String NUMBER_FACTURA=""+num_factura;
+        double TOTAL_BILL;
+   
         try {        
         Connect c = new Connect();
-        ResultSet rs = c.s.executeQuery("SELECT count(*) AS NUMERO_FACTURA FROM bill_standard WHERE NUMBER='" + ID_2 + "'");
+        ResultSet rs = c.s.executeQuery("SELECT count(*) AS NUMERO_FACTURA FROM bill_standard WHERE ID_CLIENT='" + ID_2 + "'");
         if (rs.next()) {
             num_factura = rs.getInt("NUMERO_FACTURA");
             num_factura+=1;
         }
+        ResultSet rs2 = c.s.executeQuery("SELECT IVA,PRICE FROM setup_bill  WHERE NAME='" + PARAMETROS + "'");
+        if (rs2.next()) {
+            IVA_int = rs2.getInt("IVA");
+            precio_hora=rs2.getInt("PRICE");
+        }
         rs.close();
+        rs2.close();
         c.s.close();
         } catch (Exception ex) {
         ex.printStackTrace();
         }
-    }
+        double TOTAL_HORAS=h*precio_hora;
+        TOTAL_BILL=TOTAL_HORAS+totalSum;
+        double total_iva=TOTAL_BILL*(IVA_int/100.00);
+        TOTAL_BILL=TOTAL_BILL+total_iva;        
+        System.out.println(ID_2+NAME+ADDRESS+HOUR+DATE+NUMBER_MATERIAL+""+TOTAL_MATERIAL+PARAMETROS+NUMBER_FACTURA+"  "+TOTAL_BILL);
+        new bill_standard_view();
+        setVisible(false);
+        }
+    if(ae.getSource()==cancelar){
+            setVisible(false);
+        }
 //        String time=cajon_horas.getText();
 //        String month=mes.getSelectedItem();
 //        
