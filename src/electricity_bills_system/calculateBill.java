@@ -176,7 +176,11 @@ public class calculateBill extends JFrame implements ActionListener {
         gbc.weightx = 0;
         gbc.ipady = -3;
         panel.add(new JScrollPane(cajon_direccion), gbc);
-         
+        
+        if(ID_info_update.length()>1){
+        updateAddress(ID_info_update);
+        }
+        
         JScrollPane scrollPane = new JScrollPane(cajon_direccion);
         scrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
         scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER);
@@ -409,13 +413,13 @@ public class calculateBill extends JFrame implements ActionListener {
     } catch (Exception ex) {
         ex.printStackTrace();
     }
-
-    // Forzar la actualización de la dirección si solo hay un ID
+   
+//     Forzar la actualización de la dirección si solo hay un ID
     if (ID_choice.getItemCount() == 1) {
         ID_choice.select(0); // Seleccionar el único ID
-        selectedID = ID_choice.getSelectedItem(); // Actualizar selectedID
-        updateAddress(selectedID); // Actualizar la dirección
-        update_materiales(selectedID); // Actualizar materiales
+        selectedID = ID_choice.getSelectedItem();
+        updateAddress(selectedID); 
+        update_materiales(selectedID);
     } else if (ID_choice.getItemCount() > 1) {
         // Si hay más de un ID, seleccionar el primero por defecto
         ID_choice.select(0);
@@ -427,7 +431,7 @@ public class calculateBill extends JFrame implements ActionListener {
 
 public void updateAddress(String selectedID) {
     try {
-        Connect c = new Connect();
+        Connect c = new Connect();        
         ResultSet rs = c.s.executeQuery("select * from client where ID='" + selectedID + "'");
         if (rs.next()) {
             String direccion = rs.getString("ADDRESS");
