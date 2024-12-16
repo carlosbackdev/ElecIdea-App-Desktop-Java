@@ -10,8 +10,9 @@ import java.sql.*;
 public class setup_bill extends JFrame implements ActionListener {
     RoundedButton volver, crear;
     JTextField cajon_nombre, cajon_iva, cajon_precio;
-
-    setup_bill() {
+    String bill_true;
+    setup_bill(String bill_true) {
+        this.bill_true = bill_true;
         setContentPane(new BackgroundPanel("images/Fichas.jpg"));
         setLayout(new BorderLayout());
 
@@ -165,9 +166,15 @@ public class setup_bill extends JFrame implements ActionListener {
         } else if (ae.getSource() == volver) {
             setVisible(false);
         }
+        String billt=bill_true;
+        if ("bill".equals(billt)) {            
+                new calculateBill("","");
+            }
+    
     }
 
     public static void main(String[] args) {
-        new setup_bill();
+        new setup_bill("");
+
     }
 }
