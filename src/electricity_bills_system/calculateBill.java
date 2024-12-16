@@ -570,7 +570,9 @@ public void updateTotal(String materialNumber) {
         double total_iva=TOTAL_BILL*(IVA_int/100.00);
         TOTAL_BILL=TOTAL_BILL+total_iva;        
         System.out.println(ID_2+NAME+ADDRESS+HOUR+DATE+NUMBER_MATERIAL+""+TOTAL_MATERIAL+PARAMETROS+NUMBER_FACTURA+"  "+TOTAL_BILL);
-        new bill_standard_view();
+        String TOTAL_BILL2=""+TOTAL_BILL;
+        
+        new bill_standard_view(ID_2,NAME,ADDRESS,HOUR,DATE,NUMBER_MATERIAL,TOTAL_MATERIAL,PARAMETROS,NUMBER_FACTURA,TOTAL_BILL2);
         setVisible(false);
         }
     if(ae.getSource()==cancelar){
