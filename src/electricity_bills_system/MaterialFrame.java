@@ -57,17 +57,13 @@ public class MaterialFrame extends JFrame implements ActionListener {
         precioField = new JTextField(20);
         unidadesField = new JTextField(20);
         unidadesField.setText("1");
-
-        ref = new JTextField(20);
-        
+        ref = new JTextField(20);        
         dateFormat = new SimpleDateFormat("dd-MM-yyyy");
         dateField = new JFormattedTextField(dateFormat);
-        dateField.setValue(new Date());
-        
+        dateField.setValue(new Date());        
         total_materiales = new JLabel();
         String total_final2="total: "+total_final+" €";
-        total_materiales.setText(total_final2);
-        
+        total_materiales.setText(total_final2);        
         numero_parte = new JLabel("Selecciona ID ");
                 
         // Añadir campos al panel
@@ -173,12 +169,12 @@ public class MaterialFrame extends JFrame implements ActionListener {
         gbc.gridy = 11;
         inputPanel.add(guardarButton, gbc);
 
-        // Tabla para mostrar los materiales agregados
-        String[] columnNames = {"referencia", "Nombre" , "Marca", "Precio", "Unidades", "Total"};
+        String[] columnNames = {"Referencia", "Nombre" , "Marca", "Precio", "Unidades", "Total"};
         tableModel = new DefaultTableModel(columnNames, 0);
         materialTable = new JTable(tableModel);
         JScrollPane scrollPane = new JScrollPane(materialTable);
-
+        scrollPane.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 20));
+        
         add(inputPanel, BorderLayout.NORTH);
         add(scrollPane, BorderLayout.CENTER);
         setSize(800, 900);

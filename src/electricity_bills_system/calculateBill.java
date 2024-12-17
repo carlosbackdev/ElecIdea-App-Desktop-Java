@@ -469,7 +469,7 @@ public void update_materiales(String selectedID) {
             String firstMaterialNumber = extractMaterialNumber(materiales.getItem(0)); // Extraer el número de material
             updateTotal(firstMaterialNumber);
         } else {
-            total_materiales.setText("0$"); // Si no hay materiales, establecer total a 0
+            total_materiales.setText("0€"); 
         }
 
         rs.close();
@@ -496,7 +496,7 @@ public void updateTotal(String materialNumber) {
         ResultSet rs = c.s.executeQuery("SELECT SUM(TOTAL_PRICE) AS TOTAL FROM material_bill WHERE NUMBER='" + materialNumber + "' AND ID_CLIENT='"+selectedID+"'");
         if (rs.next()) {
             totalSum = rs.getDouble("TOTAL");
-            total_materiales.setText("    " + totalSum + "$");
+            total_materiales.setText("    " + totalSum + " €");
         }
         rs.close();
         c.s.close();
@@ -568,11 +568,12 @@ public void updateTotal(String materialNumber) {
         double TOTAL_HORAS=h*precio_hora;
         TOTAL_BILL=TOTAL_HORAS+totalSum;
         double total_iva=TOTAL_BILL*(IVA_int/100.00);
-        TOTAL_BILL=TOTAL_BILL+total_iva;        
+        TOTAL_BILL=TOTAL_BILL+total_iva;      
+        String NUMBER_MATERIAL2 =NUMBER_MATERIAL.substring(NUMBER_MATERIAL.indexOf(" ")+1, NUMBER_MATERIAL.indexOf(","));
+
         System.out.println(ID_2+NAME+ADDRESS+HOUR+DATE+NUMBER_MATERIAL+""+TOTAL_MATERIAL+PARAMETROS+NUMBER_FACTURA+"  "+TOTAL_BILL);
-        String TOTAL_BILL2=""+TOTAL_BILL;
-        
-        new bill_standard_view(ID_2,NAME,ADDRESS,HOUR,DATE,NUMBER_MATERIAL,TOTAL_MATERIAL,PARAMETROS,NUMBER_FACTURA,TOTAL_BILL2);
+        String TOTAL_BILL2=""+TOTAL_BILL;        
+        new bill_standard_view(ID_2,NAME,ADDRESS,HOUR,DATE,NUMBER_MATERIAL2,TOTAL_MATERIAL,PARAMETROS,NUMBER_FACTURA,TOTAL_BILL2);
         setVisible(false);
         }
     if(ae.getSource()==cancelar){
