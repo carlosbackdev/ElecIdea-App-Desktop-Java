@@ -5,7 +5,8 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 
-public class Project extends JFrame{
+public class Project extends JFrame implements ActionListener{
+    JMenuItem cliente,generar,material;
     
     Project(){
         super("Proyectos");
@@ -35,11 +36,12 @@ public class Project extends JFrame{
         admin.setIcon(new ImageIcon(image1));
         navegador.add(admin);
         
-        JMenuItem cliente=new JMenuItem("Nuevo Cliente ");
+        cliente=new JMenuItem("Nuevo Cliente ");
         cliente.setFont(menufont);
         cliente.setMnemonic('D');
         cliente.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_D, ActionEvent.CTRL_MASK));
         admin.add(cliente);
+        cliente.addActionListener(this);
         
         JMenuItem cliente_detalles=new JMenuItem("Fichas Clientes ");
         cliente_detalles.setFont(menufont);
@@ -107,11 +109,12 @@ public class Project extends JFrame{
         add_accion.setIcon(new ImageIcon(image5));
         navegador.add(add_accion);
         
-        JMenuItem generar=new JMenuItem("Generar Factura ");
+        generar=new JMenuItem("Generar Factura ");
         generar.setFont(menufont);
         generar.setMnemonic('G');
         generar.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_G, ActionEvent.CTRL_MASK));
         add_accion.add(generar);
+        generar.addActionListener(this);
         
         JMenuItem nota=new JMenuItem("Añadir notas ");
         nota.setFont(menufont);
@@ -126,6 +129,13 @@ public class Project extends JFrame{
         Image image6 = icon6.getImage().getScaledInstance(22, 22, Image.SCALE_DEFAULT);
         proyectos.setIcon(new ImageIcon(image6));
         navegador.add(proyectos);
+        
+        material=new JMenuItem("Material");
+        material.setFont(menufont);
+        material.setMnemonic('C');
+        material.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_C, ActionEvent.CTRL_MASK));
+        proyectos.add(material);
+        material.addActionListener(this);
         
         JMenuItem calculo=new JMenuItem("Calcular ");
         calculo.setFont(menufont);
@@ -147,6 +157,17 @@ public class Project extends JFrame{
         
         setVisible(true);
         
+    }
+    public void actionPerformed(ActionEvent ae){
+     if(ae.getSource()==cliente){
+     new newClient();
+     }
+     if(ae.getSource()==generar){
+     new calculateBill("","");
+     }
+     if(ae.getSource()==material){
+     new MaterialFrame("","");
+     }
     }
     
     public static void main(String[] args){
