@@ -11,5 +11,8 @@
                 <root id="test.src.dir"/>
             </test-roots>
         </data>
+        <libraries xmlns="http://www.netbeans.org/ns/ant-project-libraries/1">
+            <definitions>C:\Users\carloslospinos\Desktop\JAVA\apache-poi-src-5.3.0-20240625\nblibraries.properties</definitions>
+        </libraries>
     </configuration>
 </project>
