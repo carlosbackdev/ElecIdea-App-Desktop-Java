@@ -154,6 +154,12 @@ public class bill_standard_view extends JFrame implements ActionListener {
             String total ="  "+ TOTAL_TABLE.get(j)+" €";
     tableModel.addRow(new Object[]{refe, nombre_material2, marca2, precio2 , unidades2, total});
         }
+        
+        tableModel.addRow(new Object[]{"", "", "", "" , "Total material",TOTAL_MATERIAL});
+        tableModel.addRow(new Object[]{"", "", "", "" , "Total "+HOUR+" horas mano de obra","  "+HOUR+" €"});
+        tableModel.addRow(new Object[]{"", "", "", "" , "Total sin IVA:","  "+TOTAL_BILL+" €"});
+        tableModel.addRow(new Object[]{"", "", "", "" , "IVA:","  "+"33 €"});
+        tableModel.addRow(new Object[]{"", "", "", "" , "Total:","  "+"33 €"});
     }
     
     

@@ -496,7 +496,7 @@ public void updateTotal(String materialNumber) {
         ResultSet rs = c.s.executeQuery("SELECT SUM(TOTAL_PRICE) AS TOTAL FROM material_bill WHERE NUMBER='" + materialNumber + "' AND ID_CLIENT='"+selectedID+"'");
         if (rs.next()) {
             totalSum = rs.getDouble("TOTAL");
-            total_materiales.setText("    " + totalSum + " €");
+            total_materiales.setText("  " + totalSum + " €");
         }
         rs.close();
         c.s.close();
