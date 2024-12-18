@@ -23,8 +23,8 @@ public class MaterialFrame extends JFrame implements ActionListener {
     SimpleDateFormat dateFormat;
     JFormattedTextField dateField;
     JLabel total_materiales,numero_parte;
-    int total_final=0;
-    int numero_parte2;
+    double total_final=0;
+    double numero_parte2;
     String selectedID,ID_info,client_info;
 
     public MaterialFrame(String ID_info, String client_info) {
@@ -246,9 +246,9 @@ private void updateRowCount() {
           
             
             if (!refe.isEmpty() && !nombre_material2.isEmpty() && !marca2.isEmpty() && !precio2.isEmpty() && !unidades2.isEmpty()) {
-            int precio_int = Integer.parseInt(precio2);
-            int unidades_int = Integer.parseInt(unidades2);
-            int total_int = precio_int * unidades_int;
+            double precio_int = Double.parseDouble(precio2);
+            double unidades_int = Double.parseDouble(unidades2);
+            double total_int = precio_int * unidades_int;
             total_final=total_int+total_final;
             String total=""+total_int;
             total_materiales.setText("Total: " + total_final +" €");

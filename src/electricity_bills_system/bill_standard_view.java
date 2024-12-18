@@ -17,10 +17,11 @@ import electricity_bills_system.EmailSender;
 
 public class bill_standard_view extends JFrame implements ActionListener {
     String ID_2, NAME, ADDRESS, HOUR, DATE, NUMBER_MATERIAL, TOTAL_MATERIAL, PARAMETROS, NUMBER_FACTURA, TOTAL_BILL,EMAIL;
+    String TOTAL_SINIVA,TOTAL;
     DefaultTableModel tableModel;
     JTable materialTable;
     JButton agregarButton, guardarButton,enviar;
-    int NUMBER_FACTURA2;
+    Double IVA_int,IVA_resta,PRICE_HOUR_int,TOTAL_BILL_INT,HOUR_INT;
     
     bill_standard_view(String ID_2,String NAME,String ADDRESS,String HOUR,String DATE,String NUMBER_MATERIAL,String TOTAL_MATERIAL,String PARAMETROS,String NUMBER_FACTURA,String TOTAL_BILL){
     super("Añadir Materiales");
@@ -37,7 +38,26 @@ public class bill_standard_view extends JFrame implements ActionListener {
     this.PARAMETROS = PARAMETROS; //? como ponerlo
     this.NUMBER_FACTURA = NUMBER_FACTURA;
     this.TOTAL_BILL = TOTAL_BILL;
-                 
+    
+    try{
+        Connect c=new Connect();
+        ResultSet rs = c.s.executeQuery("SELECT * FROM setup_bill WHERE NAME='" +PARAMETROS+ "'");
+        if(rs.next()){
+            IVA_int=rs.getDouble("IVA");
+            PRICE_HOUR_int=rs.getDouble("PRICE");
+        }
+    } catch(Exception e){
+      e.printStackTrace();
+    }
+    HOUR_INT=Double.parseDouble(HOUR);
+    TOTAL_BILL_INT=Double.parseDouble(TOTAL_BILL);
+    IVA_resta=TOTAL_BILL_INT*(IVA_int/100);
+    double TOTAL_SINIVAd=TOTAL_BILL_INT-IVA_resta;    
+    TOTAL_SINIVA=NumberFormate.formatear(TOTAL_SINIVAd);
+    TOTAL=NumberFormate.formatear(TOTAL_BILL_INT);
+    
+    
+    
     JPanel inputPanel = new JPanel(new GridBagLayout());
     GridBagConstraints gbc = new GridBagConstraints();
     inputPanel.setLayout(new BoxLayout(inputPanel, BoxLayout.Y_AXIS));    
@@ -45,40 +65,42 @@ public class bill_standard_view extends JFrame implements ActionListener {
     
         inputPanel.add(Box.createVerticalStrut(9));
     addTextArea(inputPanel, gbc, "", 0);
-    addTextArea(inputPanel, gbc, "   Nombre:    " + NAME, 1);
+    addTextArea(inputPanel, gbc, "     Nombre:    " + NAME, 1);
         inputPanel.add(Box.createVerticalStrut(6));
-    addTextArea(inputPanel, gbc,"   ID:    "+ ID_2, 2);
+    addTextArea(inputPanel, gbc,"     ID:    "+ ID_2, 2);
         inputPanel.add(Box.createVerticalStrut(6));
-    addTextArea(inputPanel, gbc, "   Direccón:    " + ADDRESS , 3);
+    addTextArea(inputPanel, gbc, "     Direccón:    " + ADDRESS , 3);
         inputPanel.add(Box.createVerticalStrut(6));
-    addTextArea(inputPanel, gbc, "   Fecha de Factura:    " + DATE,4);
+    addTextArea(inputPanel, gbc, "     Fecha de Factura:    " + DATE,4);
+        inputPanel.add(Box.createVerticalStrut(15));
+    addTextArea(inputPanel, gbc,"Datos de la Factura", 5);
+        inputPanel.add(Box.createVerticalStrut(8));
+    addTextArea(inputPanel, gbc,"     Numero Factura:    "+ NUMBER_FACTURA, 6);
         inputPanel.add(Box.createVerticalStrut(6));
-    addTextArea(inputPanel, gbc,"   Numero Factura:    "+ NUMBER_FACTURA, 5);
+    addTextArea(inputPanel, gbc, "     Numero Parte Material:    "+NUMBER_MATERIAL,7);
         inputPanel.add(Box.createVerticalStrut(6));
-    addTextArea(inputPanel, gbc, "   Numero Parte Material:    "+NUMBER_MATERIAL,6);
+    addTextArea(inputPanel, gbc,"     Total material:  " +TOTAL_MATERIAL +" €", 8);
         inputPanel.add(Box.createVerticalStrut(6));
-    addTextArea(inputPanel, gbc,"   Total material:  " +TOTAL_MATERIAL +" €", 7);
+    addTextArea(inputPanel, gbc, "     Precio hora:    "+PRICE_HOUR_int+" €", 9);
         inputPanel.add(Box.createVerticalStrut(6));
-    addTextArea(inputPanel, gbc, "   Precio hora:    ", 8);
+    addTextArea(inputPanel, gbc,"     Horas totales:    "+ HOUR +" h", 10);
         inputPanel.add(Box.createVerticalStrut(6));
-    addTextArea(inputPanel, gbc,"   Horas totales:    "+ HOUR +" h", 9);
-        inputPanel.add(Box.createVerticalStrut(6));
-    addTextArea(inputPanel, gbc,"   Total factura:    "+TOTAL_BILL+" €", 10);
+    addTextArea(inputPanel, gbc,"     Total factura:    "+TOTAL+" €", 11);
     
     JPanel inputPanel2 = new JPanel(new GridBagLayout());
     inputPanel2.setLayout(new BoxLayout(inputPanel2, BoxLayout.Y_AXIS));    
     inputPanel2.setBorder(BorderFactory.createTitledBorder("Datos de la Empresa"));
    
     inputPanel2.add(Box.createVerticalStrut(9));
-    addTextArea(inputPanel2, gbc, "   Empresa: ", 1);
+    addTextArea(inputPanel2, gbc, "     Empresa: ", 1);
     inputPanel2.add(Box.createVerticalStrut(6));
-    addTextArea(inputPanel2, gbc, "   NIF: ", 2);
+    addTextArea(inputPanel2, gbc, "     NIF: ", 2);
     inputPanel2.add(Box.createVerticalStrut(6));
-    addTextArea(inputPanel2, gbc, "   Dirección: ", 3);
+    addTextArea(inputPanel2, gbc, "     Dirección: ", 3);
     inputPanel2.add(Box.createVerticalStrut(6));
-    addTextArea(inputPanel2, gbc, "   Teléfono: ", 4);
+    addTextArea(inputPanel2, gbc, "     Teléfono: ", 4);
     inputPanel2.add(Box.createVerticalStrut(6));
-    addTextArea(inputPanel2, gbc, "   Correo: ", 5);
+    addTextArea(inputPanel2, gbc, "     Correo: ", 5);
     inputPanel2.add(Box.createVerticalStrut(6));
     addTextArea(inputPanel2, gbc, "", 6);
     inputPanel2.add(Box.createVerticalStrut(6));
@@ -95,7 +117,7 @@ public class bill_standard_view extends JFrame implements ActionListener {
         enviar.addActionListener(this);       
         buttonPanel.add(enviar, gbc);  
                
-    guardarButton = new JButton("   Guardar en el Sistema  ");
+    guardarButton = new JButton("Guardar en el Sistema y Cerrar");
         guardarButton.addActionListener(this);          
         buttonPanel.add(guardarButton, gbc);  
         
@@ -164,11 +186,11 @@ public class bill_standard_view extends JFrame implements ActionListener {
     tableModel.addRow(new Object[]{refe, nombre_material2, marca2, precio2 , unidades2, total});
         }
         
-        tableModel.addRow(new Object[]{"", "", "", "" , "Total material",TOTAL_MATERIAL});
-        tableModel.addRow(new Object[]{"", "", "", "" , "Total "+HOUR+" horas mano de obra","  "+HOUR+" €"});
-        tableModel.addRow(new Object[]{"", "", "", "" , "Total sin IVA:","  "+TOTAL_BILL+" €"});
-        tableModel.addRow(new Object[]{"", "", "", "" , "IVA:","  "+"33 €"});
-        tableModel.addRow(new Object[]{"", "", "", "" , "Total:","  "+"33 €"});
+        tableModel.addRow(new Object[]{"", "", "", "" , "Total material "," "+TOTAL_MATERIAL+" €"});
+        tableModel.addRow(new Object[]{"", "", "", "" ,HOUR+ " h, mano de obra total: ","  "+(HOUR_INT*PRICE_HOUR_int)+" €"});
+        tableModel.addRow(new Object[]{"", "", "", "" , "Total sin IVA:","  "+TOTAL_SINIVA+" €"});
+        tableModel.addRow(new Object[]{"", "", "", "" , "IVA:","  "+IVA_int+"%"});
+        tableModel.addRow(new Object[]{"", "", "", "" , "Total:","  "+TOTAL+" €"});
     }
     
     
@@ -227,37 +249,12 @@ public class bill_standard_view extends JFrame implements ActionListener {
             Row clientRow2 = sheet.createRow(rowIndex++);
             clientRow2.createCell(0).setCellValue("Numero de cliente");
             clientRow2.createCell(1).setCellValue(ID_2);
-
+            clientRow2.createCell(2).setCellValue("numero de cuenta");
+            
             Row clientRow3 = sheet.createRow(rowIndex++);
             clientRow3.createCell(0).setCellValue("Dirección:");
-            clientRow3.createCell(1).setCellValue(ADDRESS);
-
-            Row clientRow4 = sheet.createRow(rowIndex++);
-            clientRow4.createCell(0).setCellValue("Fecha de Factura:");
-            clientRow4.createCell(1).setCellValue(DATE);
-
-            Row clientRow5 = sheet.createRow(rowIndex++);
-            clientRow5.createCell(0).setCellValue("Número Factura:");
-            clientRow5.createCell(1).setCellValue(NUMBER_FACTURA);
-
-            Row clientRow6 = sheet.createRow(rowIndex++);
-            clientRow6.createCell(0).setCellValue("Número Parte Material:");
-            clientRow6.createCell(1).setCellValue(NUMBER_MATERIAL);
-
-            Row clientRow7 = sheet.createRow(rowIndex++);
-            clientRow7.createCell(0).setCellValue("Total Material:");
-            clientRow7.createCell(1).setCellValue(TOTAL_MATERIAL);
-
-            Row clientRow8 = sheet.createRow(rowIndex++);
-            clientRow8.createCell(0).setCellValue("Precio Hora:");
-            clientRow8.createCell(1).setCellValue(HOUR);
-            clientRow8.createCell(2).setCellValue("numero de cuenta");
-            
-            Row clientRow9 = sheet.createRow(rowIndex++);
-            clientRow9.createCell(0).setCellValue("Total Factura:");
-            clientRow9.createCell(1).setCellValue(TOTAL_BILL);
-            clientRow9.createCell(2).setCellValue("ES3244");
-            
+            clientRow3.createCell(1).setCellValue(ADDRESS);      
+            clientRow3.createCell(2).setCellValue("ES3244");
 
             rowIndex++;
 
@@ -286,6 +283,36 @@ public class bill_standard_view extends JFrame implements ActionListener {
             companyRow5.createCell(0).setCellValue("Correo:");
             companyRow5.createCell(1).setCellValue("empresa@correo.com");
             companyRow5.createCell(2).setCellValue("ES3244");
+            
+            rowIndex++;
+
+            Row billHeaderRow = sheet.createRow(rowIndex++);
+            billHeaderRow.createCell(0).setCellValue("DATOS DE LA FACTURA");
+            billHeaderRow.createCell(1).setCellValue("");          
+                     
+            Row clientBill1 = sheet.createRow(rowIndex++);
+            clientBill1.createCell(0).setCellValue("Fecha de Factura:");
+            clientBill1.createCell(1).setCellValue(DATE);
+
+            Row clientBill2 = sheet.createRow(rowIndex++);
+            clientBill2.createCell(0).setCellValue("Número Factura:");
+            clientBill2.createCell(1).setCellValue(NUMBER_FACTURA);
+
+            Row clientBill3 = sheet.createRow(rowIndex++);
+            clientBill3.createCell(0).setCellValue("Número Parte Material:");
+            clientBill3.createCell(1).setCellValue(NUMBER_MATERIAL);
+
+            Row clientBill4 = sheet.createRow(rowIndex++);
+            clientBill4.createCell(0).setCellValue("Total Material:");
+            clientBill4.createCell(1).setCellValue(TOTAL_MATERIAL);
+
+            Row clientBill5 = sheet.createRow(rowIndex++);
+            clientBill5.createCell(0).setCellValue("Precio Hora:");
+            clientBill5.createCell(1).setCellValue(HOUR);
+            
+            Row clientBill6 = sheet.createRow(rowIndex++);
+            clientBill6.createCell(0).setCellValue("Total Factura:");
+            clientBill6.createCell(1).setCellValue(TOTAL);
             
 
             rowIndex++;
@@ -327,10 +354,11 @@ public class bill_standard_view extends JFrame implements ActionListener {
         String toEmail = EMAIL;  // Dirección de destino
         String subject = "Factura adjunta";
         String body = "Adjunto encontrarás la factura en formato Excel.";
-        String attachmentPath = "Factura "+NUMBER_FACTURA+" "+NAME+" en "+DATE+".xlsx";  // Ruta del archivo adjunto
+        String attachmentPath = "Factura "+NUMBER_FACTURA+" "+NAME+" en "+DATE+".xlsx";
         EmailSender.sendEmailWithAttachment(toEmail, subject, body, attachmentPath);
         }
         if(ae.getSource() == guardarButton){
+            
         
         }
         

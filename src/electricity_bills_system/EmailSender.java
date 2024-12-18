@@ -29,27 +29,19 @@ public class EmailSender {
         });
 
         try {
-            // Crear mensaje de correo
             Message message = new MimeMessage(session);
             message.setFrom(new InternetAddress(fromEmail));
             message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(toEmail));
             message.setSubject(subject);
             message.setText(body);
-
-            // Crear parte para adjuntar archivo
             MimeBodyPart mimeBodyPart = new MimeBodyPart();
             mimeBodyPart.attachFile(new File(attachmentPath));
-
-            // Crear multipart y agregar archivo adjunto
             Multipart multipart = new MimeMultipart();
             multipart.addBodyPart(mimeBodyPart);
-
-            // Establecer contenido del mensaje
             message.setContent(multipart);
-
-            // Enviar el correo
             Transport.send(message);
-
+            
+            //crear un clase de dialogo para poner que ha sido entregado corectamente
             System.out.println("Correo enviado exitosamente a " + toEmail);
 
         } catch (Exception e) {
@@ -58,7 +50,6 @@ public class EmailSender {
     }
 
     public static void main(String[] args) {
-        // Prueba del método
         EmailSender emailSender = new EmailSender();   
         
     }
