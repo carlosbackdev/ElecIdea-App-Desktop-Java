@@ -539,12 +539,11 @@ public void updateTotal(String materialNumber) {
         int h=Integer.parseInt(HOUR);
         String DATE= dateField.getText();
         String NUMBER_MATERIAL=materiales.getSelectedItem();
-        String TOTAL_MATERIAL=total_materiales.getText();
+        String TOTAL_MATERIAL=totalSum+"";
         String PARAMETROS=parametros.getSelectedItem();
         int num_factura=0;
         int IVA_int=0;
-        int precio_hora=0;
-        String NUMBER_FACTURA=""+num_factura;
+        int precio_hora=0;        
         double TOTAL_BILL;
    
         try {        
@@ -565,13 +564,14 @@ public void updateTotal(String materialNumber) {
         } catch (Exception ex) {
         ex.printStackTrace();
         }
+        String NUMBER_FACTURA=""+num_factura;
         double TOTAL_HORAS=h*precio_hora;
         TOTAL_BILL=TOTAL_HORAS+totalSum;
         double total_iva=TOTAL_BILL*(IVA_int/100.00);
         TOTAL_BILL=TOTAL_BILL+total_iva;      
         String NUMBER_MATERIAL2 =NUMBER_MATERIAL.substring(NUMBER_MATERIAL.indexOf(" ")+1, NUMBER_MATERIAL.indexOf(","));
 
-        System.out.println(ID_2+NAME+ADDRESS+HOUR+DATE+NUMBER_MATERIAL+""+TOTAL_MATERIAL+PARAMETROS+NUMBER_FACTURA+"  "+TOTAL_BILL);
+        
         String TOTAL_BILL2=""+TOTAL_BILL;        
         new bill_standard_view(ID_2,NAME,ADDRESS,HOUR,DATE,NUMBER_MATERIAL2,TOTAL_MATERIAL,PARAMETROS,NUMBER_FACTURA,TOTAL_BILL2);
         setVisible(false);

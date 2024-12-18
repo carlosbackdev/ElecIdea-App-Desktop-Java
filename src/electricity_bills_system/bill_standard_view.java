@@ -10,12 +10,17 @@ import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import org.apache.poi.ss.usermodel.*;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import java.io.*;
+import electricity_bills_system.EmailSender;
 
 public class bill_standard_view extends JFrame implements ActionListener {
-    String ID_2, NAME, ADDRESS, HOUR, DATE, NUMBER_MATERIAL, TOTAL_MATERIAL, PARAMETROS, NUMBER_FACTURA, TOTAL_BILL;
+    String ID_2, NAME, ADDRESS, HOUR, DATE, NUMBER_MATERIAL, TOTAL_MATERIAL, PARAMETROS, NUMBER_FACTURA, TOTAL_BILL,EMAIL;
     DefaultTableModel tableModel;
     JTable materialTable;
-    JButton agregarButton, guardarButton;
+    JButton agregarButton, guardarButton,enviar;
+    int NUMBER_FACTURA2;
     
     bill_standard_view(String ID_2,String NAME,String ADDRESS,String HOUR,String DATE,String NUMBER_MATERIAL,String TOTAL_MATERIAL,String PARAMETROS,String NUMBER_FACTURA,String TOTAL_BILL){
     super("Añadir Materiales");
@@ -86,7 +91,11 @@ public class bill_standard_view extends JFrame implements ActionListener {
         agregarButton.addActionListener(this);       
         buttonPanel.add(agregarButton, gbc);
         
-    guardarButton = new JButton("   Guardar   ");
+    enviar = new JButton("Exportar y Enviar al mail del Cliente");
+        enviar.addActionListener(this);       
+        buttonPanel.add(enviar, gbc);  
+               
+    guardarButton = new JButton("   Guardar en el Sistema  ");
         guardarButton.addActionListener(this);          
         buttonPanel.add(guardarButton, gbc);  
         
@@ -185,7 +194,149 @@ public class bill_standard_view extends JFrame implements ActionListener {
         
     }
     
+    
      public void actionPerformed(ActionEvent ae) {
+         if (ae.getSource() == agregarButton || ae.getSource() == enviar) {
+        try {
+            //rescatar email
+            
+            try{
+                Connect c = new Connect();
+                ResultSet rs = c.s.executeQuery("SELECT EMAIL FROM client WHERE ID='" + ID_2 + "'");
+                if (rs.next()) {
+                    EMAIL = rs.getString("EMAIL");
+            }                
+             rs.close();      
+             c.s.close();  
+            }   catch (Exception e) {
+                    e.printStackTrace();
+            }
+            
+            Workbook workbook = new XSSFWorkbook();
+            Sheet sheet = workbook.createSheet("Factura "+NUMBER_FACTURA+" "+NAME+" en "+DATE);
+
+             int rowIndex = 0;
+            Row clientHeaderRow = sheet.createRow(rowIndex++);
+            clientHeaderRow.createCell(0).setCellValue("DATOS DEL CLIENTE");
+            clientHeaderRow.createCell(1).setCellValue(""); 
+
+            Row clientRow1 = sheet.createRow(rowIndex++);
+            clientRow1.createCell(0).setCellValue("Nombre:");
+            clientRow1.createCell(1).setCellValue(NAME);
+
+            Row clientRow2 = sheet.createRow(rowIndex++);
+            clientRow2.createCell(0).setCellValue("Numero de cliente");
+            clientRow2.createCell(1).setCellValue(ID_2);
+
+            Row clientRow3 = sheet.createRow(rowIndex++);
+            clientRow3.createCell(0).setCellValue("Dirección:");
+            clientRow3.createCell(1).setCellValue(ADDRESS);
+
+            Row clientRow4 = sheet.createRow(rowIndex++);
+            clientRow4.createCell(0).setCellValue("Fecha de Factura:");
+            clientRow4.createCell(1).setCellValue(DATE);
+
+            Row clientRow5 = sheet.createRow(rowIndex++);
+            clientRow5.createCell(0).setCellValue("Número Factura:");
+            clientRow5.createCell(1).setCellValue(NUMBER_FACTURA);
+
+            Row clientRow6 = sheet.createRow(rowIndex++);
+            clientRow6.createCell(0).setCellValue("Número Parte Material:");
+            clientRow6.createCell(1).setCellValue(NUMBER_MATERIAL);
+
+            Row clientRow7 = sheet.createRow(rowIndex++);
+            clientRow7.createCell(0).setCellValue("Total Material:");
+            clientRow7.createCell(1).setCellValue(TOTAL_MATERIAL);
+
+            Row clientRow8 = sheet.createRow(rowIndex++);
+            clientRow8.createCell(0).setCellValue("Precio Hora:");
+            clientRow8.createCell(1).setCellValue(HOUR);
+            clientRow8.createCell(2).setCellValue("numero de cuenta");
+            
+            Row clientRow9 = sheet.createRow(rowIndex++);
+            clientRow9.createCell(0).setCellValue("Total Factura:");
+            clientRow9.createCell(1).setCellValue(TOTAL_BILL);
+            clientRow9.createCell(2).setCellValue("ES3244");
+            
+
+            rowIndex++;
+
+            Row companyHeaderRow = sheet.createRow(rowIndex++);
+            companyHeaderRow.createCell(0).setCellValue("DATOS DE LA EMPRESA");
+            companyHeaderRow.createCell(1).setCellValue("");
+
+            Row companyRow1 = sheet.createRow(rowIndex++);
+            companyRow1.createCell(0).setCellValue("Empresa:");
+            companyRow1.createCell(1).setCellValue("Mi Empresa");
+
+            Row companyRow2 = sheet.createRow(rowIndex++);
+            companyRow2.createCell(0).setCellValue("NIF:");
+            companyRow2.createCell(1).setCellValue("12345678A");
+
+            Row companyRow3 = sheet.createRow(rowIndex++);
+            companyRow3.createCell(0).setCellValue("Dirección:");
+            companyRow3.createCell(1).setCellValue("Calle Ficticia 123");
+
+            Row companyRow4 = sheet.createRow(rowIndex++);
+            companyRow4.createCell(0).setCellValue("Teléfono:");
+            companyRow4.createCell(1).setCellValue("987654321");
+            companyRow4.createCell(2).setCellValue("numero de cuenta");
+
+            Row companyRow5 = sheet.createRow(rowIndex++);
+            companyRow5.createCell(0).setCellValue("Correo:");
+            companyRow5.createCell(1).setCellValue("empresa@correo.com");
+            companyRow5.createCell(2).setCellValue("ES3244");
+            
+
+            rowIndex++;
+     
+            Row materialheaderRow = sheet.createRow(rowIndex++);
+            for (int i = 0; i < materialTable.getColumnCount(); i++) {
+                materialheaderRow.createCell(i).setCellValue(materialTable.getColumnName(i));
+            }
+
+            for (int i = 0; i < tableModel.getRowCount(); i++) {
+                Row row = sheet.createRow(rowIndex++);
+                for (int j = 0; j < tableModel.getColumnCount(); j++) {
+                    row.createCell(j).setCellValue(tableModel.getValueAt(i, j).toString());
+                }
+            }
+             
+            for (int i = 0; i < sheet.getRow(0).getPhysicalNumberOfCells(); i++) {
+                sheet.autoSizeColumn(i);
+            }
+            
+                        
+            String filename="Factura "+NUMBER_FACTURA+" "+NAME+" en "+DATE+".xlsx";
+            FileOutputStream fileOut = new FileOutputStream(filename);
+            workbook.write(fileOut);
+            fileOut.close();
+            workbook.close();
+            
+            File excelFile = new File(filename);            
+            if (excelFile.exists()) {
+                Desktop.getDesktop().open(excelFile);  
+            }
+            
+
+            JOptionPane.showMessageDialog(null, "Archivo Excel generado con éxito!");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        if(ae.getSource() == enviar){
+        String toEmail = EMAIL;  // Dirección de destino
+        String subject = "Factura adjunta";
+        String body = "Adjunto encontrarás la factura en formato Excel.";
+        String attachmentPath = "Factura "+NUMBER_FACTURA+" "+NAME+" en "+DATE+".xlsx";  // Ruta del archivo adjunto
+        EmailSender.sendEmailWithAttachment(toEmail, subject, body, attachmentPath);
+        }
+        if(ae.getSource() == guardarButton){
+        
+        }
+        
+        
+    }
+         
          
      }
     
