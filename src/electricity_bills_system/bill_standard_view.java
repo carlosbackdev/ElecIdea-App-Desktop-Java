@@ -49,10 +49,11 @@ public class bill_standard_view extends JFrame implements ActionListener {
     } catch(Exception e){
       e.printStackTrace();
     }
+    
     HOUR_INT=Double.parseDouble(HOUR);
-    TOTAL_BILL_INT=Double.parseDouble(TOTAL_BILL);
-    IVA_resta=TOTAL_BILL_INT*(IVA_int/100);
-    double TOTAL_SINIVAd=TOTAL_BILL_INT-IVA_resta;    
+    TOTAL_BILL_INT=Double.parseDouble(TOTAL_BILL);     
+    IVA_resta=TOTAL_BILL_INT*(IVA_int/100);    
+    double TOTAL_SINIVAd=TOTAL_BILL_INT-IVA_resta;     
     TOTAL_SINIVA=NumberFormate.formatear(TOTAL_SINIVAd);
     TOTAL=NumberFormate.formatear(TOTAL_BILL_INT);
     
@@ -191,9 +192,7 @@ public class bill_standard_view extends JFrame implements ActionListener {
         tableModel.addRow(new Object[]{"", "", "", "" , "Total sin IVA:","  "+TOTAL_SINIVA+" €"});
         tableModel.addRow(new Object[]{"", "", "", "" , "IVA:","  "+IVA_int+"%"});
         tableModel.addRow(new Object[]{"", "", "", "" , "Total:","  "+TOTAL+" €"});
-    }
-    
-    
+    }  
         
     add(buttonPanel, BorderLayout.SOUTH);
     add(splitPane, BorderLayout.NORTH);
@@ -345,26 +344,35 @@ public class bill_standard_view extends JFrame implements ActionListener {
                 Desktop.getDesktop().open(excelFile);  
             }
             
-
+             if (ae.getSource() == agregarButton){
             JOptionPane.showMessageDialog(null, "Archivo Excel generado con éxito!");
+             }
         } catch (IOException e) {
             e.printStackTrace();
         }
-        if(ae.getSource() == enviar){
-        String toEmail = EMAIL;  // Dirección de destino
-        String subject = "Factura adjunta";
-        String body = "Adjunto encontrarás la factura en formato Excel.";
-        String attachmentPath = "Factura "+NUMBER_FACTURA+" "+NAME+" en "+DATE+".xlsx";
-        EmailSender.sendEmailWithAttachment(toEmail, subject, body, attachmentPath);
+            if(ae.getSource() == enviar){
+                JOptionPane.showMessageDialog(null, "Enviando correo espere a cerrar la pestaña!"); 
+                String toEmail = EMAIL;  
+                String subject = "Factura adjunta";
+                String body = "Adjunto encontrarás la factura en formato Excel.";
+                String attachmentPath = "Factura " + NUMBER_FACTURA + " " + NAME + " en " + DATE + ".xlsx";            
+                EmailSender.sendEmailWithAttachment(toEmail, subject, body, attachmentPath);  // Enviar el correo            
+            }
         }
-        if(ae.getSource() == guardarButton){
+        
+         if(ae.getSource() == guardarButton){
             
-        
-        }
-        
-        
-    }
-         
+            try{
+                Connect c=new Connect();
+                String query = "INSERT INTO bill_standard VALUES('"+NUMBER_FACTURA+"','"+ID_2+"','"+NAME+"','"+ADDRESS+"','"+HOUR+"','"+DATE+"','"+NUMBER_MATERIAL+"','"+TOTAL_MATERIAL+"','"+PARAMETROS+"','"+TOTAL+"')";
+                c.s.executeUpdate(query);
+                
+            } catch(Exception e){
+                e.printStackTrace();
+            }
+            JOptionPane.showMessageDialog(null, "Factura guardada con éxito!");
+            setVisible(false);
+        }                     
          
      }
     

@@ -14,7 +14,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
+import javax.swing.Timer;
 
 public class calculateBill extends JFrame implements ActionListener {
     JTextField cajon_nombre,cajon_horas;
@@ -33,7 +33,7 @@ public class calculateBill extends JFrame implements ActionListener {
         this.ID_info = ID_info;
         this.ID_info_update = ID_info_update;
         this.client_info_update = client_info_update;
-        setContentPane(new BackgroundPanel("images/Fichas.jpg"));  
+        setContentPane(new BackgroundPanel("images/Fichas2.jpg"));  
         
         JPanel panel = new JPanel(new GridBagLayout());
         panel.setOpaque(false); 
@@ -55,10 +55,10 @@ public class calculateBill extends JFrame implements ActionListener {
         gbc.anchor = GridBagConstraints.CENTER;
         panel.add(head, gbc);
         
-        JLabel nombre = new JLabel("Nombre del Cliente");
+        JLabel nombre = new JLabel("Busca y selecciona Nombre en clientes");
         nombre.setForeground(Color.WHITE);
         gbc.fill = GridBagConstraints.HORIZONTAL; 
-        nombre.setFont(fuente); 
+        nombre.setFont(new Font("Roboto", Font.PLAIN, 19)); 
         gbc.gridy = 1;
         gbc.gridwidth = 1;
         gbc.gridx = 0;
@@ -82,26 +82,41 @@ public class calculateBill extends JFrame implements ActionListener {
         gbc.gridy = 2;
         panel.add(nombre_combo, gbc);
         
-         nombre_popup = new JPopupMenu();
+        nombre_popup = new JPopupMenu();
         nombre_popup.setFocusable(false);
 
         cajon_nombre.getDocument().addDocumentListener(new DocumentListener() {
+            private Timer timer = new Timer(400, new ActionListener() { 
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    updatePopup();
+                }
+            });
+
             @Override
             public void insertUpdate(DocumentEvent e) {
-                updatePopup();
+                resetTimer();
             }
 
             @Override
             public void removeUpdate(DocumentEvent e) {
-                updatePopup();
+                resetTimer();
             }
 
             @Override
             public void changedUpdate(DocumentEvent e) {
-                updatePopup();
+                resetTimer();
+            }
+
+            private void resetTimer() {
+                if (timer.isRunning()) {
+                    timer.stop(); 
+                }
+                timer.start(); 
             }
 
             private void updatePopup() {
+                timer.stop(); 
                 String text = cajon_nombre.getText();
                 if (text.isEmpty()) {
                     nombre_popup.setVisible(false);
@@ -112,7 +127,7 @@ public class calculateBill extends JFrame implements ActionListener {
                         ResultSet rs = c.s.executeQuery("SELECT DISTINCT NAME FROM client WHERE NAME LIKE '" + text + "%'");
                         while (rs.next()) {
                             JMenuItem item = new JMenuItem(rs.getString("NAME"));
-                            item.setPreferredSize(new Dimension(280, 28)); // Establecer tamaño preferido para cada item
+                            item.setPreferredSize(new Dimension(200, 28)); 
                             item.addActionListener(new ActionListener() {
                                 @Override
                                 public void actionPerformed(ActionEvent e) {
@@ -123,13 +138,12 @@ public class calculateBill extends JFrame implements ActionListener {
                             });
                             nombre_popup.add(item);
                         }
-                        rs.close();
-                        c.s.close();
+
                     } catch (Exception ex) {
                         ex.printStackTrace();
                     }
                     if (nombre_popup.getComponentCount() > 0) {
-                        nombre_popup.setPreferredSize(new Dimension(307, nombre_popup.getComponentCount() * 30)); // Establecer tamaño preferido del popup
+                        nombre_popup.setPreferredSize(new Dimension(307, nombre_popup.getComponentCount() * 30));
                         nombre_popup.show(cajon_nombre, 0, cajon_nombre.getHeight());
                     } else {
                         nombre_popup.setVisible(false);
@@ -373,7 +387,7 @@ public class calculateBill extends JFrame implements ActionListener {
         
         
         
-        guardar  = new RoundedButton("Guardar");
+        guardar  = new RoundedButton("Ver y Guardar");
         guardar.setBackground(new Color(222, 239, 255));
         guardar.setForeground(Color.BLACK);
         guardar.setFont(fuente); 
@@ -438,7 +452,7 @@ public void updateAddress(String selectedID) {
             String postal = rs.getString("POSTAL");
             String ciudad = rs.getString("CITY");
             String direccion_completa = direccion + ", " + postal + ", " + ciudad;
-            cajon_direccion.setText(direccion_completa);
+            cajon_direccion.setText(direccion_completa.trim());
         }
         rs.close();
         c.s.close();
@@ -505,171 +519,87 @@ public void updateTotal(String materialNumber) {
     }
 }
 
-
-
-
-    
-
-    //al guardar el dinero del material si vino de material frame hay que hacerlo con
-// id_info_update creo, hay que probar
     public void actionPerformed(ActionEvent ae){
-        String client=cajon_nombre.getText();
-        String ID =ID_choice.getSelectedItem();
-        String bill_true="bill";
-       if(ae.getSource()==materiales_agregar){
-        new MaterialFrame(ID,client);
-        setVisible(false);
-       }
-       if(ae.getSource()==configurar){
-           
-        new setup_bill(bill_true);
-        setVisible(false);
-       }
-    if(ae.getSource()==guardar){
-        String ID_2 =ID_choice.getSelectedItem();
-        if (ID_info_update.length()>1){
-            ID_2=ID_info_update;
+      String client=cajon_nombre.getText();
+      String ID =ID_choice.getSelectedItem();
+      String bill_true="bill";
+      
+        if(ae.getSource()==materiales_agregar){
+         new MaterialFrame(ID,client);
+         setVisible(false);
         }
-        String NAME=cajon_nombre.getText();
-        if(client_info_update.length()>1){
-            NAME=client_info_update;
-        }
-        String ADDRESS = cajon_direccion.getText();
-        String HOUR = cajon_horas.getText();
-        int h=Integer.parseInt(HOUR);
-        String DATE= dateField.getText();
-        String NUMBER_MATERIAL=materiales.getSelectedItem();
-        String TOTAL_MATERIAL=totalSum+"";
-        String PARAMETROS=parametros.getSelectedItem();
-        int num_factura=0;
-        int IVA_int=0;
-        int precio_hora=0;        
-        double TOTAL_BILL;
-   
-        try {        
-        Connect c = new Connect();
-        ResultSet rs = c.s.executeQuery("SELECT count(*) AS NUMERO_FACTURA FROM bill_standard WHERE ID_CLIENT='" + ID_2 + "'");
-        if (rs.next()) {
-            num_factura = rs.getInt("NUMERO_FACTURA");
-            num_factura+=1;
-        }
-        ResultSet rs2 = c.s.executeQuery("SELECT IVA,PRICE FROM setup_bill  WHERE NAME='" + PARAMETROS + "'");
-        if (rs2.next()) {
-            IVA_int = rs2.getInt("IVA");
-            precio_hora=rs2.getInt("PRICE");
-        }
-        rs.close();
-        rs2.close();
-        c.s.close();
-        } catch (Exception ex) {
-        ex.printStackTrace();
-        }
-        String NUMBER_FACTURA=""+num_factura;
-        double TOTAL_HORAS=h*precio_hora;
-        TOTAL_BILL=TOTAL_HORAS+totalSum;
-        double total_iva=TOTAL_BILL*(IVA_int/100.00);
-        TOTAL_BILL=TOTAL_BILL+total_iva;      
-        String NUMBER_MATERIAL2 =NUMBER_MATERIAL.substring(NUMBER_MATERIAL.indexOf(" ")+1, NUMBER_MATERIAL.indexOf(","));
-
         
-        String TOTAL_BILL2=""+TOTAL_BILL;        
-        new bill_standard_view(ID_2,NAME,ADDRESS,HOUR,DATE,NUMBER_MATERIAL2,TOTAL_MATERIAL,PARAMETROS,NUMBER_FACTURA,TOTAL_BILL2);
-        setVisible(false);
+        if(ae.getSource()==configurar){
+
+         new setup_bill(bill_true);
+         setVisible(false);
         }
-    if(ae.getSource()==cancelar){
+        
+        if(ae.getSource()==guardar){                        
+            String ID_2 =ID_choice.getSelectedItem();
+            if (ID_info_update.length()>1){
+                ID_2=ID_info_update;
+            }
+            String NAME=cajon_nombre.getText();
+            if(client_info_update.length()>1){
+                NAME=client_info_update;
+            }
+            String ADDRESS = cajon_direccion.getText();
+            String HOUR = cajon_horas.getText();
+            
+            if(!NAME.isBlank()&& ID_2.length()==9 && !HOUR.isBlank()){
+                int h=Integer.parseInt(HOUR);
+                String DATE= dateField.getText();
+                String NUMBER_MATERIAL=materiales.getSelectedItem();
+                String TOTAL_MATERIAL=totalSum+"";
+                String PARAMETROS=parametros.getSelectedItem();
+                int num_factura=0;
+                int IVA_int=0;
+                int precio_hora=0;        
+                double TOTAL_BILL;
+            
+            try {        
+            Connect c = new Connect();
+            ResultSet rs = c.s.executeQuery("SELECT count(*) AS NUMERO_FACTURA FROM bill_standard WHERE ID_CLIENT='" + ID_2 + "'");
+            if (rs.next()) {
+                num_factura = rs.getInt("NUMERO_FACTURA");
+                num_factura+=1;
+            }
+            ResultSet rs2 = c.s.executeQuery("SELECT IVA,PRICE FROM setup_bill  WHERE NAME='" + PARAMETROS + "'");
+            if (rs2.next()) {
+                IVA_int = rs2.getInt("IVA");
+                precio_hora=rs2.getInt("PRICE");
+            }
+            rs.close();
+            rs2.close();
+            c.s.close();
+            } catch (Exception ex) {
+            ex.printStackTrace();
+            }
+            String NUMBER_FACTURA=""+num_factura;
+            double TOTAL_HORAS=h*precio_hora;
+            TOTAL_BILL=TOTAL_HORAS+totalSum;
+            double total_iva=TOTAL_BILL*(IVA_int/100.00);
+            TOTAL_BILL=TOTAL_BILL+total_iva;      
+            String NUMBER_MATERIAL2 =NUMBER_MATERIAL.substring(NUMBER_MATERIAL.indexOf(" ")+1, NUMBER_MATERIAL.indexOf(","));
+
+
+            String TOTAL_BILL2=""+TOTAL_BILL;        
+            new bill_standard_view(ID_2,NAME,ADDRESS,HOUR,DATE,NUMBER_MATERIAL2,TOTAL_MATERIAL,PARAMETROS,NUMBER_FACTURA,TOTAL_BILL2);
             setVisible(false);
+            
+            }else if(NAME.isBlank()){
+                JOptionPane.showMessageDialog(null, "Seleciona un nombre");
+            }else if( ID_2.length()!=9){
+                JOptionPane.showMessageDialog(null, "Seleciona una ID");
+            }else if(HOUR.isBlank()){
+                JOptionPane.showMessageDialog(null, "Introduce un numero de horas");
+            }        
+            
         }
-//        String time=cajon_horas.getText();
-//        String month=mes.getSelectedItem();
-//        
-//        int condicion=0;
-//        int tf=0;
-//        int ml=0;
-//        try{ Connect c = new Connect();
-//            String query="select PHONE,EMAIL,POSTAL from client;";                
-//              ResultSet rs=c.s.executeQuery(query);   
-//               while(rs.next()){
-//                   String rs2=rs.getString("PHONE");
-//                   String rs3=rs.getString("EMAIL");
-//                   if(rs2.equals(phone)){                      
-//                       condicion=1;
-//                       tf=1;
-//                       
-//                   }
-//                   if(rs3.equals(mail)){                       
-//                       condicion=1;
-//                       ml=1;
-//                       
-//                   }
-//                   
-//               }
-//                rs.close();
-//                c.s.close();
-//                if(tf>0){
-//                JOptionPane.showMessageDialog(null,"numero de telefono ya existente");
-//                }
-//                if(ml>0){
-//                JOptionPane.showMessageDialog(null,"email ya existente");
-//                }
-//               
-//            }catch (Exception e){
-//                e.printStackTrace();
-//            }
-//        if(postal.length()>5 || postal.length()<5){
-//        condicion=1;
-//        JOptionPane.showMessageDialog(null,"numero de postal incorrecto");
-//        }
-//        if(phone.length()<9 || phone.length()>9 ){
-//        condicion=1;
-//        JOptionPane.showMessageDialog(null,"numero de telefono incorrecto");
-//        }
-//        
-//        if(address.length()<5){
-//        condicion=1;
-//        JOptionPane.showMessageDialog(null,"direccion incorrecta");
-//        }
-//        if(city.length()<4){
-//        condicion=1;
-//        JOptionPane.showMessageDialog(null,"ciudad incorrecta");
-//        }
-//        if(name.length()<3){
-//        condicion=1;
-//        JOptionPane.showMessageDialog(null,"nombre incorrecta");
-//        }
-//        int condicion2=0;
-//        for(int i=0;i<mailn;i++){
-//        String a =""+ mail.charAt(i);
-//        if(a.equals("@")){
-//            condicion2=1;
-//        }
-//        }
-//        if(condicion2==0){
-//        condicion=1;
-//        JOptionPane.showMessageDialog(null,"email incorrecto");
-//        }
-//       
-//        if(condicion==0){
-//            try {
-//                Connect c= new Connect();
-//                String query ="insert into client values('"+name+"', '"+ID+"', '"+address+"', '"+city+"', '"+postal+"', '"+mail+"', '"+phone+"')";
-//                String query2 ="insert into login values('"+ID+"', '', '"+name+"', '','')";
-//                c.s.executeUpdate(query);
-//                c.s.executeUpdate(query2);
-//            
-//                JOptionPane.showMessageDialog(null,"Cliente Añadido Correctamente");
-//                setVisible(false);
-//                
-//                new meterinfo(ID);
-//            
-//            }catch(Exception e){
-//                e.printStackTrace();
-//                }
-//        
-//            }else if(condicion == 0){
-//            setVisible(false);
-//            }
-//        }else if(ae.getSource() == cancelar){
-//            setVisible(false);}
+        if(ae.getSource()==cancelar){
+                setVisible(false);
+            }
     }
     
     public static void main(String[]args){

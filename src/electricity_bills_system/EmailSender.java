@@ -1,14 +1,19 @@
 
 package electricity_bills_system;
 
+import java.awt.*;
 import javax.mail.*;
 import javax.mail.internet.*;
 import java.util.*;
 import java.io.File;
+import javax.swing.JOptionPane;
+import javax.swing.*;
 
 
-public class EmailSender {
-
+public class EmailSender extends JFrame {
+    
+   
+     
     public static void sendEmailWithAttachment(String toEmail, String subject, String body, String attachmentPath) {
         String fromEmail = "carlosbackdev@gmail.com";  // Tu dirección de correo
         String password = "ienq evpl rstw hpqf";  // Tu contraseña de correo electric bill
@@ -39,14 +44,16 @@ public class EmailSender {
             Multipart multipart = new MimeMultipart();
             multipart.addBodyPart(mimeBodyPart);
             message.setContent(multipart);
-            Transport.send(message);
+            Transport.send(message);  
+                       
+            JOptionPane.showMessageDialog(null, "Correo enviado con exito!");
             
-            //crear un clase de dialogo para poner que ha sido entregado corectamente
-            System.out.println("Correo enviado exitosamente a " + toEmail);
+            
 
         } catch (Exception e) {
             e.printStackTrace();
         }
+        
     }
 
     public static void main(String[] args) {
