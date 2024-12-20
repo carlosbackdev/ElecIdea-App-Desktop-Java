@@ -7,9 +7,12 @@ import java.awt.event.*;
 
 public class Project extends JFrame implements ActionListener{
     JMenuItem cliente,generar,material;
+    String NIF,ID_USER;
     
-    Project(){
-        super("Proyectos");
+    Project(String NIF, String ID_USER){
+        this.NIF=NIF;
+        this.ID_USER=ID_USER;   
+        
         setContentPane(new BackgroundPanel("images/fondo.png"));
         setLayout(new BorderLayout()); 
         setExtendedState(JFrame.MAXIMIZED_BOTH);
@@ -160,18 +163,18 @@ public class Project extends JFrame implements ActionListener{
     }
     public void actionPerformed(ActionEvent ae){
      if(ae.getSource()==cliente){
-     new newClient();
+     new newClient(NIF,ID_USER);
      }
      if(ae.getSource()==generar){
-     new calculateBill("","");
+     new calculateBill("","",NIF,ID_USER);
      }
      if(ae.getSource()==material){
-     new MaterialFrame("","");
+     new MaterialFrame("","",NIF,ID_USER);
      }
     }
     
     public static void main(String[] args){
-        new Project();
+        new Project("","");
     }
     
     

@@ -7,8 +7,9 @@ import java.sql.*;
 
 public class Signup extends JFrame implements ActionListener {
     RoundedButton volver,crear;
-    Choice tipousu;
-    JTextField cajon_usu,cajon_nombre,cajon_passwd;
+    Choice tipousu,empresa_nombre;
+    JTextField cajon_usu,cajon_nombre,cajon_passwd,cajon_empresa,cajon_codigo;
+    String NIF;
     Signup(){
         super("Crear Cuenta");
         setContentPane(new BackgroundPanel("images/login.jpg"));
@@ -17,7 +18,7 @@ public class Signup extends JFrame implements ActionListener {
         JPanel panel = new JPanel(new GridBagLayout());
         panel.setOpaque(false);
         GridBagConstraints gbc = new GridBagConstraints();
-        gbc.insets = new Insets(45, 15, 25, 15);
+        gbc.insets = new Insets(30, 10, 25, 15);
         gbc.ipadx = 40;
 
         JLabel head = new JLabel("CREAR CUENTA");
@@ -30,9 +31,11 @@ public class Signup extends JFrame implements ActionListener {
         panel.add(head, gbc);
 
         JLabel tipo_usuario = new JLabel("Registrarse como:");
+        gbc.anchor = GridBagConstraints.WEST;
         tipo_usuario.setForeground(Color.WHITE);
         tipo_usuario.setFont(new Font("Roboto", Font.PLAIN, 24));
         gbc.gridy = 1;
+        
         gbc.gridwidth = 1;
         gbc.gridx = 0;
         panel.add(tipo_usuario, gbc);
@@ -90,12 +93,48 @@ public class Signup extends JFrame implements ActionListener {
         gbc.weightx = 0; 
         panel.add(cajon_passwd, gbc);
         
+        JLabel empresa = new JLabel("Nombre de Empresa");
+        empresa.setForeground(Color.WHITE);
+        empresa.setFont(new Font("Roboto", Font.PLAIN, 24));
+        gbc.gridy = 5;
+        gbc.gridx = 0;
+        panel.add(empresa, gbc);
+
+        JTextField empresa_nombre = new JTextField();    
+        empresa_nombre.setHorizontalAlignment(JTextField.CENTER);
+        empresa_nombre.setFont(new Font("Roboto", Font.PLAIN, 16));
+        gbc.gridx = 1;
+        panel.add(empresa_nombre, gbc);
         
+        
+        JLabel empresacod = new JLabel("Codigo de Empresa");
+        empresacod.setForeground(Color.WHITE);
+        empresacod.setFont(new Font("Roboto", Font.PLAIN, 24));
+        gbc.gridy = 6;
+        gbc.gridx = 0;
+        panel.add(empresacod, gbc);
+
+        cajon_codigo = new JTextField();
+        cajon_codigo.setFont(new Font("Roboto", Font.PLAIN, 17));
+        cajon_codigo.setHorizontalAlignment(JTextField.CENTER);
+        gbc.gridx = 1;
+        gbc.fill = GridBagConstraints.HORIZONTAL; 
+        gbc.weightx = 0; 
+        panel.add(cajon_codigo, gbc);        
+        
+        JLabel inf = new JLabel("Para registrarse como usuario se debe obtener el codigo porporcionado por su empresa");
+        gbc.anchor = GridBagConstraints.CENTER;
+        inf.setForeground(Color.WHITE);
+        inf.setFont(new Font("Arial", Font.PLAIN, 12));
+        gbc.gridy = 7;
+        gbc.gridwidth = 2;
+        gbc.gridx = 0;
+        panel.add(inf, gbc);
         
         JPanel panelBotones = new JPanel(new BorderLayout());
         panelBotones.setOpaque(false); 
         gbc.gridx = 0;
-        gbc.gridy = 6; 
+        gbc.gridy = 8; 
         gbc.gridwidth = 2; 
         gbc.fill = GridBagConstraints.NONE; 
         gbc.anchor = GridBagConstraints.CENTER; 
@@ -123,7 +162,7 @@ public class Signup extends JFrame implements ActionListener {
 
         add(panel, BorderLayout.PAGE_START);
         
-        setSize(1200, 800);
+        setSize(1150, 850);
         setLocationRelativeTo(null);
         setVisible(true);
         
@@ -139,8 +178,11 @@ public class Signup extends JFrame implements ActionListener {
             nombre=nombre.toLowerCase();
             int nombrelenght=nombre.length();
             String password = cajon_passwd.getText();
+            String CODE=cajon_codigo.getText().trim();            
+            CODE=contraseña.encryptPassword(CODE);
             int passlenght=password.length();
             int ID=0;
+            boolean codigo=true;
             if (!nombre_usuario.isEmpty() && !nombre.isEmpty() && !password.isEmpty()) {
                 ID =IDgenerador.generadorId();}
             
@@ -155,8 +197,7 @@ public class Signup extends JFrame implements ActionListener {
             }
             if(ID<=0){
             JOptionPane.showMessageDialog(null,"se deben rellenar todos los datos");
-            }
-            
+            }            
             
             String rs3;
             int nombre_exsistente=0;
@@ -180,12 +221,25 @@ public class Signup extends JFrame implements ActionListener {
                 e.printStackTrace();
             }
             
-             String encrypted_password = contraseña.encryptPassword(password);          
+            String encrypted_password = contraseña.encryptPassword(password);
             
+            try {
+                Connect c = new Connect ();
+                ResultSet rs=c.s.executeQuery("SELECT NIF FROM company WHERE CODE='"+CODE+"'");
+                if(rs.next()){
+                    NIF=rs.getString("NIF");                    
+                    }else{
+                    codigo=false;
+                }         
+                
+            } catch(Exception e){
+                e.printStackTrace();
+            }
+                    
              
-            if(ID>0 && passlenght>7 && nombrelenght>2 && nombre_usuarioleght>4 && nombre_exsistente==0){
+            if(ID>0 && passlenght>7 && nombrelenght>2 && nombre_usuarioleght>4 && nombre_exsistente==0 && codigo){
             try{ Connect c = new Connect();
-                 String query = "insert into login values('"+ID+"', '"+nombre_usuario+"','"+nombre+"','"+encrypted_password+"','"+tipo_usuario+"')";
+                 String query = "insert into login values('"+ID+"', '"+nombre_usuario+"','"+nombre+"','"+encrypted_password+"','"+tipo_usuario+"','"+NIF+"')";
                  
                  c.s.executeUpdate(query);
                  
@@ -196,6 +250,9 @@ public class Signup extends JFrame implements ActionListener {
                 e.printStackTrace();
             }
             
+            }
+            if(!codigo){
+            JOptionPane.showMessageDialog(null,"Codigo de empresa incorrecto");
             }
         
         }else if(ae.getSource() == volver){

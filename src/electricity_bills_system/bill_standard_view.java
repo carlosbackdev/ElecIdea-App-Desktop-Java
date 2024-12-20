@@ -22,8 +22,10 @@ public class bill_standard_view extends JFrame implements ActionListener {
     JTable materialTable;
     JButton agregarButton, guardarButton,enviar;
     Double IVA_int,IVA_resta,PRICE_HOUR_int,TOTAL_BILL_INT,HOUR_INT;
+    String NIF,ID_USER,NAME_COMPANY,ADDRESS_COMPANY,EMAIL_COMPANY,PHONE_COMPANY,IBAN_COMPANY;
     
-    bill_standard_view(String ID_2,String NAME,String ADDRESS,String HOUR,String DATE,String NUMBER_MATERIAL,String TOTAL_MATERIAL,String PARAMETROS,String NUMBER_FACTURA,String TOTAL_BILL){
+    bill_standard_view(String ID_2,String NAME,String ADDRESS,String HOUR,String DATE,String NUMBER_MATERIAL,
+            String TOTAL_MATERIAL,String PARAMETROS,String NUMBER_FACTURA,String TOTAL_BILL,String NIF,String ID_USER){
     super("Añadir Materiales");
     setContentPane(new BackgroundPanel("images/Fichas.jpg"));
     setLayout(new BorderLayout());
@@ -38,6 +40,8 @@ public class bill_standard_view extends JFrame implements ActionListener {
     this.PARAMETROS = PARAMETROS; //? como ponerlo
     this.NUMBER_FACTURA = NUMBER_FACTURA;
     this.TOTAL_BILL = TOTAL_BILL;
+    this.NIF = NIF;
+    this.ID_USER = ID_USER;
     
     try{
         Connect c=new Connect();
@@ -49,6 +53,25 @@ public class bill_standard_view extends JFrame implements ActionListener {
     } catch(Exception e){
       e.printStackTrace();
     }
+    try{
+                Connect c = new Connect();
+                ResultSet rs = c.s.executeQuery("SELECT * FROM company WHERE NIF='" + NIF + "'");
+                if (rs.next()) {
+                    NAME_COMPANY=rs.getString("NAME");
+                    String direc=rs.getString("ADDRESS");
+                    String post=rs.getString("POSTAL");
+                    String cit=rs.getString("CITY");
+                    ADDRESS_COMPANY=direc+", "+post+", "+cit+".";
+                    EMAIL_COMPANY=rs.getString("EMAIL");
+                    PHONE_COMPANY=rs.getString("PHONE");
+                    IBAN_COMPANY=rs.getString("IBAN");
+                    
+            }                
+             rs.close();      
+             c.s.close();  
+            }   catch (Exception e) {
+                    e.printStackTrace();
+            }
     
     HOUR_INT=Double.parseDouble(HOUR);
     TOTAL_BILL_INT=Double.parseDouble(TOTAL_BILL);     
@@ -93,15 +116,15 @@ public class bill_standard_view extends JFrame implements ActionListener {
     inputPanel2.setBorder(BorderFactory.createTitledBorder("Datos de la Empresa"));
    
     inputPanel2.add(Box.createVerticalStrut(9));
-    addTextArea(inputPanel2, gbc, "     Empresa: ", 1);
+    addTextArea(inputPanel2, gbc, "     Empresa:    "+ NAME_COMPANY, 1);
     inputPanel2.add(Box.createVerticalStrut(6));
-    addTextArea(inputPanel2, gbc, "     NIF: ", 2);
+    addTextArea(inputPanel2, gbc, "     NIF:     "+ NIF, 2);
     inputPanel2.add(Box.createVerticalStrut(6));
-    addTextArea(inputPanel2, gbc, "     Dirección: ", 3);
+    addTextArea(inputPanel2, gbc, "     Dirección:    " + ADDRESS_COMPANY, 3);
     inputPanel2.add(Box.createVerticalStrut(6));
-    addTextArea(inputPanel2, gbc, "     Teléfono: ", 4);
+    addTextArea(inputPanel2, gbc, "     Teléfono:    "+ PHONE_COMPANY, 4);
     inputPanel2.add(Box.createVerticalStrut(6));
-    addTextArea(inputPanel2, gbc, "     Correo: ", 5);
+    addTextArea(inputPanel2, gbc, "     Correo:    "+ EMAIL_COMPANY, 5);
     inputPanel2.add(Box.createVerticalStrut(6));
     addTextArea(inputPanel2, gbc, "", 6);
     inputPanel2.add(Box.createVerticalStrut(6));
@@ -219,7 +242,7 @@ public class bill_standard_view extends JFrame implements ActionListener {
      public void actionPerformed(ActionEvent ae) {
          if (ae.getSource() == agregarButton || ae.getSource() == enviar) {
         try {
-            //rescatar email
+            
             
             try{
                 Connect c = new Connect();
@@ -232,6 +255,7 @@ public class bill_standard_view extends JFrame implements ActionListener {
             }   catch (Exception e) {
                     e.printStackTrace();
             }
+            
             
             Workbook workbook = new XSSFWorkbook();
             Sheet sheet = workbook.createSheet("Factura "+NUMBER_FACTURA+" "+NAME+" en "+DATE);
@@ -263,25 +287,25 @@ public class bill_standard_view extends JFrame implements ActionListener {
 
             Row companyRow1 = sheet.createRow(rowIndex++);
             companyRow1.createCell(0).setCellValue("Empresa:");
-            companyRow1.createCell(1).setCellValue("Mi Empresa");
+            companyRow1.createCell(1).setCellValue(NAME_COMPANY);
 
             Row companyRow2 = sheet.createRow(rowIndex++);
             companyRow2.createCell(0).setCellValue("NIF:");
-            companyRow2.createCell(1).setCellValue("12345678A");
+            companyRow2.createCell(1).setCellValue(NIF);
 
             Row companyRow3 = sheet.createRow(rowIndex++);
             companyRow3.createCell(0).setCellValue("Dirección:");
-            companyRow3.createCell(1).setCellValue("Calle Ficticia 123");
+            companyRow3.createCell(1).setCellValue(ADDRESS_COMPANY);
 
             Row companyRow4 = sheet.createRow(rowIndex++);
             companyRow4.createCell(0).setCellValue("Teléfono:");
-            companyRow4.createCell(1).setCellValue("987654321");
+            companyRow4.createCell(1).setCellValue(PHONE_COMPANY);
             companyRow4.createCell(2).setCellValue("numero de cuenta");
 
             Row companyRow5 = sheet.createRow(rowIndex++);
             companyRow5.createCell(0).setCellValue("Correo:");
-            companyRow5.createCell(1).setCellValue("empresa@correo.com");
-            companyRow5.createCell(2).setCellValue("ES3244");
+            companyRow5.createCell(1).setCellValue(EMAIL_COMPANY);
+            companyRow5.createCell(2).setCellValue(IBAN_COMPANY);
             
             rowIndex++;
 
@@ -355,8 +379,9 @@ public class bill_standard_view extends JFrame implements ActionListener {
                 String toEmail = EMAIL;  
                 String subject = "Factura adjunta";
                 String body = "Adjunto encontrarás la factura en formato Excel.";
-                String attachmentPath = "Factura " + NUMBER_FACTURA + " " + NAME + " en " + DATE + ".xlsx";            
-                EmailSender.sendEmailWithAttachment(toEmail, subject, body, attachmentPath);  // Enviar el correo            
+                String attachmentPath = "Factura " + NUMBER_FACTURA + " " + NAME + " en " + DATE + ".xlsx";
+                String email_company=EMAIL_COMPANY;
+                EmailSender.sendEmailWithAttachment(toEmail, subject, body, attachmentPath,email_company);  // Enviar el correo            
             }
         }
         
@@ -364,7 +389,7 @@ public class bill_standard_view extends JFrame implements ActionListener {
             
             try{
                 Connect c=new Connect();
-                String query = "INSERT INTO bill_standard VALUES('"+NUMBER_FACTURA+"','"+ID_2+"','"+NAME+"','"+ADDRESS+"','"+HOUR+"','"+DATE+"','"+NUMBER_MATERIAL+"','"+TOTAL_MATERIAL+"','"+PARAMETROS+"','"+TOTAL+"')";
+                String query = "INSERT INTO bill_standard VALUES('"+NUMBER_FACTURA+"','"+ID_2+"','"+NAME.toLowerCase()+"','"+ADDRESS.toLowerCase()+"','"+HOUR+"','"+DATE.toLowerCase()+"','"+NUMBER_MATERIAL+"','"+TOTAL_MATERIAL+"','"+PARAMETROS.toLowerCase()+"','"+TOTAL+"','"+NIF+"')";
                 c.s.executeUpdate(query);
                 
             } catch(Exception e){
@@ -377,6 +402,6 @@ public class bill_standard_view extends JFrame implements ActionListener {
      }
     
     public static void main(String[]args){
-        new bill_standard_view("","","","","","","","","","");
+        new bill_standard_view("","","","","","","","","","","","");
     }
 }

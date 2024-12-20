@@ -13,7 +13,10 @@ public class newClient extends JFrame implements ActionListener {
     JTextField cajon_nombre,cajon_direccion,cajon_ciudad,cajon_postal,cajon_mail,cajon_telf;
     RoundedButton guardar,cancelar;
     JLabel numero;
-    newClient(){
+    String NIF,ID_USER;
+    newClient(String NIF, String ID_USER){
+        this.NIF=NIF;
+        this.ID_USER=ID_USER;
         
         setContentPane(new BackgroundPanel("images/Fichas.jpg"));  
         
@@ -26,7 +29,7 @@ public class newClient extends JFrame implements ActionListener {
         Font fuente2=new Font("Roboto", Font.PLAIN, 13);
         gbc.ipadx = 80;
         
-        JLabel head = new JLabel("Nuevo Cliente");
+        JLabel head = new JLabel("          Nuevo Cliente");
         head.setForeground(Color.WHITE);
         head.setFont(new Font("Roboto", Font.PLAIN, 28));
         gbc.gridx = 0;
@@ -164,7 +167,7 @@ public class newClient extends JFrame implements ActionListener {
         
         
         
-        guardar  = new RoundedButton("Guardar");
+        guardar  = new RoundedButton("  Guardar  ");
         guardar.setBackground(new Color(222, 239, 255));
         guardar.setForeground(Color.BLACK);
         guardar.setFont(fuente); 
@@ -172,7 +175,7 @@ public class newClient extends JFrame implements ActionListener {
         panelBotones.add(guardar);
         panelBotones.add(guardar, BorderLayout.WEST);
 
-        cancelar = new RoundedButton("Cancelar");
+        cancelar = new RoundedButton("  Cancelar  ");
         cancelar.setBackground(new Color(222, 239, 255));
         cancelar.setForeground(Color.BLACK);
         cancelar.setFont(fuente); 
@@ -210,15 +213,12 @@ public class newClient extends JFrame implements ActionListener {
                    String rs3=rs.getString("EMAIL");
                    if(rs2.equals(phone)){                      
                        condicion=1;
-                       tf=1;
-                       
+                       tf=1;                      
                    }
                    if(rs3.equals(mail)){                       
                        condicion=1;
-                       ml=1;
-                       
-                   }
-                   
+                       ml=1;                      
+                   }                  
                }
                 rs.close();
                 c.s.close();
@@ -268,8 +268,8 @@ public class newClient extends JFrame implements ActionListener {
         if(condicion==0){
             try {
                 Connect c= new Connect();
-                String query ="insert into client values('"+name+"', '"+ID+"', '"+address+"', '"+city+"', '"+postal+"', '"+mail+"', '"+phone+"')";
-                String query2 ="insert into login values('"+ID+"', '"+name+"_"+(ID)+"', '"+name+"', '','')";
+                String query ="insert into client values('"+name+"', '"+ID+"', '"+address+"', '"+city+"', '"+postal+"', '"+mail+"', '"+phone+"','"+NIF+"')";
+                String query2 ="insert into login values('"+ID+"', '"+name+"_"+(ID)+"','"+name+"','','cliente','"+NIF+"')";
                 c.s.executeUpdate(query);
                 c.s.executeUpdate(query2);
             
@@ -289,7 +289,7 @@ public class newClient extends JFrame implements ActionListener {
             setVisible(false);}
     }
     public static void main(String[]args){
-        new newClient();
+        new newClient("","");
     }
     
 }

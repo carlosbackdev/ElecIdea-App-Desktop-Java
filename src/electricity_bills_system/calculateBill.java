@@ -22,17 +22,19 @@ public class calculateBill extends JFrame implements ActionListener {
     RoundedButton guardar,cancelar,configurar,materiales_agregar;
     Choice ID_choice,parametros, materiales;
     JComboBox<String> nombre_combo;
-    String ID_info,materiales_selected,selectedID;
+    String ID_info,materiales_selected,selectedID,NIF,ID_USER;
     JPopupMenu nombre_popup;
     SimpleDateFormat dateFormat;
     String suma_total,total_final,ID_info_update,client_info_update,numero_material,direcion_completa;
     JLabel total_materiales;
     JFormattedTextField dateField;
     double totalSum;
-    calculateBill(String ID_info_update, String client_info_update){
+    calculateBill(String ID_info_update, String client_info_update,String NIF, String ID_USER){
         this.ID_info = ID_info;
         this.ID_info_update = ID_info_update;
         this.client_info_update = client_info_update;
+        this.NIF = NIF;
+        this.ID_USER = ID_USER;
         setContentPane(new BackgroundPanel("images/Fichas2.jpg"));  
         
         JPanel panel = new JPanel(new GridBagLayout());
@@ -124,7 +126,7 @@ public class calculateBill extends JFrame implements ActionListener {
                     nombre_popup.removeAll();
                     try {
                         Connect c = new Connect();
-                        ResultSet rs = c.s.executeQuery("SELECT DISTINCT NAME FROM client WHERE NAME LIKE '" + text + "%'");
+                        ResultSet rs = c.s.executeQuery("SELECT DISTINCT NAME FROM client WHERE NAME LIKE '" + text + "%' AND NIF='"+NIF+"'");
                         while (rs.next()) {
                             JMenuItem item = new JMenuItem(rs.getString("NAME"));
                             item.setPreferredSize(new Dimension(200, 28)); 
@@ -351,7 +353,7 @@ public class calculateBill extends JFrame implements ActionListener {
             rs2.close();
 
             // Ejecutar la consulta para obtener los nombres
-            ResultSet rs = c.s.executeQuery("select * from setup_bill");
+            ResultSet rs = c.s.executeQuery("select * from setup_bill WHERE NIF='"+NIF+"'");
             while (rs.next()) {
                 parametros.add(rs.getString("NAME"));
             }
@@ -417,7 +419,7 @@ public class calculateBill extends JFrame implements ActionListener {
     ID_choice.removeAll();
     try {
         Connect c = new Connect();
-        ResultSet rs = c.s.executeQuery("SELECT ID FROM client WHERE NAME='" + selectedName + "'");
+        ResultSet rs = c.s.executeQuery("SELECT ID FROM client WHERE NAME='" + selectedName + "' AND NIF='"+NIF+"'");
         while (rs.next()) {
             ID_choice.add(rs.getString("ID"));
             selectedID = rs.getString("ID"); // Actualizar selectedID
@@ -525,13 +527,13 @@ public void updateTotal(String materialNumber) {
       String bill_true="bill";
       
         if(ae.getSource()==materiales_agregar){
-         new MaterialFrame(ID,client);
+         new MaterialFrame(ID,client,NIF,ID_USER);
          setVisible(false);
         }
         
         if(ae.getSource()==configurar){
 
-         new setup_bill(bill_true);
+         new setup_bill(bill_true,NIF);
          setVisible(false);
         }
         
@@ -582,10 +584,13 @@ public void updateTotal(String materialNumber) {
             double total_iva=TOTAL_BILL*(IVA_int/100.00);
             TOTAL_BILL=TOTAL_BILL+total_iva;      
             String NUMBER_MATERIAL2 =NUMBER_MATERIAL.substring(NUMBER_MATERIAL.indexOf(" ")+1, NUMBER_MATERIAL.indexOf(","));
-
+            if(NUMBER_MATERIAL2.isBlank()){
+            JOptionPane.showMessageDialog(null, "Introduce parte de material");
+            
+            }
 
             String TOTAL_BILL2=""+TOTAL_BILL;        
-            new bill_standard_view(ID_2,NAME,ADDRESS,HOUR,DATE,NUMBER_MATERIAL2,TOTAL_MATERIAL,PARAMETROS,NUMBER_FACTURA,TOTAL_BILL2);
+            new bill_standard_view(ID_2,NAME,ADDRESS,HOUR,DATE,NUMBER_MATERIAL2,TOTAL_MATERIAL,PARAMETROS,NUMBER_FACTURA,TOTAL_BILL2,NIF,ID_USER);
             setVisible(false);
             
             }else if(NAME.isBlank()){
@@ -594,7 +599,8 @@ public void updateTotal(String materialNumber) {
                 JOptionPane.showMessageDialog(null, "Seleciona una ID");
             }else if(HOUR.isBlank()){
                 JOptionPane.showMessageDialog(null, "Introduce un numero de horas");
-            }        
+            }
+            
             
         }
         if(ae.getSource()==cancelar){
@@ -603,7 +609,7 @@ public void updateTotal(String materialNumber) {
     }
     
     public static void main(String[]args){
-        new calculateBill("","");
+        new calculateBill("","","","");
     }
     
 }

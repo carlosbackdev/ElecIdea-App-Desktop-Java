@@ -10,9 +10,10 @@ import java.sql.*;
 public class setup_bill extends JFrame implements ActionListener {
     RoundedButton volver, crear;
     JTextField cajon_nombre, cajon_iva, cajon_precio;
-    String bill_true;
-    setup_bill(String bill_true) {
+    String bill_true,NIF;
+    setup_bill(String bill_true,String NIF) {
         this.bill_true = bill_true;
+        this.NIF = NIF;
         setContentPane(new BackgroundPanel("images/Fichas.jpg"));
         setLayout(new BorderLayout());
 
@@ -153,7 +154,7 @@ public class setup_bill extends JFrame implements ActionListener {
             if (name_length <= 20 && iva_length <= 2 && price_length <= 5 && action && nombre_existente == 0) {
                 try {
                     Connect c = new Connect();
-                    String query = "insert into setup_bill values('"+name+"', '"+iva+"','"+price+"')";
+                    String query = "insert into setup_bill values('"+name+"', '"+iva+"','"+price+"','"+NIF+"')";
                  
                     c.s.executeUpdate(query);
 
@@ -168,13 +169,13 @@ public class setup_bill extends JFrame implements ActionListener {
         }
         String billt=bill_true;
         if ("bill".equals(billt)) {            
-                new calculateBill("","");
+                new calculateBill("","",NIF,"");
             }
     
     }
 
     public static void main(String[] args) {
-        new setup_bill("");
+        new setup_bill("","");
 
     }
 }

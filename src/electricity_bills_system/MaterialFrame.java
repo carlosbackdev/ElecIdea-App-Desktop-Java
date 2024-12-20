@@ -25,13 +25,15 @@ public class MaterialFrame extends JFrame implements ActionListener {
     JLabel total_materiales,numero_parte;
     double total_final=0;
     double numero_parte2;
-    String selectedID,ID_info,client_info;
+    String selectedID,ID_info,client_info,NIF,ID_USER;
 
-    public MaterialFrame(String ID_info, String client_info) {
+    public MaterialFrame(String ID_info, String client_info,String NIF,String ID_USER) {
         super("Añadir Materiales");
         setLayout(new BorderLayout());
         this.ID_info = ID_info;
         this.client_info = client_info;
+        this.NIF = NIF;
+        this.ID_USER = ID_USER;
         
         JPanel inputPanel = new JPanel(new GridBagLayout());
         GridBagConstraints gbc = new GridBagConstraints();
@@ -285,7 +287,7 @@ private void updateRowCount() {
                     if(ID_info.length()>1){
                     ID_2=ID_choice.getSelectedItem();
                     }
-                    String query = "INSERT INTO material_bill VALUES('" + ID_2 + "', '" + number + "','" + nombre_material2 + "','" + brand + "','" + price_unit + "','" + unit + "','" + ref_material + "','" + date + "','" + total_price + "')";
+                    String query = "INSERT INTO material_bill VALUES('" + ID_2 + "', '" + number + "','" + nombre_material2 + "','" + brand + "','" + price_unit + "','" + unit + "','" + ref_material + "','" + date + "','" + total_price + "','"+NIF+"')";
 
                     c.s.executeUpdate(query);
                 }
@@ -295,13 +297,13 @@ private void updateRowCount() {
                 ea.printStackTrace();
             }
             if(ID_info.length()>1){
-            new calculateBill(ID_info, client_info);}
+            new calculateBill(ID_info, client_info,NIF,ID_USER);}
         }
     }
     
    
 
     public static void main(String[] args) {
-        new MaterialFrame("","");
+        new MaterialFrame("","","","");
     }
 }

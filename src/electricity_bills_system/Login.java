@@ -58,9 +58,10 @@ class BackgroundPanel extends JPanel {
 }
 
 public class Login extends JFrame implements ActionListener{
-    RoundedButton login,signup;
+    RoundedButton login,signup,signup_empresa;
     JTextField cajon_usuario,cajon_contra;
     Choice tipousu;
+    String NIF,ID_USER;
     Login(){
     super("Inicio Sesion Usuario");
         setContentPane(new BackgroundPanel("images/login.jpg"));    
@@ -143,10 +144,9 @@ public class Login extends JFrame implements ActionListener{
         gbc.fill = GridBagConstraints.NONE; 
         gbc.anchor = GridBagConstraints.CENTER; 
         panel.add(panelBotones, gbc);
+                
         
-        
-        
-        login  = new RoundedButton("Entrar");
+        login  = new RoundedButton("     Entrar     ");
         login.setBackground(new Color(222, 239, 255));
         login.setForeground(Color.BLACK);
         login.setFont(new Font("Roboto", Font.PLAIN, 18)); 
@@ -154,14 +154,23 @@ public class Login extends JFrame implements ActionListener{
         panelBotones.add(login);
         panelBotones.add(login, BorderLayout.WEST);
 
-        signup = new RoundedButton("Registro");
+        signup = new RoundedButton("     Registro     ");
         signup.setBackground(new Color(222, 239, 255));
         signup.setForeground(Color.BLACK);
         signup.setFont(new Font("Roboto", Font.PLAIN, 18)); 
         signup.addActionListener(this);
         panelBotones.add(signup);
         panelBotones.add(signup, BorderLayout.EAST);
-
+        
+        signup_empresa = new RoundedButton("Registrar Empresa");
+        signup_empresa.setBackground(new Color(222, 239, 255));
+        signup_empresa.setForeground(Color.BLACK);
+        signup_empresa.setFont(new Font("Roboto", Font.PLAIN, 18));
+        gbc.gridy = 6;
+        gbc.gridx = 0;
+        signup_empresa.addActionListener(this);
+        panel.add(signup_empresa, gbc);
+        
         add(panel, BorderLayout.PAGE_START);
 
         setSize(1200, 800);
@@ -183,8 +192,10 @@ public class Login extends JFrame implements ActionListener{
                 
                ResultSet rs = c.s.executeQuery(query);
                if(rs.next()){
+                   NIF=rs.getString("NIF");
+                   ID_USER=rs.getString("ID");
                    setVisible(false);
-                   new Project();
+                   new Project(NIF,ID_USER);
                } else{
                    JOptionPane.showMessageDialog(null,"Datos incorrectos");
                    cajon_usuario.setText("");
@@ -200,6 +211,9 @@ public class Login extends JFrame implements ActionListener{
         }else if(ae.getSource() == signup){
             setVisible(false);
             new Signup();
+        }else if(ae.getSource() == signup_empresa){
+            setVisible(false);
+            new SignupCompany();
         }
         
     }
