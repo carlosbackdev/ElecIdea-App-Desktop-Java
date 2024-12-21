@@ -463,7 +463,7 @@ public void updateAddress(String selectedID) {
     }
 }
 
-public void update_materiales(String selectedID) { 
+public void update_materiales(String seletedID) { 
     materiales.removeAll();
     try {
         Connect c = new Connect();

@@ -6,7 +6,7 @@ import java.awt.*;
 import java.awt.event.*;
 
 public class Project extends JFrame implements ActionListener{
-    JMenuItem cliente,generar,material;
+    JMenuItem cliente,generar,material,factura_detalle;
     String NIF,ID_USER;
     
     Project(String NIF, String ID_USER){
@@ -98,7 +98,7 @@ public class Project extends JFrame implements ActionListener{
         pago.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_P, ActionEvent.CTRL_MASK));
         accion.add(pago);
         
-        JMenuItem factura_detalle=new JMenuItem("Detalles Facturas ");
+        factura_detalle=new JMenuItem("Detalles Facturas ");
         factura_detalle.setFont(menufont);
         factura_detalle.setMnemonic('O');
         factura_detalle.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_O, ActionEvent.CTRL_MASK));
@@ -170,6 +170,9 @@ public class Project extends JFrame implements ActionListener{
      }
      if(ae.getSource()==material){
      new MaterialFrame("","",NIF,ID_USER);
+     }
+     if(ae.getSource()==factura_detalle){
+     new BillSearch(NIF,ID_USER);
      }
     }
     
