@@ -18,6 +18,7 @@ import electricity_bills_system.EmailSender;
 public class bill_standard_view extends JFrame implements ActionListener {
     String ID_2, NAME, ADDRESS, HOUR, DATE, NUMBER_MATERIAL, TOTAL_MATERIAL, PARAMETROS, NUMBER_FACTURA, TOTAL_BILL,EMAIL;
     String TOTAL_SINIVA,TOTAL;
+    boolean enviado=false;
     DefaultTableModel tableModel;
     JTable materialTable;
     JButton agregarButton, guardarButton,enviar;
@@ -42,6 +43,7 @@ public class bill_standard_view extends JFrame implements ActionListener {
     this.TOTAL_BILL = TOTAL_BILL;
     this.NIF = NIF;
     this.ID_USER = ID_USER;
+   
     
     try{
         Connect c=new Connect();
@@ -382,14 +384,18 @@ public class bill_standard_view extends JFrame implements ActionListener {
                 String attachmentPath = "Factura " + NUMBER_FACTURA + " " + NAME + " en " + DATE + ".xlsx";
                 String email_company=EMAIL_COMPANY;
                 EmailSender.sendEmailWithAttachment(toEmail, subject, body, attachmentPath,email_company);  // Enviar el correo            
+                enviado=true;
             }
         }
         
          if(ae.getSource() == guardarButton){
-            
+            String STATUS="sin enviar";
+            if(enviado){
+            STATUS="pendiente";
+            }
             try{
                 Connect c=new Connect();
-                String query = "INSERT INTO bill_standard VALUES('"+NUMBER_FACTURA+"','"+ID_2+"','"+NAME.toLowerCase()+"','"+ADDRESS.toLowerCase()+"','"+HOUR+"','"+DATE.toLowerCase()+"','"+NUMBER_MATERIAL+"','"+TOTAL_MATERIAL+"','"+PARAMETROS.toLowerCase()+"','"+TOTAL+"','"+NIF+"')";
+                String query = "INSERT INTO bill_standard VALUES('"+NUMBER_FACTURA+"','"+ID_2+"','"+NAME.toLowerCase()+"','"+ADDRESS.toLowerCase()+"','"+HOUR+"','"+DATE.toLowerCase()+"','"+NUMBER_MATERIAL+"','"+TOTAL_MATERIAL+"','"+PARAMETROS.toLowerCase()+"','"+TOTAL+"','"+NIF+"','"+STATUS+"')";
                 c.s.executeUpdate(query);
                 
             } catch(Exception e){

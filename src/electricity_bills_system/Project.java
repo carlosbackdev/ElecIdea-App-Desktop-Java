@@ -92,6 +92,13 @@ public class Project extends JFrame implements ActionListener{
         accion.setIcon(new ImageIcon(image4));
         navegador.add(accion);
         
+        generar=new JMenuItem("Generar Factura ");
+        generar.setFont(menufont);
+        generar.setMnemonic('G');
+        generar.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_G, ActionEvent.CTRL_MASK));
+        accion.add(generar);
+        generar.addActionListener(this);
+        
         JMenuItem pago=new JMenuItem("Pago Facturas ");
         pago.setFont(menufont);
         pago.setMnemonic('P');
@@ -103,6 +110,7 @@ public class Project extends JFrame implements ActionListener{
         factura_detalle.setMnemonic('O');
         factura_detalle.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_O, ActionEvent.CTRL_MASK));
         accion.add(factura_detalle);
+        factura_detalle.addActionListener(this);
         
         JMenu add_accion=new JMenu("Añadir   ");
         add_accion.setFont(menufont);
@@ -110,14 +118,8 @@ public class Project extends JFrame implements ActionListener{
         ImageIcon icon5= new ImageIcon(ClassLoader.getSystemResource("images/add.png"));
         Image image5 = icon5.getImage().getScaledInstance(22, 22, Image.SCALE_DEFAULT);
         add_accion.setIcon(new ImageIcon(image5));
-        navegador.add(add_accion);
+        navegador.add(add_accion);        
         
-        generar=new JMenuItem("Generar Factura ");
-        generar.setFont(menufont);
-        generar.setMnemonic('G');
-        generar.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_G, ActionEvent.CTRL_MASK));
-        add_accion.add(generar);
-        generar.addActionListener(this);
         
         JMenuItem nota=new JMenuItem("Añadir notas ");
         nota.setFont(menufont);

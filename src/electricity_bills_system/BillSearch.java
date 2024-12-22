@@ -19,6 +19,7 @@ public class BillSearch extends JFrame implements ActionListener {
 BillSearch(String NIF,String ID_USER){
     this.NIF=NIF;
     this.ID_USER=ID_USER;
+    
     setContentPane(new BackgroundPanel("images/Fichas.jpg"));
     setLayout(new BorderLayout());
     Font fuente=new Font("Roboto", Font.PLAIN, 20);
@@ -105,7 +106,7 @@ BillSearch(String NIF,String ID_USER){
                     nombre_popup.removeAll();
                     try {
                         Connect c = new Connect();
-                        ResultSet rs = c.s.executeQuery("SELECT DISTINCT NAME FROM client WHERE NAME LIKE '" + text + "%'");
+                        ResultSet rs = c.s.executeQuery("SELECT DISTINCT NAME FROM client WHERE NAME LIKE '" + text + "%' AND NIF='"+NIF+"'");
                         while (rs.next()) {
                             JMenuItem item = new JMenuItem(rs.getString("NAME"));
                             item.setPreferredSize(new Dimension(200, 28)); 
@@ -189,11 +190,16 @@ BillSearch(String NIF,String ID_USER){
     gbc.fill = GridBagConstraints.HORIZONTAL; 
     gbc.weightx = 0;
     panel.add(factura_choice, gbc);
+    
+    JLabel margen = new JLabel();
+    gbc.gridy = 5;
+    gbc.gridx = 0;
+    panel.add(margen, gbc);
 
     JPanel panelBotones = new JPanel(new BorderLayout());
     panelBotones.setOpaque(false);
     gbc.gridx = 0;
-    gbc.gridy = 5;
+    gbc.gridy = 6;
     gbc.gridwidth = 2;
     gbc.fill = GridBagConstraints.NONE;
     gbc.anchor = GridBagConstraints.CENTER;
@@ -225,7 +231,7 @@ public void updateID_choice(String selectedName) {
     ID_choice.removeAll();
     try {
         Connect c = new Connect();
-        ResultSet rs = c.s.executeQuery("SELECT ID FROM client WHERE NAME='" + selectedName + "'");
+        ResultSet rs = c.s.executeQuery("SELECT ID FROM client WHERE NAME='" + selectedName + "' AND NIF='"+NIF+"'");
         while (rs.next()) {
             ID_choice.add(rs.getString("ID"));
             selectedID = rs.getString("ID"); // Actualizar selectedID
@@ -250,7 +256,9 @@ public void update_factura(String selectedID) {
     try {
         Connect c = new Connect();
         String estado=status_choice.getSelectedItem();
-        estado=estado.toLowerCase();
+        estado=estado.toLowerCase().trim();
+        System.out.println(estado);
+        
         String query="SELECT NUMBER_FACTURA, DAY(STR_TO_DATE(DATE, '%d-%m-%Y')) AS DIA, " +
                                    "YEAR(STR_TO_DATE(DATE, '%d-%m-%Y')) AS ANO, " +
                                    "MONTHNAME(STR_TO_DATE(DATE, '%d-%m-%Y')) AS MES, " +
@@ -261,17 +269,17 @@ public void update_factura(String selectedID) {
             query="SELECT NUMBER_FACTURA, DAY(STR_TO_DATE(DATE, '%d-%m-%Y')) AS DIA, " +
                                    "YEAR(STR_TO_DATE(DATE, '%d-%m-%Y')) AS ANO, " +
                                    "MONTHNAME(STR_TO_DATE(DATE, '%d-%m-%Y')) AS MES, " +
-                                   "STATUS" +
+                                   "STATUS " +
                                    "FROM bill_standard WHERE ID_CLIENT='" + selectedID + "' AND STATUS='"+estado+"'";
         }
         c.s.executeUpdate("SET lc_time_names = 'es_ES'");         
         ResultSet rs = c.s.executeQuery(query);
          while (rs.next()) {
-            String materialNumber = rs.getString("NUMBER_FACTURA");
+            String numberfactura = rs.getString("NUMBER_FACTURA");
             String materialDate = rs.getString("MES");
             String ano = rs.getString("ANO");
             String state = rs.getString("STATUS");
-            factura_choice.add("Factura " + materialNumber +", " + materialDate + " de " + ano +", "+state);
+            factura_choice.add("Factura " + numberfactura +", " + materialDate + " de " + ano +", "+state);
         }
         rs.close();
         c.s.close();
@@ -283,16 +291,47 @@ public void update_factura(String selectedID) {
 }
 
 public void actionPerformed(ActionEvent ae){
-    String factura_sinregistro=factura_choice.getSelectedItem();
+    if(ae.getSource()==volver){
+          setVisible(false);
+          return;
+      }
+    String NAME=cajon_nombre.getText();
+    String ID_CLIENT=ID_choice.getSelectedItem();
+    String STATUS=status_choice.getSelectedItem().toLowerCase();
+    String ADDRESS = "", HOUR = "", DATE = "", NUMBER_MATERIAL = "", TOTAL_MATERIAL = "", PARAMETROS = "", TOTAL_BILL = "";
+    String NUMBER_FACTURA=factura_choice.getSelectedItem();
+    NUMBER_FACTURA=NUMBER_FACTURA.substring(NUMBER_FACTURA.indexOf(" ")+1, NUMBER_FACTURA.indexOf(","));
+    String factura_sinregistro=factura_choice.getSelectedItem();    
     
     if(!factura_sinregistro.equals("Sin registros")){
-            
+          if(ae.getSource()==buscar){
+              try{
+                  Connect c=new Connect();
+                  String query="select * from bill_standard where ID_CLIENT='" + ID_CLIENT + "' AND NUMBER_FACTURA='"+NUMBER_FACTURA+"'";
+                  System.out.println(query);
+                  ResultSet rs = c.s.executeQuery(query);
+                  if (rs.next()) {
+                    ADDRESS = rs.getString("ADDRESS");
+                    HOUR = rs.getString("HOUR");
+                    DATE = rs.getString("DATE");
+                    NUMBER_MATERIAL = rs.getString("NUMBER_MATERIAL");
+                    TOTAL_MATERIAL = rs.getString("TOTAL_MATERIAL");
+                    PARAMETROS = rs.getString("PARAMETROS");
+                    TOTAL_BILL = rs.getString("TOTAL_BILL");
+                }
+                rs.close();
+                c.s.close();
+              }catch (Exception e){
+                  e.printStackTrace();
+              }
+              
+     new bill_standard_view(ID_CLIENT,NAME,ADDRESS,HOUR,DATE,NUMBER_MATERIAL,TOTAL_MATERIAL,PARAMETROS,NUMBER_FACTURA,TOTAL_BILL,NIF,ID_USER);
+     }      
         
-        
-        
-        
-        
-}
+    }
+    if(ae.getSource()==volver){
+          setVisible(false);
+      }
     
 }
 public static void main(String[] args) {

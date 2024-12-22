@@ -297,7 +297,8 @@ private void updateRowCount() {
                 ea.printStackTrace();
             }
             if(ID_info.length()>1){
-            new calculateBill(ID_info, client_info,NIF,ID_USER);}
+            new calculateBill(ID_info, client_info,NIF,ID_USER);
+            }
         }
     }
     

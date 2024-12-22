@@ -35,7 +35,8 @@ public class calculateBill extends JFrame implements ActionListener {
         this.client_info_update = client_info_update;
         this.NIF = NIF;
         this.ID_USER = ID_USER;
-        setContentPane(new BackgroundPanel("images/Fichas2.jpg"));  
+        setContentPane(new BackgroundPanel("images/Fichas2.jpg"));   
+        
         
         JPanel panel = new JPanel(new GridBagLayout());
         panel.setOpaque(false); 
@@ -193,7 +194,7 @@ public class calculateBill extends JFrame implements ActionListener {
         gbc.ipady = -3;
         panel.add(new JScrollPane(cajon_direccion), gbc);
         
-        if(ID_info_update.length()>1){
+        if(ID_info_update.length()>2){
         updateAddress(ID_info_update);
         }
         
@@ -465,6 +466,9 @@ public void updateAddress(String selectedID) {
 
 public void update_materiales(String seletedID) { 
     materiales.removeAll();
+    if(ID_info_update.length()>1){
+        selectedID=ID_info_update;
+        }
     try {
         Connect c = new Connect();
         c.s.executeUpdate("SET lc_time_names = 'es_ES'");         
