@@ -7,13 +7,18 @@ import java.awt.*;
 import java.util.*;
 import java.awt.event.*;
 import java.sql.*;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 
 public class newClient extends JFrame implements ActionListener {
     JTextField cajon_nombre,cajon_direccion,cajon_ciudad,cajon_postal,cajon_mail,cajon_telf;
     RoundedButton guardar,cancelar;
     JLabel numero;
-    String NIF,ID_USER;
+    String NIF,ID_USER,date;
+    SimpleDateFormat dateFormat;
+    JFormattedTextField dateField;
+    
     newClient(String NIF, String ID_USER){
         this.NIF=NIF;
         this.ID_USER=ID_USER;
@@ -165,7 +170,8 @@ public class newClient extends JFrame implements ActionListener {
         gbc.anchor = GridBagConstraints.CENTER; 
         panel.add(panelBotones, gbc);
         
-        
+        dateFormat = new SimpleDateFormat("dd-MM-yyyy");
+        date = dateFormat.format(new Date());
         
         guardar  = new RoundedButton("  Guardar  ");
         guardar.setBackground(new Color(222, 239, 255));
@@ -268,7 +274,7 @@ public class newClient extends JFrame implements ActionListener {
         if(condicion==0){
             try {
                 Connect c= new Connect();
-                String query ="insert into client values('"+name+"', '"+ID+"', '"+address+"', '"+city+"', '"+postal+"', '"+mail+"', '"+phone+"','"+NIF+"')";
+                String query ="insert into client values('"+name+"', '"+ID+"', '"+address+"', '"+city+"', '"+postal+"', '"+mail+"', '"+phone+"','"+NIF+"','"+date+"')";
                 String query2 ="insert into login values('"+ID+"', '"+name+"_"+(ID)+"','"+name+"','','cliente','"+NIF+"')";
                 c.s.executeUpdate(query);
                 c.s.executeUpdate(query2);

@@ -4,18 +4,21 @@ package electricity_bills_system;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
+import java.io.*;
 import java.sql.ResultSet;
 import java.util.ArrayList;
 import javax.swing.border.Border;
 import javax.swing.event.*;
 import javax.swing.table.*;
+import org.apache.poi.ss.usermodel.*;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 public class ClientSearch extends JFrame implements ActionListener{
     JTextField cliente;
     JComboBox<String> nombre_combo;
     JPopupMenu nombre_popup;
     Choice ID_choice,proyecto_tipo,fecha_choice_mes,fecha_choice_year;
-    String selectedID;
+    String selectedID,NIF,ID_USER;
     JButton buscar, imprimir,salir;
     JTable tabla_cliente;
     DefaultTableModel tableModel;
@@ -28,9 +31,11 @@ public class ClientSearch extends JFrame implements ActionListener{
     ArrayList<String> PHONEa = new ArrayList<>();
     ArrayList<String> PROJECTa = new ArrayList<>();
 
-    ClientSearch(){
+    ClientSearch(String NIF,String ID_USER){
     super("Clientes");
     setLayout(new BorderLayout());
+    this.NIF=NIF;
+    this.ID_USER=ID_USER;
     
      
     JPanel inputPanel = new JPanel(new GridBagLayout());
@@ -119,7 +124,7 @@ public class ClientSearch extends JFrame implements ActionListener{
                     nombre_popup.removeAll();
                     try {
                         Connect c = new Connect();
-                        ResultSet rs = c.s.executeQuery("SELECT DISTINCT NAME FROM client WHERE NAME LIKE '" + text + "%' AND NIF='02777324M'");
+                        ResultSet rs = c.s.executeQuery("SELECT DISTINCT NAME FROM client WHERE NAME LIKE '" + text + "%' AND NIF='"+NIF+"'");
                         while (rs.next()) {
                             JMenuItem item = new JMenuItem(rs.getString("NAME"));
                             item.setPreferredSize(new Dimension(200, 28)); 
@@ -159,7 +164,7 @@ public class ClientSearch extends JFrame implements ActionListener{
     gbc.gridwidth = 2;       
     inputPanel.add(buscar, gbc);
         
-    imprimir = new JButton("Imprimir");
+    imprimir = new JButton("Exportar");
     imprimir.addActionListener(this);
     imprimir.setPreferredSize(new Dimension(130, 25)); 
     gbc.gridy = 5;
@@ -197,7 +202,7 @@ public class ClientSearch extends JFrame implements ActionListener{
     ID_choice.removeAll();
     try {
         Connect c = new Connect();
-        ResultSet rs = c.s.executeQuery("SELECT ID FROM client WHERE NAME='" + selectedName + "' AND NIF='02777324M'");
+        ResultSet rs = c.s.executeQuery("SELECT ID FROM client WHERE NAME='" + selectedName + "' AND NIF='"+NIF+"'");
         while (rs.next()) {
             ID_choice.add(rs.getString("ID"));
         }
@@ -219,6 +224,10 @@ public class ClientSearch extends JFrame implements ActionListener{
     
     public void actionPerformed(ActionEvent ae) {
     String ID_CLIENT=ID_choice.getSelectedItem();
+    String PROJECT_TYPE=proyecto_tipo.getSelectedItem();
+    String MES=fecha_choice_mes.getSelectedItem();
+    String YEAR=fecha_choice_year.getSelectedItem();
+    int numero_mes=0;
       if(ae.getSource() == buscar){
           int longitud=NAMEa.size();
           if(longitud>0){
@@ -236,18 +245,34 @@ public class ClientSearch extends JFrame implements ActionListener{
        try{
         
         Connect c = new Connect();
-        String filtro1="";
+        String filtro1="",filtro2="",filtro3="",filtro4="";
         if(!ID_CLIENT.equals("Cualquiera")){
             filtro1=" AND client.ID='"+ID_CLIENT+"'";
         }
+        if(!PROJECT_TYPE.equals("Todos")){
+            filtro2=" AND PROJECT='"+PROJECT_TYPE+"'";
+        }
+        if(!MES.equals("Todos Meses")){
+            for(int i=1;i<meses.length;i++){                
+                if(meses[i].equals(MES)){
+                    numero_mes=i;
+                break;
+                }                
+            }
+            String numero_formateado= String.format("%02d", numero_mes);
+            filtro3=" AND DATE LIKE '%-"+numero_formateado+"-%'";
+        }
+        if(!YEAR.equals("Todos Años")){
+            filtro4=" AND DATE LIKE '%-"+YEAR+"'";
+        }
         
-        String query="SELECT NAME,ADDRESS,POSTAL,CITY,EMAIL,PHONE,client.ID,PROJECT FROM ebs.meter_info JOIN ebs.client ON meter_info.ID=client.ID where NIF='02777324M'"+filtro1;
-        
+        String query="SELECT NAME,ADDRESS,POSTAL,CITY,EMAIL,PHONE,client.ID,PROJECT FROM ebs.meter_info JOIN ebs.client ON meter_info.ID=client.ID where NIF='"+NIF+"'"+filtro1+filtro2+filtro3+filtro4;
         ResultSet rs = c.s.executeQuery(query);
         
         if (!rs.next()) {
             datos=false;
-            
+            NAMEa.add("sin registros");
+            tableModel.addRow(new Object[]{"Sin registros", "", "", "", "", "",""});
         }else
         do {
             String name = rs.getString("NAME");
@@ -286,13 +311,49 @@ public class ClientSearch extends JFrame implements ActionListener{
            }
         }
        
+      } else if(ae.getSource() == imprimir){
+        try{          
+         Workbook workbook = new XSSFWorkbook();
+         Sheet sheet = workbook.createSheet("Clientes; "+NAMEa.size()+"de ");
+         int rowIndex = 0;
+         
+         Row clientesHeadarRow = sheet.createRow(rowIndex++);
+            for (int i = 0; i < tabla_cliente.getColumnCount(); i++) {
+                clientesHeadarRow.createCell(i).setCellValue(tabla_cliente.getColumnName(i));
+            }
+
+            for (int i = 0; i < tableModel.getRowCount(); i++) {
+                Row row = sheet.createRow(rowIndex++);
+                for (int j = 0; j < tableModel.getColumnCount(); j++) {
+                    row.createCell(j).setCellValue(tableModel.getValueAt(i, j).toString());
+                }
+            }
+             
+            for (int i = 0; i < sheet.getRow(0).getPhysicalNumberOfCells(); i++) {
+                sheet.autoSizeColumn(i);
+            }
+            String filename="Clientes; "+NAMEa.size()+"de "+".xlsx";
+            FileOutputStream fileOut = new FileOutputStream(filename);
+            workbook.write(fileOut);
+            fileOut.close();
+            workbook.close();
+            
+            File excelFile = new File(filename);            
+            if (excelFile.exists()) {
+                Desktop.getDesktop().open(excelFile);  
+            }
+        }catch (IOException e) {
+            e.printStackTrace();
+        }
+      }else{
+          setVisible(false);
       }
         
     }
 
 
     public static void main(String[] args){
-        new ClientSearch();
+        new ClientSearch("","");
     }
 }
     
