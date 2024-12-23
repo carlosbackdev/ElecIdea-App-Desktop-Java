@@ -82,7 +82,7 @@ public class meterinfo extends JFrame implements ActionListener {
 
         tipo_proyecto = new Choice();
         tipo_proyecto.add("Defecto");
-        tipo_proyecto.add("Mantenimineto electrico");
+        tipo_proyecto.add("Mantenimiento Electrico");
         tipo_proyecto.add("Proyecto Solar");
         tipo_proyecto.setFont(fuente2);
         gbc.gridx = 1;
@@ -194,9 +194,9 @@ public class meterinfo extends JFrame implements ActionListener {
     if(ae.getSource()==guardar){
         String ID = ID_info;
         String info_type=tipo.getSelectedItem();
-        String project_type=tipo_proyecto.getSelectedItem();
+        String project_type=tipo_proyecto.getSelectedItem().toLowerCase();
         String codec=codigo_s.getSelectedItem();
-        String client_type=tipo_cliente.getSelectedItem();
+        String client_type=tipo_cliente.getSelectedItem().toLowerCase();
         String days="30";
         
        
