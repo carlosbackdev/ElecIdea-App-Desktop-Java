@@ -26,6 +26,7 @@ public class MaterialFrame extends JFrame implements ActionListener {
     double total_final=0;
     double numero_parte2;
     String selectedID,ID_info,client_info,NIF,ID_USER;
+    boolean existe=true;
 
     public MaterialFrame(String ID_info, String client_info,String NIF,String ID_USER) {
         super("Añadir Materiales");
@@ -34,11 +35,13 @@ public class MaterialFrame extends JFrame implements ActionListener {
         this.client_info = client_info;
         this.NIF = NIF;
         this.ID_USER = ID_USER;
+        Color gris=new Color(210,210,210);
         
         JPanel inputPanel = new JPanel(new GridBagLayout());
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.insets = new Insets(10, 10, 10, 10);
         gbc.fill = GridBagConstraints.HORIZONTAL;
+        
 
         cliente = new JTextField(client_info);
         
@@ -46,6 +49,8 @@ public class MaterialFrame extends JFrame implements ActionListener {
         if(ID_info.length()<3){
         ID_choice.add("Elige una ID");}
         ID_choice.add(ID_info);
+        ID_choice.setBackground(new Color(70, 73, 75));
+        ID_choice.setForeground(new Color(190, 190, 190));
         ID_choice.addItemListener(new ItemListener() {
     public void itemStateChanged(ItemEvent e) {
         if (e.getStateChange() == ItemEvent.SELECTED) {
@@ -55,6 +60,7 @@ public class MaterialFrame extends JFrame implements ActionListener {
     }
 });
         nombre_material = new JTextField(20);
+        nombre_material.setText("buscar");
         marca_nombre = new JTextField(20);
         precioField = new JTextField(20);
         unidadesField = new JTextField(20);
@@ -86,26 +92,41 @@ public class MaterialFrame extends JFrame implements ActionListener {
         nombre_combo.setVisible(false);
         gbc.gridy = 2;
 
-        nombre_popup = new JPopupMenu();
-        nombre_popup.setFocusable(false);
+        
+    nombre_popup = new JPopupMenu();
+   
+    cliente.getDocument().addDocumentListener(new DocumentListener() {
+            private Timer timer = new Timer(400, new ActionListener() { 
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    updatePopup();
+                }
+            });
 
-        cliente.getDocument().addDocumentListener(new DocumentListener() {
             @Override
             public void insertUpdate(DocumentEvent e) {
-                updatePopup();
+                resetTimer();
             }
 
             @Override
             public void removeUpdate(DocumentEvent e) {
-                updatePopup();
+                resetTimer();
             }
 
             @Override
             public void changedUpdate(DocumentEvent e) {
-                updatePopup();
+                resetTimer();
+            }
+
+            private void resetTimer() {
+                if (timer.isRunning()) {
+                    timer.stop(); 
+                }
+                timer.start(); 
             }
 
             private void updatePopup() {
+                timer.stop(); 
                 String text = cliente.getText();
                 if (text.isEmpty()) {
                     nombre_popup.setVisible(false);
@@ -113,27 +134,26 @@ public class MaterialFrame extends JFrame implements ActionListener {
                     nombre_popup.removeAll();
                     try {
                         Connect c = new Connect();
-                        ResultSet rs = c.s.executeQuery("SELECT DISTINCT NAME FROM client WHERE NAME LIKE '" + text + "%'");
+                        ResultSet rs = c.s.executeQuery("SELECT DISTINCT NAME FROM client WHERE NAME LIKE '" + text + "%' AND NIF='"+NIF+"'");
                         while (rs.next()) {
                             JMenuItem item = new JMenuItem(rs.getString("NAME"));
-                            item.setPreferredSize(new Dimension(280, 28)); // Establecer tamaño preferido para cada item
+                            item.setPreferredSize(new Dimension(200, 28)); 
                             item.addActionListener(new ActionListener() {
                                 @Override
                                 public void actionPerformed(ActionEvent e) {
                                     cliente.setText(item.getText());
                                     nombre_popup.setVisible(false);
-                                    updateID_choice(item.getText()); // Actualizar ID_choice cuando se selecciona un nombre
+                                    updateID_choice(item.getText());
                                 }
                             });
                             nombre_popup.add(item);
                         }
-                        rs.close();
-                        c.s.close();
+
                     } catch (Exception ex) {
                         ex.printStackTrace();
                     }
                     if (nombre_popup.getComponentCount() > 0) {
-                        nombre_popup.setPreferredSize(new Dimension(168, nombre_popup.getComponentCount() * 30)); // Establecer tamaño preferido del popup
+                        nombre_popup.setPreferredSize(new Dimension(205, nombre_popup.getComponentCount() * 30));
                         nombre_popup.show(cliente, 0, cliente.getHeight());
                     } else {
                         nombre_popup.setVisible(false);
@@ -141,11 +161,13 @@ public class MaterialFrame extends JFrame implements ActionListener {
                 }
             }
         });
+    
+    
         if(ID_info.length()>1){
             int rowCount = 0;
            try {
         Connect c = new Connect();
-        ResultSet rsCount = c.s.executeQuery("SELECT COUNT(DISTINCT NUMBER) as numero FROM material_bill WHERE ID_CLIENT='" + ID_info + "'");
+        ResultSet rsCount = c.s.executeQuery("SELECT COUNT(DISTINCT NUMBER) as numero FROM material_bill WHERE ID_CLIENT='" + ID_info + "' AND NIF='"+NIF+"'");
         if (rsCount.next()) {
             rowCount = rsCount.getInt("numero");
         }
@@ -158,7 +180,85 @@ public class MaterialFrame extends JFrame implements ActionListener {
     numero_parte2 = numeroP;
     numero_parte.setText("Número de Parte: " + numeroP);
     }
-      
+        
+    JComboBox<String> material_combo = new JComboBox<>();
+    material_combo.setEditable(true);
+
+        nombre_material.addFocusListener(new FocusListener() {
+        @Override
+        public void focusGained(FocusEvent e) {
+            if (nombre_material.getText().equals("buscar")) {
+                nombre_material.setText("");
+            }
+        }
+
+        @Override
+        public void focusLost(FocusEvent e) {
+            if (nombre_material.getText().isEmpty()) {
+                nombre_material.setText("buscar");
+            }
+        }
+    });
+    
+        nombre_material.getDocument().addDocumentListener(new DocumentListener() {
+        private Timer timer = new Timer(500, new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                checkMaterialExistence();
+            }
+        });
+
+        @Override
+        public void insertUpdate(DocumentEvent e) {
+            resetTimer();
+        }
+
+        @Override
+        public void removeUpdate(DocumentEvent e) {
+            resetTimer();
+        }
+
+        @Override
+        public void changedUpdate(DocumentEvent e) {
+            resetTimer();
+        }
+
+        private void resetTimer() {
+            if (timer.isRunning()) {
+                timer.stop();
+            }
+            timer.start();
+        }
+
+        private void checkMaterialExistence() {
+            String text = nombre_material.getText().toLowerCase().trim();
+            if (!text.isEmpty()) {
+                try {
+                    Connect c = new Connect();
+                    ResultSet rs = c.s.executeQuery("SELECT COUNT(*) FROM material_bill WHERE NAME='" + text + "' AND NIF='" + NIF + "'");
+                    if (rs.next()) {
+                        int count = rs.getInt(1);
+                        if (count == 0) {
+                            marca_nombre.setText("");
+                            precioField.setText("");
+                            ref.setText("");
+                        } else {
+                            rs = c.s.executeQuery("SELECT BRAND, PRICE, REF FROM material_bill WHERE NAME='" + text + "' AND NIF='" + NIF + "'");
+                            if (rs.next()) {
+                                marca_nombre.setText(rs.getString("BRAND"));
+                                precioField.setText(rs.getString("PRICE"));
+                                ref.setText(rs.getString("REF"));
+                            }
+                        }
+                    }
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                }
+            }
+        }
+    });
+
+
         agregarButton = new JButton("Agregar Material");
         agregarButton.addActionListener(this);
         gbc.gridx = 0;
@@ -199,7 +299,7 @@ public class MaterialFrame extends JFrame implements ActionListener {
     ID_choice.add("Elige una ID");
     try {
         Connect c = new Connect();
-        ResultSet rs = c.s.executeQuery("SELECT ID FROM client WHERE NAME='" + selectedName + "'");
+        ResultSet rs = c.s.executeQuery("SELECT ID FROM client WHERE NAME='" + selectedName + "' AND NIF='"+NIF+"'");
         while (rs.next()) {
             ID_choice.add(rs.getString("ID"));
         }
@@ -218,6 +318,7 @@ public class MaterialFrame extends JFrame implements ActionListener {
     // Llamar a updateRowCount para actualizar el número de parte
     updateRowCount();
 }
+    
 
 private void updateRowCount() {
     int rowCount = 0;
@@ -287,7 +388,7 @@ private void updateRowCount() {
                     if(ID_info.length()>1){
                     ID_2=ID_choice.getSelectedItem();
                     }
-                    String query = "INSERT INTO material_bill VALUES('" + ID_2 + "', '" + number + "','" + nombre_material2 + "','" + brand + "','" + price_unit + "','" + unit + "','" + ref_material + "','" + date + "','" + total_price + "','"+NIF+"')";
+                    String query = "INSERT INTO material_bill VALUES('" + ID_2 + "', '" + number + "','" + nombre_material2.toLowerCase().trim() + "','" + brand.toLowerCase().trim() + "','" + price_unit + "','" + unit + "','" + ref_material.trim() + "','" + date + "','" + total_price + "','"+NIF+"')";
 
                     c.s.executeUpdate(query);
                 }
@@ -299,6 +400,9 @@ private void updateRowCount() {
             if(ID_info.length()>1){
             new calculateBill(ID_info, client_info,NIF,ID_USER);
             }
+        }else{
+         setVisible(false);           
+         
         }
     }
     

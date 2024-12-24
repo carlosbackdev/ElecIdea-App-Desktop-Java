@@ -1,46 +1,77 @@
 
 package electricity_bills_system;
 
+import com.formdev.flatlaf.FlatDarkLaf;
 import javax.swing.*;
 import java.awt.*;
 import javax.swing.border.Border;
 import java.awt.Color;
 import java.awt.event.*;
 import java.sql.*;
+import javax.swing.border.EmptyBorder;
+
+
 
 class RoundedButton extends JButton {
+
     public RoundedButton(String label) {
         super(label);
         setOpaque(false);
         setContentAreaFilled(false);
         setBorderPainted(false);
-        setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR)); // Cambia el cursor a puntero
+        setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR)); 
+        setFocusPainted(false); 
+        setBackground(new Color(86, 94, 100)); 
+        setForeground(new Color(190, 190, 190)); 
+        
+        addMouseListener(new java.awt.event.MouseAdapter() {
+            @Override
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                setBackground(new Color(65, 122, 194)); 
+                setBorderPainted(true);  
+            }
+
+            @Override
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                setBackground(new Color(86, 94, 100));  
+                setBorderPainted(false);  
+            }
+        });
     }
 
     @Override
     protected void paintComponent(Graphics g) {
         Graphics2D g2 = (Graphics2D) g.create();
         g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+
+        
+        if (!getModel().isPressed()) {
+            g2.setColor(new Color(200, 200, 200, 100)); 
+            g2.fillRoundRect(5, 5, getWidth() - 10, getHeight() - 10, 30, 30);
+        }
+
         g2.setColor(getBackground());
-        g2.fillRoundRect(0, 0, getWidth(), getHeight(), 30, 30);
+        g2.fillRoundRect(0, 0, getWidth(), getHeight(), 30, 30); 
+
+        if (getModel().isPressed()) {
+            g2.setColor(new Color(100, 100, 100, 50));
+            g2.fillRoundRect(5, 5, getWidth() - 10, getHeight() - 10, 30, 30);
+        }
+
         super.paintComponent(g2);
         g2.dispose();
     }
 
     @Override
     protected void paintBorder(Graphics g) {
-        Graphics2D g2 = (Graphics2D) g.create();
-        g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-        g2.setColor(getForeground());
-        g2.drawRoundRect(0, 0, getWidth() - 1, getHeight() - 1, 30, 30);
-        g2.dispose();
+
     }
 
     @Override
     public void setContentAreaFilled(boolean b) {
-        // No hacer nada
     }
 }
+
 
 
 class BackgroundPanel extends JPanel {
@@ -64,17 +95,18 @@ public class Login extends JFrame implements ActionListener{
     String NIF,ID_USER;
     Login(){
     super("Inicio Sesion Usuario");
-        setContentPane(new BackgroundPanel("images/login.jpg"));    
+        setContentPane(new BackgroundPanel("images/inicio.jpg"));    
         setLayout(new BorderLayout());
 
         JPanel panel = new JPanel(new GridBagLayout());
-        panel.setOpaque(false); // Hace que el panel sea transparente
+        panel.setOpaque(false); 
         GridBagConstraints gbc = new GridBagConstraints();
-        gbc.insets = new Insets(45, 15, 25, 15);
+        gbc.insets = new Insets(45, 5, 25, 5);
         gbc.ipadx = 40;
+        Color gris=new Color(210,210,210);
         
-        JLabel head = new JLabel("SESIÓN");
-        head.setForeground(Color.WHITE);
+        JLabel head = new JLabel("       INICIO DE SESIÓN");
+        head.setForeground(gris);
         head.setFont(new Font("Roboto", Font.PLAIN, 28));
         gbc.gridx = 0;
         gbc.gridy = 0;
@@ -83,7 +115,7 @@ public class Login extends JFrame implements ActionListener{
         panel.add(head, gbc);
         
         JLabel label_usuario = new JLabel("Usuario");
-        label_usuario.setForeground(Color.WHITE);
+        label_usuario.setForeground(gris);
         label_usuario.setFont(new Font("Roboto", Font.PLAIN, 24));
         gbc.fill = GridBagConstraints.HORIZONTAL; 
         gbc.gridy = 1;
@@ -101,7 +133,7 @@ public class Login extends JFrame implements ActionListener{
         panel.add(cajon_usuario, gbc);
 
         JLabel label_contraseña = new JLabel("Contraseña");
-        label_contraseña.setForeground(Color.WHITE);
+        label_contraseña.setForeground(gris);
         label_contraseña.setFont(new Font("Roboto", Font.PLAIN, 24)); 
         gbc.gridy = 2;
         gbc.gridx = 0;
@@ -115,8 +147,8 @@ public class Login extends JFrame implements ActionListener{
         gbc.weightx = 0; 
         panel.add(cajon_contra, gbc);
 
-        JLabel tipo_usuario = new JLabel("Conectarse como");
-        tipo_usuario.setForeground(Color.WHITE);
+        JLabel tipo_usuario = new JLabel("Conectarse");
+        tipo_usuario.setForeground(gris);
         tipo_usuario.setFont(new Font("Roboto", Font.PLAIN, 24)); 
         gbc.gridy = 3;
         gbc.gridx = 0;
@@ -125,6 +157,8 @@ public class Login extends JFrame implements ActionListener{
         tipousu = new Choice();
         tipousu.add("cliente");
         tipousu.add("administrador");
+        tipousu.setBackground(new Color(70, 73, 75));
+        tipousu.setForeground(new Color(190, 190, 190));
         tipousu.setFont(new Font("Roboto", Font.PLAIN, 16));
         gbc.gridx = 1;
         gbc.fill = GridBagConstraints.HORIZONTAL; 
@@ -147,24 +181,18 @@ public class Login extends JFrame implements ActionListener{
                 
         
         login  = new RoundedButton("     Entrar     ");
-        login.setBackground(new Color(222, 239, 255));
-        login.setForeground(Color.BLACK);
         login.setFont(new Font("Roboto", Font.PLAIN, 18)); 
         login.addActionListener(this);
         panelBotones.add(login);
         panelBotones.add(login, BorderLayout.WEST);
 
         signup = new RoundedButton("     Registro     ");
-        signup.setBackground(new Color(222, 239, 255));
-        signup.setForeground(Color.BLACK);
         signup.setFont(new Font("Roboto", Font.PLAIN, 18)); 
         signup.addActionListener(this);
         panelBotones.add(signup);
         panelBotones.add(signup, BorderLayout.EAST);
         
         signup_empresa = new RoundedButton("Registrar Empresa");
-        signup_empresa.setBackground(new Color(222, 239, 255));
-        signup_empresa.setForeground(Color.BLACK);
         signup_empresa.setFont(new Font("Roboto", Font.PLAIN, 18));
         gbc.gridy = 6;
         gbc.gridx = 0;
@@ -172,17 +200,22 @@ public class Login extends JFrame implements ActionListener{
         panel.add(signup_empresa, gbc);
         
         add(panel, BorderLayout.PAGE_START);
-
-        setSize(1200, 800);
+        
+        try {
+            UIManager.setLookAndFeel(new FlatDarkLaf());
+        } catch (UnsupportedLookAndFeelException e) {
+            e.printStackTrace();
+        }
+        setSize(900, 800);
         setLocationRelativeTo(null);
-        setVisible(true);
+        setVisible(true);    
     }
     
     public void actionPerformed(ActionEvent ae){
         if(ae.getSource() == login){
-            String username= cajon_usuario.getText();
-            username = username.toLowerCase();
-            String password= cajon_contra.getText();
+            String username= cajon_usuario.getText().trim();
+            username = username.toLowerCase().trim();
+            String password= cajon_contra.getText().trim();
             String encrypted_password = contraseña.encryptPassword(password);      
             String user=tipousu.getSelectedItem();
             

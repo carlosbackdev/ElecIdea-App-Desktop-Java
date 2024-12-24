@@ -26,15 +26,16 @@ BillSearch(String NIF,String ID_USER){
     Font fuente=new Font("Roboto", Font.PLAIN, 20);
     Font fuente2=new Font("Roboto", Font.PLAIN, 15);
     Font fuente3=new Font("Roboto", Font.PLAIN, 12);
+    Color gris=new Color(210,210,210);
      
     JPanel panel = new JPanel(new GridBagLayout());
     panel.setOpaque(false);
     GridBagConstraints gbc = new GridBagConstraints();
-    gbc.insets = new Insets(30, 0, 25, 0);
-    gbc.ipadx = 120;
+    gbc.insets = new Insets(25, 0, 25, 0);
+    gbc.ipadx = 80;
 
     JLabel head = new JLabel("                BUSCAR Y VER FACTURAS");
-    head.setForeground(Color.WHITE);
+    head.setForeground(gris);
     head.setFont(fuente);
     gbc.gridx = 0;
     gbc.gridy = 0;
@@ -43,7 +44,7 @@ BillSearch(String NIF,String ID_USER){
     panel.add(head, gbc);
 
     JLabel nombre_parametro = new JLabel("Busca y Selecciona nombre");
-    nombre_parametro.setForeground(Color.WHITE);
+    nombre_parametro.setForeground(gris);
     nombre_parametro.setFont(fuente);
     gbc.gridy = 1;
     gbc.gridwidth = 1;
@@ -136,7 +137,7 @@ BillSearch(String NIF,String ID_USER){
         });
     
     JLabel numeroid = new JLabel("Numero Identificacion");
-    numeroid.setForeground(Color.WHITE);
+    numeroid.setForeground(gris);
     numeroid.setFont(fuente); 
     gbc.gridy = 2;
     gbc.gridx = 0;
@@ -146,6 +147,8 @@ BillSearch(String NIF,String ID_USER){
     ID_choice = new Choice();
     ID_choice.add("seleciona ID");
     ID_choice.setFont(fuente2);
+    ID_choice.setBackground(new Color(70, 73, 75));
+    ID_choice.setForeground(new Color(190, 190, 190));
     gbc.gridx = 1;
     gbc.fill = GridBagConstraints.HORIZONTAL; 
     gbc.weightx = 0;
@@ -153,7 +156,7 @@ BillSearch(String NIF,String ID_USER){
 
     JLabel nombreusu = new JLabel("Estado Factura:");
     gbc.anchor = GridBagConstraints.WEST;
-    nombreusu.setForeground(Color.WHITE);
+    nombreusu.setForeground(gris);
     nombreusu.setFont(fuente);
     gbc.gridy = 3;
     gbc.gridx = 0;
@@ -165,6 +168,8 @@ BillSearch(String NIF,String ID_USER){
     status_choice.add("Pendiente");
     status_choice.add("Sin enviar");
     status_choice.setFont(fuente2);
+    status_choice.setBackground(new Color(70, 73, 75));
+    status_choice.setForeground(new Color(190, 190, 190));
     gbc.gridx = 1;
     gbc.fill = GridBagConstraints.HORIZONTAL; 
     gbc.weightx = 0;
@@ -194,6 +199,8 @@ BillSearch(String NIF,String ID_USER){
     for(int i=0;i<meses.length;i++){
     fecha_choice_mes.add(meses[i]);}
     fecha_choice_mes.setFont(fuente3);
+    fecha_choice_mes.setBackground(new Color(70, 73, 75));
+    fecha_choice_mes.setForeground(new Color(190, 190, 190));
     fecha_choice_mes.addItemListener(new ItemListener() {
         @Override
         public void itemStateChanged(ItemEvent e) {
@@ -210,6 +217,8 @@ BillSearch(String NIF,String ID_USER){
     fecha_choice_year.add("2024");
     fecha_choice_year.add("2023");
     fecha_choice_year.add("2022");
+    fecha_choice_year.setBackground(new Color(70, 73, 75));
+    fecha_choice_year.setForeground(new Color(190, 190, 190));
     fecha_choice_year.setFont(fuente3);fecha_choice_year.addItemListener(new ItemListener() {
         @Override
         public void itemStateChanged(ItemEvent e) {
@@ -231,7 +240,7 @@ BillSearch(String NIF,String ID_USER){
 
     
     JLabel nombrecompleto = new JLabel("Selecionar factura:");
-    nombrecompleto.setForeground(Color.WHITE);
+    nombrecompleto.setForeground(gris);
     nombrecompleto.setFont(fuente);
     gbc.gridy = 5;
     gbc.gridx = 0;
@@ -239,6 +248,8 @@ BillSearch(String NIF,String ID_USER){
 
     factura_choice = new Choice();    
     factura_choice.setFont(fuente3);
+    factura_choice.setBackground(new Color(70, 73, 75));
+    factura_choice.setForeground(new Color(190,190,190));
     gbc.gridx = 1;
     gbc.fill = GridBagConstraints.HORIZONTAL; 
     gbc.weightx = 0;
@@ -255,19 +266,16 @@ BillSearch(String NIF,String ID_USER){
     gbc.gridy = 7;
     gbc.gridwidth = 2;
     gbc.fill = GridBagConstraints.NONE;
+    gbc.ipadx=50;
     gbc.anchor = GridBagConstraints.CENTER;
     panel.add(panelBotones, gbc);
 
     buscar = new RoundedButton(" Ver Factura ");
-    buscar.setBackground(new Color(222, 239, 255));
-    buscar.setForeground(Color.BLACK);
     buscar.setFont(new Font("Roboto", Font.PLAIN, 18));
     buscar.addActionListener(this);
     panelBotones.add(buscar, BorderLayout.WEST);
 
     volver = new RoundedButton("   Volver   ");
-    volver.setBackground(new Color(222, 239, 255));
-    volver.setForeground(Color.BLACK);
     volver.setFont(new Font("Roboto", Font.PLAIN, 18));
     volver.addActionListener(this);
     panelBotones.add(volver, BorderLayout.EAST);

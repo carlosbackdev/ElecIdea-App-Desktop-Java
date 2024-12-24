@@ -20,9 +20,11 @@ public class Signup extends JFrame implements ActionListener {
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.insets = new Insets(30, 10, 25, 15);
         gbc.ipadx = 40;
+        Color gris=new Color(210,210,210);
+
 
         JLabel head = new JLabel("CREAR CUENTA");
-        head.setForeground(Color.WHITE);
+        head.setForeground(gris);
         head.setFont(new Font("Roboto", Font.PLAIN, 24));
         gbc.gridx = 0;
         gbc.gridy = 0;
@@ -32,7 +34,7 @@ public class Signup extends JFrame implements ActionListener {
 
         JLabel tipo_usuario = new JLabel("Registrarse como:");
         gbc.anchor = GridBagConstraints.WEST;
-        tipo_usuario.setForeground(Color.WHITE);
+        tipo_usuario.setForeground(gris);
         tipo_usuario.setFont(new Font("Roboto", Font.PLAIN, 24));
         gbc.gridy = 1;
         
@@ -43,13 +45,15 @@ public class Signup extends JFrame implements ActionListener {
         tipousu = new Choice();
         tipousu.add("cliente");
         tipousu.add("administrador");
+        tipousu.setBackground(new Color(70, 73, 75));
+        tipousu.setForeground(new Color(190, 190, 190));
         tipousu.setFont(new Font("Roboto", Font.PLAIN, 16));
         gbc.gridx = 1;
         panel.add(tipousu, gbc);
 
         JLabel nombreusu = new JLabel("Usuario");
         gbc.anchor = GridBagConstraints.WEST;
-        nombreusu.setForeground(Color.WHITE);
+        nombreusu.setForeground(gris);
         nombreusu.setFont(new Font("Roboto", Font.PLAIN, 24));
         gbc.gridy = 2;
         gbc.gridx = 0;
@@ -64,7 +68,7 @@ public class Signup extends JFrame implements ActionListener {
         panel.add(cajon_usu, gbc);
         
         JLabel nombrecompleto = new JLabel("Nombre y Apellido");
-        nombrecompleto.setForeground(Color.WHITE);
+        nombrecompleto.setForeground(gris);
         nombrecompleto.setFont(new Font("Roboto", Font.PLAIN, 24));
         gbc.gridy = 3;
         gbc.gridx = 0;
@@ -79,7 +83,7 @@ public class Signup extends JFrame implements ActionListener {
         panel.add(cajon_nombre, gbc);
         
         JLabel contraseña = new JLabel("Contraseña");
-        contraseña.setForeground(Color.WHITE);
+        contraseña.setForeground(gris);
         contraseña.setFont(new Font("Roboto", Font.PLAIN, 24));
         gbc.gridy = 4;
         gbc.gridx = 0;
@@ -94,7 +98,7 @@ public class Signup extends JFrame implements ActionListener {
         panel.add(cajon_passwd, gbc);
         
         JLabel empresa = new JLabel("Nombre de Empresa");
-        empresa.setForeground(Color.WHITE);
+        empresa.setForeground(gris);
         empresa.setFont(new Font("Roboto", Font.PLAIN, 24));
         gbc.gridy = 5;
         gbc.gridx = 0;
@@ -108,7 +112,7 @@ public class Signup extends JFrame implements ActionListener {
         
         
         JLabel empresacod = new JLabel("Codigo de Empresa");
-        empresacod.setForeground(Color.WHITE);
+        empresacod.setForeground(gris);
         empresacod.setFont(new Font("Roboto", Font.PLAIN, 24));
         gbc.gridy = 6;
         gbc.gridx = 0;
@@ -124,7 +128,7 @@ public class Signup extends JFrame implements ActionListener {
         
         JLabel inf = new JLabel("Para registrarse como usuario se debe obtener el codigo porporcionado por su empresa");
         gbc.anchor = GridBagConstraints.CENTER;
-        inf.setForeground(Color.WHITE);
+        inf.setForeground(gris);
         inf.setFont(new Font("Arial", Font.PLAIN, 12));
         gbc.gridy = 7;
         gbc.gridwidth = 2;
@@ -142,17 +146,13 @@ public class Signup extends JFrame implements ActionListener {
         
         
         
-        crear  = new RoundedButton("Crear");
-        crear.setBackground(new Color(222, 239, 255));
-        crear.setForeground(Color.BLACK);
+        crear  = new RoundedButton("      Crear      ");
         crear.setFont(new Font("Roboto", Font.PLAIN, 18)); 
         crear.addActionListener(this);
         panelBotones.add(crear);
         panelBotones.add(crear, BorderLayout.WEST);
 
-        volver = new RoundedButton("Volver");
-        volver.setBackground(new Color(222, 239, 255));
-        volver.setForeground(Color.BLACK);
+        volver = new RoundedButton("       Volver      ");
         volver.setFont(new Font("Roboto", Font.PLAIN, 18)); 
         volver.addActionListener(this);
         panelBotones.add(volver);
@@ -172,12 +172,12 @@ public class Signup extends JFrame implements ActionListener {
         if(ae.getSource() == crear){
             String tipo_usuario = tipousu.getSelectedItem();
             String nombre_usuario = cajon_usu.getText();
-            nombre_usuario=nombre_usuario.toLowerCase();
+            nombre_usuario=nombre_usuario.toLowerCase().trim();
             int nombre_usuarioleght=nombre_usuario.length();
             String nombre = cajon_nombre.getText();
-            nombre=nombre.toLowerCase();
+            nombre=nombre.toLowerCase().trim();
             int nombrelenght=nombre.length();
-            String password = cajon_passwd.getText();
+            String password = cajon_passwd.getText().trim();
             String CODE=cajon_codigo.getText().trim();            
             CODE=contraseña.encryptPassword(CODE);
             int passlenght=password.length();
@@ -239,7 +239,7 @@ public class Signup extends JFrame implements ActionListener {
              
             if(ID>0 && passlenght>7 && nombrelenght>2 && nombre_usuarioleght>4 && nombre_exsistente==0 && codigo){
             try{ Connect c = new Connect();
-                 String query = "insert into login values('"+ID+"', '"+nombre_usuario+"','"+nombre+"','"+encrypted_password+"','"+tipo_usuario+"','"+NIF+"')";
+                 String query = "insert into login values('"+ID+"', '"+nombre_usuario.trim()+"','"+nombre.toLowerCase().trim()+"','"+encrypted_password+"','"+tipo_usuario+"','"+NIF+"')";
                  
                  c.s.executeUpdate(query);
                  

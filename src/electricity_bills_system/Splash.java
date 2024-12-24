@@ -1,7 +1,9 @@
 
 package electricity_bills_system;
+import com.formdev.flatlaf.FlatDarkLaf;
 import javax.swing.*;
 import java.awt.*;
+
 
 public class Splash extends JFrame  implements Runnable{    
     Thread t;
@@ -25,6 +27,12 @@ public class Splash extends JFrame  implements Runnable{
         
         t=new Thread(this);
         t.start();
+        try {
+            UIManager.setLookAndFeel(new FlatDarkLaf());
+        } catch (UnsupportedLookAndFeelException e) {
+            e.printStackTrace();
+        }
+        
                 
         setVisible(true);
 

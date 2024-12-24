@@ -16,15 +16,16 @@ public class SignupCompany extends JFrame implements ActionListener {
         setContentPane(new BackgroundPanel("images/login.jpg"));
         setLayout(new BorderLayout());
         Font fuente=new Font("Roboto", Font.PLAIN, 24);
+        Color gris=new Color(210,210,210);
 
         JPanel panel = new JPanel(new GridBagLayout());
         panel.setOpaque(false);
         GridBagConstraints gbc = new GridBagConstraints();
-        gbc.insets = new Insets(15, 0, 25, 0);
-        gbc.ipadx = 90;
+        gbc.insets = new Insets(15, 5, 25, 5);
+        gbc.ipadx = 65;
 
-        JLabel head = new JLabel("          REGISTRAR EMPRESA");
-        head.setForeground(Color.WHITE);
+        JLabel head = new JLabel("             REGISTRAR EMPRESA");
+        head.setForeground(gris);
         head.setFont(fuente);
         gbc.gridx = 0;
         gbc.gridy = 0;
@@ -32,9 +33,9 @@ public class SignupCompany extends JFrame implements ActionListener {
         gbc.anchor = GridBagConstraints.CENTER;
         panel.add(head, gbc);
 
-        JLabel tipo_usuario = new JLabel("Nombre");
+        JLabel tipo_usuario = new JLabel("     Nombre");
         gbc.anchor = GridBagConstraints.WEST;
-        tipo_usuario.setForeground(Color.WHITE);
+        tipo_usuario.setForeground(gris);
         tipo_usuario.setFont(fuente);
         gbc.gridy = 1;        
         gbc.gridwidth = 1;
@@ -49,9 +50,9 @@ public class SignupCompany extends JFrame implements ActionListener {
         gbc.weightx = 0; 
         panel.add(cajon_nombre, gbc);
 
-        JLabel nombreusu = new JLabel("NIF");
+        JLabel nombreusu = new JLabel("     NIF");
         gbc.anchor = GridBagConstraints.WEST;
-        nombreusu.setForeground(Color.WHITE);
+        nombreusu.setForeground(gris);
         nombreusu.setFont(fuente);
         gbc.gridy = 2;
         gbc.gridx = 0;
@@ -65,8 +66,8 @@ public class SignupCompany extends JFrame implements ActionListener {
         gbc.weightx = 0; 
         panel.add(cajon_nif, gbc);
         
-        JLabel nombrecompleto = new JLabel("Dirección");
-        nombrecompleto.setForeground(Color.WHITE);
+        JLabel nombrecompleto = new JLabel("     Dirección");
+        nombrecompleto.setForeground(gris);
         nombrecompleto.setFont(fuente);
         gbc.gridy = 3;
         gbc.gridx = 0;
@@ -80,8 +81,8 @@ public class SignupCompany extends JFrame implements ActionListener {
         gbc.weightx = 0; 
         panel.add(cajon_direccion, gbc);
         
-        JLabel contraseña = new JLabel("Postal");
-        contraseña.setForeground(Color.WHITE);
+        JLabel contraseña = new JLabel("     Postal");
+        contraseña.setForeground(gris);
         contraseña.setFont(fuente);
         gbc.gridy = 4;
         gbc.gridx = 0;
@@ -95,8 +96,8 @@ public class SignupCompany extends JFrame implements ActionListener {
         gbc.weightx = 0; 
         panel.add(cajon_postal, gbc);
         
-        JLabel empresa = new JLabel("Ciudad");
-        empresa.setForeground(Color.WHITE);
+        JLabel empresa = new JLabel("     Ciudad");
+        empresa.setForeground(gris);
         empresa.setFont(fuente);
         gbc.gridy = 5;
         gbc.gridx = 0;
@@ -110,8 +111,8 @@ public class SignupCompany extends JFrame implements ActionListener {
         gbc.weightx = 0; 
         panel.add(cajon_ciudad, gbc); 
         
-        JLabel empresacod = new JLabel("Email");
-        empresacod.setForeground(Color.WHITE);
+        JLabel empresacod = new JLabel("     Email");
+        empresacod.setForeground(gris);
         empresacod.setFont(fuente);
         gbc.gridy = 6;
         gbc.gridx = 0;
@@ -125,9 +126,9 @@ public class SignupCompany extends JFrame implements ActionListener {
         gbc.weightx = 0; 
         panel.add(cajon_mail, gbc);        
         
-        JLabel inf = new JLabel("Telefono");
+        JLabel inf = new JLabel("     Telefono");
         gbc.anchor = GridBagConstraints.CENTER;
-        inf.setForeground(Color.WHITE);
+        inf.setForeground(gris);
         inf.setFont(fuente);
         gbc.gridy = 7;
         gbc.gridwidth = 2;
@@ -142,9 +143,9 @@ public class SignupCompany extends JFrame implements ActionListener {
         gbc.weightx = 0; 
         panel.add(cajon_tlf, gbc);
         
-        JLabel iban = new JLabel("IBAN");
+        JLabel iban = new JLabel("     IBAN");
         gbc.anchor = GridBagConstraints.CENTER;
-        iban.setForeground(Color.WHITE);
+        iban.setForeground(gris);
         iban.setFont(fuente);
         gbc.gridy = 8;
         gbc.gridwidth = 2;
@@ -178,16 +179,12 @@ public class SignupCompany extends JFrame implements ActionListener {
         
         
         crear  = new RoundedButton("   Registrar   ");
-        crear.setBackground(new Color(222, 239, 255));
-        crear.setForeground(Color.BLACK);
         crear.setFont(new Font("Roboto", Font.PLAIN, 18)); 
         crear.addActionListener(this);
         panelBotones.add(crear);
         panelBotones.add(crear, BorderLayout.WEST);
 
         volver = new RoundedButton("     Volver     ");
-        volver.setBackground(new Color(222, 239, 255));
-        volver.setForeground(Color.BLACK);
         volver.setFont(new Font("Roboto", Font.PLAIN, 18)); 
         volver.addActionListener(this);
         panelBotones.add(volver);
@@ -205,14 +202,14 @@ public class SignupCompany extends JFrame implements ActionListener {
     
     public void actionPerformed(ActionEvent ae){
         if(ae.getSource() == crear){
-            String NAME=cajon_nombre.getText();
-            String NIF=cajon_nif.getText();            
-            String ADDRESS=cajon_direccion.getText();
-            String POSTAL= cajon_postal.getText();
-            String CITY=cajon_ciudad.getText();
-            String EMAIL=cajon_mail.getText();
-            String PHONE=cajon_tlf.getText();
-            String IBAN=cajon_iban.getText();
+            String NAME=cajon_nombre.getText().toLowerCase().trim();
+            String NIF=cajon_nif.getText().trim();            
+            String ADDRESS=cajon_direccion.getText().toLowerCase().trim();
+            String POSTAL= cajon_postal.getText().trim();
+            String CITY=cajon_ciudad.getText().toLowerCase().trim();
+            String EMAIL=cajon_mail.getText().toLowerCase().trim();
+            String PHONE=cajon_tlf.getText().trim();
+            String IBAN=cajon_iban.getText().trim().toUpperCase();
             String[] COMPANY= {NAME,NIF,ADDRESS,POSTAL,CITY,EMAIL,PHONE,IBAN};
             boolean NIF_VALIDO=false;
             boolean correo=false;

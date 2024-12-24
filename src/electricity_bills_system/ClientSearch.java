@@ -6,7 +6,9 @@ import java.awt.*;
 import java.awt.event.*;
 import java.io.*;
 import java.sql.ResultSet;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import javax.swing.border.Border;
 import javax.swing.event.*;
 import javax.swing.table.*;
@@ -18,10 +20,12 @@ public class ClientSearch extends JFrame implements ActionListener{
     JComboBox<String> nombre_combo;
     JPopupMenu nombre_popup;
     Choice ID_choice,proyecto_tipo,fecha_choice_mes,fecha_choice_year;
-    String selectedID,NIF,ID_USER;
+    String selectedID,NIF,ID_USER,date;
     JButton buscar, imprimir,salir;
     JTable tabla_cliente;
     DefaultTableModel tableModel;
+    JFormattedTextField dateField;
+    SimpleDateFormat dateFormat;
     String[] meses = {"Todos Meses","Enero","Febrero","Marzo","Aril","Mayo","Junio","Julio","Agosto","Septiembre","Octubre","Noviembre","Diciembre"};
     ArrayList<String> NAMEa = new ArrayList<>();
     ArrayList<String> ADDRESSa = new ArrayList<>();
@@ -45,6 +49,8 @@ public class ClientSearch extends JFrame implements ActionListener{
     
     cliente = new JTextField("Todos");  
     ID_choice = new Choice();
+    ID_choice.setBackground(new java.awt.Color(70, 73, 75));
+    ID_choice.setForeground(new java.awt.Color(190, 190, 190));
         ID_choice.add("Cualquiera");
         ID_choice.addItemListener(new ItemListener() {
         public void itemStateChanged(ItemEvent e) {
@@ -55,6 +61,8 @@ public class ClientSearch extends JFrame implements ActionListener{
     });
     proyecto_tipo = new Choice();
     String[] tipos={"Todos","defecto","mantenimiento electrico","proyecto solar"};
+    proyecto_tipo.setBackground(new java.awt.Color(70, 73, 75));
+    proyecto_tipo.setForeground(new java.awt.Color(190, 190, 190));
     for(int i=0;i<tipos.length;i++){
         proyecto_tipo.add(tipos[i]);
     }    
@@ -65,6 +73,8 @@ public class ClientSearch extends JFrame implements ActionListener{
     fecha_choice_mes = new Choice();
     for(int i=0;i<meses.length;i++){
     fecha_choice_mes.add(meses[i]);}
+    fecha_choice_mes.setBackground(new java.awt.Color(70, 73, 75));
+    fecha_choice_mes.setForeground(new java.awt.Color(190, 190, 190));
 
 
     fecha_choice_year = new Choice();
@@ -72,7 +82,9 @@ public class ClientSearch extends JFrame implements ActionListener{
     fecha_choice_year.add("2025");
     fecha_choice_year.add("2024");
     fecha_choice_year.add("2023");
-    fecha_choice_year.add("2022");  
+    fecha_choice_year.add("2022");
+    fecha_choice_year.setBackground(new java.awt.Color(70, 73, 75));
+    fecha_choice_year.setForeground(new java.awt.Color(190, 190, 190));
 
     panelfecha.add(fecha_choice_mes); 
     panelfecha.add(fecha_choice_year);
@@ -117,7 +129,7 @@ public class ClientSearch extends JFrame implements ActionListener{
 
             private void updatePopup() {
                 timer.stop(); 
-                String text = cliente.getText();
+                String text = cliente.getText().toLowerCase().trim();
                 if (text.isEmpty()) {
                     nombre_popup.setVisible(false);
                 } else {
@@ -332,7 +344,9 @@ public class ClientSearch extends JFrame implements ActionListener{
             for (int i = 0; i < sheet.getRow(0).getPhysicalNumberOfCells(); i++) {
                 sheet.autoSizeColumn(i);
             }
-            String filename="Clientes; "+NAMEa.size()+"de "+".xlsx";
+            dateFormat = new SimpleDateFormat("dd-MM-yyyy");
+            date = dateFormat.format(new Date());
+            String filename="Clientes tabla; del "+date+".xlsx";
             FileOutputStream fileOut = new FileOutputStream(filename);
             workbook.write(fileOut);
             fileOut.close();

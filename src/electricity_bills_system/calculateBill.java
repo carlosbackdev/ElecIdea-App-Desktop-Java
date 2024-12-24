@@ -3,6 +3,7 @@
 package electricity_bills_system;
 
 
+import com.formdev.flatlaf.FlatDarkLaf;
 import javax.swing.*;
 import java.awt.*;
 import java.util.*;
@@ -47,10 +48,11 @@ public class calculateBill extends JFrame implements ActionListener {
         Font fuente2=new Font("Roboto", Font.PLAIN, 15);
         Font fuente3=new Font("Roboto", Font.PLAIN, 18);
         Font fuente4=new Font("Roboto", Font.PLAIN, 14);
-        gbc.ipadx = 100;
+        Color gris=new Color(210,210,210);
+        gbc.ipadx = 85;
         
         JLabel head = new JLabel("                Calcular Factura Eléctrica");
-        head.setForeground(Color.WHITE);
+        head.setForeground(gris);
         head.setFont(new Font("Roboto", Font.PLAIN, 28));
         gbc.gridx = 0;
         gbc.gridy = 0;
@@ -59,7 +61,7 @@ public class calculateBill extends JFrame implements ActionListener {
         panel.add(head, gbc);
         
         JLabel nombre = new JLabel("Busca y selecciona Nombre en clientes");
-        nombre.setForeground(Color.WHITE);
+        nombre.setForeground(gris);
         gbc.fill = GridBagConstraints.HORIZONTAL; 
         nombre.setFont(new Font("Roboto", Font.PLAIN, 19)); 
         gbc.gridy = 1;
@@ -157,7 +159,7 @@ public class calculateBill extends JFrame implements ActionListener {
         
 
         JLabel numeroid = new JLabel("Numero Identificacion");
-        numeroid.setForeground(Color.WHITE);
+        numeroid.setForeground(gris);
         numeroid.setFont(fuente); 
         gbc.gridy = 2;
         gbc.gridx = 0;
@@ -169,6 +171,8 @@ public class calculateBill extends JFrame implements ActionListener {
         ID_choice.add("seleciona ID");}
         ID_choice.add(ID_info_update);
         ID_choice.setFont(fuente2);
+        ID_choice.setBackground(new Color(70, 73, 75));
+        ID_choice.setForeground(new Color(190, 190, 190));
         gbc.gridx = 1;
         gbc.fill = GridBagConstraints.HORIZONTAL; 
         gbc.weightx = 0;
@@ -176,7 +180,7 @@ public class calculateBill extends JFrame implements ActionListener {
         
        
         JLabel direccion = new JLabel("Direccion");
-        direccion.setForeground(Color.WHITE);
+        direccion.setForeground(gris);
         gbc.fill = GridBagConstraints.HORIZONTAL; 
         direccion.setFont(fuente); 
         gbc.gridy = 3;
@@ -234,7 +238,7 @@ public class calculateBill extends JFrame implements ActionListener {
         });
         
         JLabel horas = new JLabel("Horas de mantenimiento");
-        horas.setForeground(Color.WHITE);
+        horas.setForeground(gris);
         horas.setFont(fuente); 
         gbc.gridy = 4;
         gbc.gridx = 0;
@@ -250,7 +254,7 @@ public class calculateBill extends JFrame implements ActionListener {
         panel.add(cajon_horas, gbc);
         
         JLabel fechala = new JLabel("Fecha");
-        fechala.setForeground(Color.WHITE);
+        fechala.setForeground(gris);
         fechala.setFont(fuente); 
         gbc.gridy = 5;
         gbc.gridx = 0;
@@ -275,14 +279,14 @@ public class calculateBill extends JFrame implements ActionListener {
         panel.add(panelBotones3, gbc);
         
         materiales_agregar  = new RoundedButton("Agregar Materiales");
-        materiales_agregar.setBackground(new Color(222, 239, 255));
-        materiales_agregar.setForeground(Color.BLACK);
         materiales_agregar.setFont(fuente2); 
         materiales_agregar.addActionListener(this);
         panelBotones3.add(materiales_agregar);
         panelBotones3.add(materiales_agregar, BorderLayout.WEST);
         
         materiales=new Choice();
+        materiales.setBackground(new Color(70, 73, 75));
+        materiales.setForeground(new Color(190, 190, 190));
         materiales.addItemListener(new ItemListener() {
             public void itemStateChanged(ItemEvent e) {
                 if (e.getStateChange() == ItemEvent.SELECTED) {
@@ -305,14 +309,14 @@ public class calculateBill extends JFrame implements ActionListener {
         panel.add(materiales, gbc);
         
         JLabel totall = new JLabel("Total Materiales");
-        totall.setForeground(Color.WHITE);
+        totall.setForeground(gris);
         totall.setFont(fuente); 
         gbc.gridy = 7;
         gbc.gridx = 0;
         panel.add(totall, gbc);
         
         total_materiales = new JLabel("");
-        total_materiales.setForeground(Color.WHITE);
+        total_materiales.setForeground(gris);
         total_materiales.setFont(fuente3); 
         total_materiales.setText(total_final);
         gbc.weightx = 1.0;
@@ -330,8 +334,6 @@ public class calculateBill extends JFrame implements ActionListener {
         panel.add(panelBotones2, gbc);
         
         configurar  = new RoundedButton("Agregar Parametros");
-        configurar.setBackground(new Color(222, 239, 255));
-        configurar.setForeground(Color.BLACK);
         configurar.setFont(fuente2); 
         configurar.addActionListener(this);
         panelBotones2.add(configurar);
@@ -364,7 +366,8 @@ public class calculateBill extends JFrame implements ActionListener {
             e.printStackTrace();
         }
         
-        
+        parametros.setBackground(new Color(70, 73, 75));
+        parametros.setForeground(new Color(190, 190, 190));
         parametros.setFont(fuente2);
         gbc.gridx = 1;
         gbc.fill = GridBagConstraints.HORIZONTAL; 
@@ -384,29 +387,31 @@ public class calculateBill extends JFrame implements ActionListener {
         gbc.gridx = 0;
         gbc.gridy = 10; 
         gbc.gridwidth = 2; 
+        gbc.ipadx = 50;
         gbc.fill = GridBagConstraints.NONE; 
         gbc.anchor = GridBagConstraints.CENTER; 
         panel.add(panelBotones, gbc);
         
         
         
-        guardar  = new RoundedButton("Ver y Guardar");
-        guardar.setBackground(new Color(222, 239, 255));
-        guardar.setForeground(Color.BLACK);
-        guardar.setFont(fuente); 
+        guardar  = new RoundedButton("  Ver y Guardar  ");
+        guardar.setFont(fuente2); 
         guardar.addActionListener(this);
         panelBotones.add(guardar);
         panelBotones.add(guardar, BorderLayout.WEST);
 
-        cancelar = new RoundedButton("Cancelar");
-        cancelar.setBackground(new Color(222, 239, 255));
-        cancelar.setForeground(Color.BLACK);
-        cancelar.setFont(fuente); 
+        cancelar = new RoundedButton("      Cancelar      ");
+        cancelar.setFont(fuente2); 
         cancelar.addActionListener(this);
         panelBotones.add(cancelar);
         panelBotones.add(cancelar, BorderLayout.EAST);
 
         add(panel, BorderLayout.PAGE_START);
+        try {
+            UIManager.setLookAndFeel(new FlatDarkLaf());
+        } catch (UnsupportedLookAndFeelException e) {
+            e.printStackTrace();
+        }
         
         setSize(900, 800);
         setLocationRelativeTo(null);

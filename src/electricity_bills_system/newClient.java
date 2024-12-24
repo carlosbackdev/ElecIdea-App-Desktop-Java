@@ -32,10 +32,13 @@ public class newClient extends JFrame implements ActionListener {
         gbc.weightx = 1.0;
         Font fuente=new Font("Roboto", Font.PLAIN, 20);
         Font fuente2=new Font("Roboto", Font.PLAIN, 13);
+        Font fuente3=new Font("Roboto", Font.PLAIN, 16);
         gbc.ipadx = 80;
+        Color gris=new Color(210,210,210);
+
         
         JLabel head = new JLabel("          Nuevo Cliente");
-        head.setForeground(Color.WHITE);
+        head.setForeground(gris);
         head.setFont(new Font("Roboto", Font.PLAIN, 28));
         gbc.gridx = 0;
         gbc.gridy = 0;
@@ -44,7 +47,7 @@ public class newClient extends JFrame implements ActionListener {
         panel.add(head, gbc);
         
         JLabel nombre = new JLabel("Nombre");
-        nombre.setForeground(Color.WHITE);
+        nombre.setForeground(gris);
         gbc.fill = GridBagConstraints.HORIZONTAL; 
         nombre.setFont(fuente); 
         gbc.gridy = 1;
@@ -61,7 +64,7 @@ public class newClient extends JFrame implements ActionListener {
         panel.add(cajon_nombre, gbc);
 
         JLabel numeroid = new JLabel("Numero ID generado");
-        numeroid.setForeground(Color.WHITE);
+        numeroid.setForeground(gris);
         numeroid.setFont(fuente); 
         gbc.gridy = 2;
         gbc.gridx = 0;
@@ -70,7 +73,7 @@ public class newClient extends JFrame implements ActionListener {
 
         numero = new JLabel("");
         numero.setFont(fuente);
-        numero.setForeground(Color.WHITE);
+        numero.setForeground(gris);
         gbc.gridx = 1;
         gbc.fill = GridBagConstraints.CENTER;  
         gbc.weightx = 0;        
@@ -81,7 +84,7 @@ public class newClient extends JFrame implements ActionListener {
 
 
         JLabel direccion = new JLabel("Direccion");
-        direccion.setForeground(Color.WHITE);
+        direccion.setForeground(gris);
         gbc.fill = GridBagConstraints.HORIZONTAL; 
         direccion.setFont(fuente); 
         gbc.gridy = 3;
@@ -97,7 +100,7 @@ public class newClient extends JFrame implements ActionListener {
         panel.add(cajon_direccion, gbc);
         
         JLabel ciudad = new JLabel("Ciudad");
-        ciudad.setForeground(Color.WHITE);
+        ciudad.setForeground(gris);
         ciudad.setFont(fuente); 
         gbc.gridy = 4;
         gbc.gridx = 0;
@@ -112,7 +115,7 @@ public class newClient extends JFrame implements ActionListener {
         panel.add(cajon_ciudad, gbc);
         
         JLabel postal = new JLabel("Codigo Postal");
-        postal.setForeground(Color.WHITE);
+        postal.setForeground(gris);
         postal.setFont(fuente); 
         gbc.gridy = 5;
         gbc.gridx = 0;
@@ -127,7 +130,7 @@ public class newClient extends JFrame implements ActionListener {
         panel.add(cajon_postal, gbc);
         
         JLabel mail = new JLabel("Email");
-        mail.setForeground(Color.WHITE);
+        mail.setForeground(gris);
         mail.setFont(fuente); 
         gbc.gridy = 6;
         gbc.gridx = 0;
@@ -142,7 +145,7 @@ public class newClient extends JFrame implements ActionListener {
         panel.add(cajon_mail, gbc);
         
         JLabel telefono = new JLabel("Telefono");
-        telefono.setForeground(Color.WHITE);
+        telefono.setForeground(gris);
         telefono.setFont(fuente); 
         gbc.gridy = 7;
         gbc.gridx = 0;
@@ -173,18 +176,14 @@ public class newClient extends JFrame implements ActionListener {
         dateFormat = new SimpleDateFormat("dd-MM-yyyy");
         date = dateFormat.format(new Date());
         
-        guardar  = new RoundedButton("  Guardar  ");
-        guardar.setBackground(new Color(222, 239, 255));
-        guardar.setForeground(Color.BLACK);
-        guardar.setFont(fuente); 
+        guardar  = new RoundedButton("    Guardar    ");
+        guardar.setFont(fuente3); 
         guardar.addActionListener(this);
         panelBotones.add(guardar);
         panelBotones.add(guardar, BorderLayout.WEST);
 
-        cancelar = new RoundedButton("  Cancelar  ");
-        cancelar.setBackground(new Color(222, 239, 255));
-        cancelar.setForeground(Color.BLACK);
-        cancelar.setFont(fuente); 
+        cancelar = new RoundedButton("    Cancelar    ");
+        cancelar.setFont(fuente3); 
         cancelar.addActionListener(this);
         panelBotones.add(cancelar);
         panelBotones.add(cancelar, BorderLayout.EAST);
@@ -199,13 +198,13 @@ public class newClient extends JFrame implements ActionListener {
     
     public void actionPerformed(ActionEvent ae){
     if(ae.getSource()==guardar){
-        String name =cajon_nombre.getText();
+        String name =cajon_nombre.getText().toLowerCase().trim();
         String ID = numero.getText();
-        String address=cajon_direccion.getText();
-        String city=cajon_ciudad.getText();
-        String postal=cajon_postal.getText();
-        String mail=cajon_mail.getText();
-        String phone = cajon_telf.getText();
+        String address=cajon_direccion.getText().toLowerCase().trim();
+        String city=cajon_ciudad.getText().toLowerCase().trim();
+        String postal=cajon_postal.getText().trim();
+        String mail=cajon_mail.getText().toLowerCase().trim();
+        String phone = cajon_telf.getText().trim();
         int mailn=mail.length();
         
         int condicion=0;
@@ -263,6 +262,9 @@ public class newClient extends JFrame implements ActionListener {
         for(int i=0;i<mailn;i++){
         String a =""+ mail.charAt(i);
         if(a.equals("@")){
+            condicion2=1;
+        }
+        if(a.equals(".")){
             condicion2=1;
         }
         }

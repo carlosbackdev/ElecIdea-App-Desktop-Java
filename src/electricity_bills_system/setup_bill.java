@@ -16,6 +16,7 @@ public class setup_bill extends JFrame implements ActionListener {
         this.NIF = NIF;
         setContentPane(new BackgroundPanel("images/Fichas.jpg"));
         setLayout(new BorderLayout());
+        Color gris=new Color(210,210,210);
 
         JPanel panel = new JPanel(new GridBagLayout());
         panel.setOpaque(false);
@@ -24,7 +25,7 @@ public class setup_bill extends JFrame implements ActionListener {
         gbc.ipadx = 40;
 
         JLabel head = new JLabel("Configurar Nuevo Parametro de Facturas");
-        head.setForeground(Color.WHITE);
+        head.setForeground(gris);
         head.setFont(new Font("Roboto", Font.PLAIN, 24));
         gbc.gridx = 0;
         gbc.gridy = 0;
@@ -33,7 +34,7 @@ public class setup_bill extends JFrame implements ActionListener {
         panel.add(head, gbc);
 
         JLabel nombre_parametro = new JLabel("Nombre del Parametro");
-        nombre_parametro.setForeground(Color.WHITE);
+        nombre_parametro.setForeground(gris);
         nombre_parametro.setFont(new Font("Roboto", Font.PLAIN, 24));
         gbc.gridy = 1;
         gbc.gridwidth = 1;
@@ -50,7 +51,7 @@ public class setup_bill extends JFrame implements ActionListener {
 
         JLabel nombreusu = new JLabel("IVA (en unidad)");
         gbc.anchor = GridBagConstraints.WEST;
-        nombreusu.setForeground(Color.WHITE);
+        nombreusu.setForeground(gris);
         nombreusu.setFont(new Font("Roboto", Font.PLAIN, 24));
         gbc.gridy = 2;
         gbc.gridx = 0;
@@ -65,7 +66,7 @@ public class setup_bill extends JFrame implements ActionListener {
         panel.add(cajon_iva, gbc);
 
         JLabel nombrecompleto = new JLabel("Precio Por Hora");
-        nombrecompleto.setForeground(Color.WHITE);
+        nombrecompleto.setForeground(gris);
         nombrecompleto.setFont(new Font("Roboto", Font.PLAIN, 24));
         gbc.gridy = 3;
         gbc.gridx = 0;
@@ -88,17 +89,17 @@ public class setup_bill extends JFrame implements ActionListener {
         gbc.anchor = GridBagConstraints.CENTER;
         panel.add(panelBotones, gbc);
 
-        crear = new RoundedButton("Guardar");
+        crear = new RoundedButton("   Guardar   ");
         crear.setBackground(new Color(222, 239, 255));
         crear.setForeground(Color.BLACK);
-        crear.setFont(new Font("Roboto", Font.PLAIN, 18));
+        crear.setFont(new Font("Roboto", Font.PLAIN, 16));
         crear.addActionListener(this);
         panelBotones.add(crear, BorderLayout.WEST);
 
-        volver = new RoundedButton("Volver");
+        volver = new RoundedButton("     Volver     ");
         volver.setBackground(new Color(222, 239, 255));
         volver.setForeground(Color.BLACK);
-        volver.setFont(new Font("Roboto", Font.PLAIN, 18));
+        volver.setFont(new Font("Roboto", Font.PLAIN, 16));
         volver.addActionListener(this);
         panelBotones.add(volver, BorderLayout.EAST);
 
@@ -112,11 +113,11 @@ public class setup_bill extends JFrame implements ActionListener {
    
     public void actionPerformed(ActionEvent ae) {
         if (ae.getSource() == crear) {
-            String name = cajon_nombre.getText().toLowerCase();
+            String name = cajon_nombre.getText().toLowerCase().trim();
             int name_length = name.length();
-            String iva = cajon_iva.getText().toLowerCase();
+            String iva = cajon_iva.getText().toLowerCase().trim();
             int iva_length = iva.length();
-            String price = cajon_precio.getText().toLowerCase();
+            String price = cajon_precio.getText().toLowerCase().trim();
             int price_length = price.length();
             
 
@@ -135,7 +136,7 @@ public class setup_bill extends JFrame implements ActionListener {
             int nombre_existente = 0;
             try {
                 Connect c = new Connect();
-                String query = "SELECT NAME FROM setup_bill;";
+                String query = "SELECT NAME FROM setup_bill where NIF='"+NIF+"';";
                 ResultSet rs2 = c.s.executeQuery(query);
                 while (rs2.next()) {
                     String rs3 = rs2.getString("NAME");
