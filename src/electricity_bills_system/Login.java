@@ -22,7 +22,7 @@ class RoundedButton extends JButton {
         setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR)); 
         setFocusPainted(false); 
         setBackground(new Color(86, 94, 100)); 
-        setForeground(new Color(190, 190, 190)); 
+        setForeground(new Color(220, 220, 220)); 
         
         addMouseListener(new java.awt.event.MouseAdapter() {
             @Override

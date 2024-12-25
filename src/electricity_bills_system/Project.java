@@ -6,7 +6,7 @@ import java.awt.*;
 import java.awt.event.*;
 
 public class Project extends JFrame implements ActionListener{
-    JMenuItem cliente,generar,material,factura_detalle,cliente_detalles, factura;
+    JMenuItem cliente,generar,material,factura_detalle,cliente_detalles, factura,cliente_modificar;
     String NIF,ID_USER;
     
     Project(String NIF, String ID_USER){
@@ -53,11 +53,12 @@ public class Project extends JFrame implements ActionListener{
         cliente_detalles.addActionListener(this);
         admin.add(cliente_detalles);
         
-        JMenuItem cliente_crear=new JMenuItem("Modificar Clientes ");
-        cliente_crear.setFont(menufont);
-        cliente_crear.setMnemonic('M');
-        cliente_crear.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_M, ActionEvent.CTRL_MASK));
-        admin.add(cliente_crear);
+        cliente_modificar=new JMenuItem("Modificar Clientes ");
+        cliente_modificar.setFont(menufont);
+        cliente_modificar.setMnemonic('M');
+        cliente_modificar.addActionListener(this);
+        cliente_modificar.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_M, ActionEvent.CTRL_MASK));
+        admin.add(cliente_modificar);
         
         factura=new JMenuItem("Factura de Clientes ");
         factura.setFont(menufont);
@@ -183,6 +184,9 @@ public class Project extends JFrame implements ActionListener{
      }
      if(ae.getSource()==factura){
      new calculateBill("","",NIF,ID_USER);
+     }
+     if(ae.getSource()==cliente_modificar){
+     new ClientUpdate(NIF,ID_USER);
      }
     }
     

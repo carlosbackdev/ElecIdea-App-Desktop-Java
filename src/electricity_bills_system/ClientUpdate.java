@@ -115,7 +115,7 @@ public class ClientUpdate extends JFrame implements ActionListener{
                     nombre_popup.removeAll();
                     try {
                         Connect c = new Connect();
-                        ResultSet rs = c.s.executeQuery("SELECT DISTINCT NAME FROM client WHERE NAME LIKE '" + text + "%'");
+                        ResultSet rs = c.s.executeQuery("SELECT DISTINCT NAME FROM client WHERE NAME LIKE '" + text + "%' AND NIF='"+NIF+"'");
                         while (rs.next()) {
                             JMenuItem item = new JMenuItem(rs.getString("NAME"));
                             item.setPreferredSize(new Dimension(200, 28)); 
@@ -134,7 +134,7 @@ public class ClientUpdate extends JFrame implements ActionListener{
                         ex.printStackTrace();
                     }
                     if (nombre_popup.getComponentCount() > 0) {
-                        nombre_popup.setPreferredSize(new Dimension(307, nombre_popup.getComponentCount() * 30));
+                        nombre_popup.setPreferredSize(new Dimension(220, nombre_popup.getComponentCount() * 30));
                         nombre_popup.show(cajon_nombre, 0, cajon_nombre.getHeight());
                     } else {
                         nombre_popup.setVisible(false);
@@ -281,13 +281,7 @@ public class ClientUpdate extends JFrame implements ActionListener{
         cancelar.setFont(fuente); 
         cancelar.addActionListener(this);
         panelBotones2.add(cancelar);
-        panelBotones2.add(cancelar, BorderLayout.EAST);
-        
-         try {
-            UIManager.setLookAndFeel(new FlatDarkLaf());
-        } catch (UnsupportedLookAndFeelException e) {
-            e.printStackTrace();
-        }
+        panelBotones2.add(cancelar, BorderLayout.EAST);      
 
         add(panel, BorderLayout.PAGE_START);
         
@@ -300,7 +294,7 @@ public class ClientUpdate extends JFrame implements ActionListener{
     ID_choice.removeAll();
     try {
         Connect c = new Connect();
-        ResultSet rs = c.s.executeQuery("SELECT ID FROM client WHERE NAME='" + selectedName + "'");
+        ResultSet rs = c.s.executeQuery("SELECT ID FROM client WHERE NAME='" + selectedName + "' AND NIF='"+NIF+"'");
         while (rs.next()) {
             ID_choice.add(rs.getString("ID"));
             selectedID = rs.getString("ID");
@@ -345,9 +339,9 @@ public class ClientUpdate extends JFrame implements ActionListener{
 }
     
     public void actionPerformed(ActionEvent ae){
+        String ID = ID_choice.getSelectedItem();
     if(ae.getSource()==guardar){
-        String name =cajon_nombre.getText().toLowerCase().trim();
-        String ID = numero.getText();
+        String name =cajon_nombre.getText().toLowerCase().trim();        
         String address=cajon_direccion.getText().toLowerCase().trim();
         String city=cajon_ciudad.getText().toLowerCase().trim();
         String postal=cajon_postal.getText().trim();
@@ -449,6 +443,16 @@ public class ClientUpdate extends JFrame implements ActionListener{
                 JOptionPane.QUESTION_MESSAGE);
 
             if (opcion == JOptionPane.YES_OPTION) {
+                try{
+                    Connect c = new Connect();
+                    String query="DELETE FROM client WHERE ID='"+ID+"'";
+                    c.s.executeUpdate(query);
+                    JOptionPane.showMessageDialog(null,"Cliente Eliminado");
+                    setVisible(false);
+                    new ClientUpdate(NIF,ID_USER);
+                }catch (Exception e){
+                    e.printStackTrace();
+                }
                 
             } else if (opcion == JOptionPane.NO_OPTION) {
                 
