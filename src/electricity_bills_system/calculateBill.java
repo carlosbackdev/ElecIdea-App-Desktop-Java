@@ -18,8 +18,7 @@ import java.util.regex.Pattern;
 import javax.swing.Timer;
 
 public class calculateBill extends JFrame implements ActionListener {
-    JTextField cajon_nombre,cajon_horas;
-    JTextArea cajon_direccion;
+    JTextField cajon_nombre,cajon_horas,cajon_direccion;
     RoundedButton guardar,cancelar,configurar,materiales_agregar;
     JComboBox ID_choice,parametros, materiales;
     JComboBox<String> nombre_combo;
@@ -69,12 +68,11 @@ public class calculateBill extends JFrame implements ActionListener {
         gbc.gridx = 0;
         panel.add(nombre, gbc);
         
-        // elegir nombre mientras se escribe
         
         cajon_nombre = new JTextField(client_info_update);
         cajon_nombre.setFont(fuente2);
         cajon_nombre.setHorizontalAlignment(JTextField.CENTER);
-        cajon_nombre.setPreferredSize(new Dimension(200, 28));
+        cajon_nombre.setPreferredSize(new Dimension(285, 25));
         gbc.gridx = 1;
         gbc.fill = GridBagConstraints.HORIZONTAL; 
         gbc.weightx = 1.0;
@@ -132,7 +130,7 @@ public class calculateBill extends JFrame implements ActionListener {
                         ResultSet rs = c.s.executeQuery("SELECT DISTINCT NAME FROM client WHERE NAME LIKE '" + text + "%' AND NIF='"+NIF+"'");
                         while (rs.next()) {
                             JMenuItem item = new JMenuItem(rs.getString("NAME"));
-                            item.setPreferredSize(new Dimension(200, 28)); 
+                            item.setPreferredSize(new Dimension(285, 25)); 
                             item.addActionListener(new ActionListener() {
                                 @Override
                                 public void actionPerformed(ActionEvent e) {
@@ -157,6 +155,19 @@ public class calculateBill extends JFrame implements ActionListener {
                 }
             }
         });
+            cajon_nombre.addFocusListener(new FocusListener() {
+        @Override
+        public void focusGained(FocusEvent e) {
+            // Nada que hacer aquí
+        }
+
+        @Override
+        public void focusLost(FocusEvent e) {
+            // Reafirmar el tamaño del JTextField cuando se pierde el foco (después de seleccionar el nombre)
+            cajon_nombre.setPreferredSize(new Dimension(285, 25)); // Tamaño fijo
+            cajon_nombre.revalidate();
+        }
+    });
         
 
         JLabel numeroid = new JLabel("Numero Identificacion");
@@ -188,26 +199,18 @@ public class calculateBill extends JFrame implements ActionListener {
         gbc.gridx = 0;
         panel.add(direccion, gbc);
 
-        cajon_direccion = new JTextArea("SELECCIONA NUMERO DE ID");
+        cajon_direccion = new JTextField("Seleciona Numero ID");
         cajon_direccion.setFont(fuente2);
-        cajon_direccion.setOpaque(false);
-        cajon_direccion.setWrapStyleWord(true);
         cajon_direccion.setEditable(false);
         gbc.gridx = 1;
         gbc.fill = GridBagConstraints.HORIZONTAL;
         gbc.weightx = 0;
-        gbc.ipady = -3;
-        panel.add(new JScrollPane(cajon_direccion), gbc);
+        gbc.ipady = 0;
+        panel.add(cajon_direccion, gbc);
         
         if(ID_info_update.length()>2){
         updateAddress(ID_info_update);
         }
-        
-        JScrollPane scrollPane = new JScrollPane(cajon_direccion);
-        scrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
-        scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER);
-        panel.add(scrollPane, gbc); 
-        scrollPane.setBorder(BorderFactory.createEmptyBorder()); // Sin borde
         
         
         

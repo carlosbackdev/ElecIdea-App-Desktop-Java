@@ -90,9 +90,10 @@ class BackgroundPanel extends JPanel {
 
 public class Login extends JFrame implements ActionListener{
     RoundedButton login,signup,signup_empresa;
-    JTextField cajon_usuario,cajon_contra;
+    JTextField cajon_usuario;
     JComboBox tipousu;
     String NIF,ID_USER;
+    JPasswordField cajon_contra;
     Login(){
     super("Inicio Sesion Usuario");
         setContentPane(new BackgroundPanel("images/inicio.jpg"));    
@@ -139,7 +140,7 @@ public class Login extends JFrame implements ActionListener{
         gbc.gridx = 0;
         panel.add(label_contraseña, gbc);
 
-        cajon_contra = new JTextField();
+        cajon_contra = new JPasswordField();
         cajon_contra.setFont(new Font("Roboto", Font.PLAIN, 14));
         cajon_contra.setHorizontalAlignment(JTextField.CENTER);
         gbc.gridx = 1;
@@ -227,6 +228,7 @@ public class Login extends JFrame implements ActionListener{
                    ID_USER=rs.getString("ID");
                    setVisible(false);
                    new Project(NIF,ID_USER);
+                   new Finance(NIF,ID_USER);
                } else{
                    JOptionPane.showMessageDialog(null,"Datos incorrectos");
                    cajon_usuario.setText("");

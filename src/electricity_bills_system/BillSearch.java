@@ -54,6 +54,7 @@ BillSearch(String NIF,String ID_USER){
     cajon_nombre = new JTextField();
     cajon_nombre.setFont(fuente2);
     cajon_nombre.setHorizontalAlignment(JTextField.CENTER);
+    cajon_nombre.setPreferredSize(new Dimension(215, 25));
     gbc.gridx = 1;
     gbc.fill = GridBagConstraints.HORIZONTAL;
     gbc.weightx = 0;
@@ -111,7 +112,7 @@ BillSearch(String NIF,String ID_USER){
                         ResultSet rs = c.s.executeQuery("SELECT DISTINCT NAME FROM client WHERE NAME LIKE '" + text + "%' AND NIF='"+NIF+"'");
                         while (rs.next()) {
                             JMenuItem item = new JMenuItem(rs.getString("NAME"));
-                            item.setPreferredSize(new Dimension(200, 28)); 
+                            item.setPreferredSize(new Dimension(215, 25)); 
                             item.addActionListener(new ActionListener() {
                                 @Override
                                 public void actionPerformed(ActionEvent e) {
@@ -136,6 +137,19 @@ BillSearch(String NIF,String ID_USER){
                 }
             }
         });
+            cajon_nombre.addFocusListener(new FocusListener() {
+        @Override
+        public void focusGained(FocusEvent e) {
+            // Nada que hacer aquí
+        }
+
+        @Override
+        public void focusLost(FocusEvent e) {
+            // Reafirmar el tamaño del JTextField cuando se pierde el foco (después de seleccionar el nombre)
+            cajon_nombre.setPreferredSize(new Dimension(215, 25)); // Tamaño fijo
+            cajon_nombre.revalidate();
+        }
+    });
     
     JLabel numeroid = new JLabel("Numero Identificacion");
     numeroid.setForeground(gris);
@@ -273,13 +287,13 @@ BillSearch(String NIF,String ID_USER){
     gbc.anchor = GridBagConstraints.CENTER;
     panel.add(panelBotones, gbc);
 
-    buscar = new RoundedButton(" Ver Factura ");
-    buscar.setFont(new Font("Roboto", Font.PLAIN, 18));
+    buscar = new RoundedButton("   Ver Factura   ");
+    buscar.setFont(new Font("Roboto", Font.PLAIN, 16));
     buscar.addActionListener(this);
     panelBotones.add(buscar, BorderLayout.WEST);
 
-    volver = new RoundedButton("   Volver   ");
-    volver.setFont(new Font("Roboto", Font.PLAIN, 18));
+    volver = new RoundedButton("        Volver        ");
+    volver.setFont(new Font("Roboto", Font.PLAIN, 16));
     volver.addActionListener(this);
     panelBotones.add(volver, BorderLayout.EAST);
 

@@ -34,7 +34,7 @@ public class ClientUpdate extends JFrame implements ActionListener{
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.insets = new Insets(20, 0, 20, 0);
         gbc.weightx = 1.0;
-        Font fuente=new Font("Roboto", Font.PLAIN, 18);
+        Font fuente=new Font("Roboto", Font.PLAIN, 20);
         Font fuente2=new Font("Roboto", Font.PLAIN, 13);
         Color gris=new Color(210,210,210);
         gbc.ipadx = 20;
@@ -60,7 +60,7 @@ public class ClientUpdate extends JFrame implements ActionListener{
         cajon_nombre = new JTextField();
         cajon_nombre.setFont(fuente2);
         cajon_nombre.setHorizontalAlignment(JTextField.CENTER);
-        cajon_nombre.setPreferredSize(new Dimension(200, 28));
+        cajon_nombre.setPreferredSize(new Dimension(210, 25));
         gbc.gridx = 1;
         gbc.fill = GridBagConstraints.HORIZONTAL; 
         gbc.weightx = 1.0;
@@ -77,7 +77,7 @@ public class ClientUpdate extends JFrame implements ActionListener{
         nombre_popup.setFocusable(false);
 
         cajon_nombre.getDocument().addDocumentListener(new DocumentListener() {
-            private javax.swing.Timer timer = new javax.swing.Timer(800, new ActionListener() { 
+            private javax.swing.Timer timer = new javax.swing.Timer(700, new ActionListener() { 
                 @Override
                 public void actionPerformed(ActionEvent e) {
                     updatePopup();
@@ -118,7 +118,7 @@ public class ClientUpdate extends JFrame implements ActionListener{
                         ResultSet rs = c.s.executeQuery("SELECT DISTINCT NAME FROM client WHERE NAME LIKE '" + text + "%' AND NIF='"+NIF+"'");
                         while (rs.next()) {
                             JMenuItem item = new JMenuItem(rs.getString("NAME"));
-                            item.setPreferredSize(new Dimension(200, 28)); 
+                            item.setPreferredSize(new Dimension(210, 25)); 
                             item.addActionListener(new ActionListener() {
                                 @Override
                                 public void actionPerformed(ActionEvent e) {
@@ -134,12 +134,24 @@ public class ClientUpdate extends JFrame implements ActionListener{
                         ex.printStackTrace();
                     }
                     if (nombre_popup.getComponentCount() > 0) {
-                        nombre_popup.setPreferredSize(new Dimension(220, nombre_popup.getComponentCount() * 30));
+                        int width = cajon_nombre.getWidth();
+                        nombre_popup.setPreferredSize(new Dimension(width, nombre_popup.getComponentCount() * 30));
                         nombre_popup.show(cajon_nombre, 0, cajon_nombre.getHeight());
                     } else {
                         nombre_popup.setVisible(false);
                     }
                 }
+            }
+        });
+                cajon_nombre.addFocusListener(new FocusListener() {
+            @Override
+            public void focusGained(FocusEvent e) {
+            }
+
+            @Override
+            public void focusLost(FocusEvent e) {
+                cajon_nombre.setPreferredSize(new Dimension(210, 25));
+                cajon_nombre.revalidate();
             }
         });
         

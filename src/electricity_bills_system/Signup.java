@@ -8,15 +8,16 @@ import java.sql.*;
 public class Signup extends JFrame implements ActionListener {
     RoundedButton volver,crear;
     Choice empresa_nombre;
-    JTextField cajon_usu,cajon_nombre,cajon_passwd,cajon_empresa,cajon_codigo;
+    JTextField cajon_usu,cajon_nombre,cajon_empresa;
     JLabel tipousu;
     String NIF;
+    JPasswordField cajon_passwd,cajon_codigo;
     Signup(){
         super("Crear Cuenta");
         setContentPane(new BackgroundPanel("images/login2.jpg"));
         setLayout(new BorderLayout());
         Font fuente1=new Font("Roboto", Font.PLAIN, 20);
-
+        Font fuente2=new Font("Roboto", Font.PLAIN, 16);
         JPanel panel = new JPanel(new GridBagLayout());
         panel.setOpaque(false);
         GridBagConstraints gbc = new GridBagConstraints();
@@ -51,7 +52,7 @@ public class Signup extends JFrame implements ActionListener {
         gbc.gridx = 1;
         panel.add(tipousu, gbc);
 
-        JLabel nombreusu = new JLabel("Usuario");
+        JLabel nombreusu = new JLabel("Nombre de Usuario");
         gbc.anchor = GridBagConstraints.WEST;
         nombreusu.setForeground(gris);
         nombreusu.setFont(fuente1);
@@ -60,7 +61,7 @@ public class Signup extends JFrame implements ActionListener {
         panel.add(nombreusu, gbc);
 
         cajon_usu = new JTextField();
-        cajon_usu.setFont(new Font("Roboto", Font.PLAIN, 17));
+        cajon_usu.setFont(fuente2);
         cajon_usu.setHorizontalAlignment(JTextField.CENTER);
         gbc.gridx = 1;
         gbc.fill = GridBagConstraints.HORIZONTAL; 
@@ -75,7 +76,7 @@ public class Signup extends JFrame implements ActionListener {
         panel.add(nombrecompleto, gbc);
 
         cajon_nombre = new JTextField();
-        cajon_nombre.setFont(fuente1);
+        cajon_nombre.setFont(fuente2);
         cajon_nombre.setHorizontalAlignment(JTextField.CENTER);
         gbc.gridx = 1;
         gbc.fill = GridBagConstraints.HORIZONTAL; 
@@ -89,8 +90,8 @@ public class Signup extends JFrame implements ActionListener {
         gbc.gridx = 0;
         panel.add(contraseña, gbc);
 
-        cajon_passwd = new JTextField();
-        cajon_passwd.setFont(fuente1);
+        cajon_passwd = new JPasswordField();
+        cajon_passwd.setFont(fuente2);
         cajon_passwd.setHorizontalAlignment(JTextField.CENTER);
         gbc.gridx = 1;
         gbc.fill = GridBagConstraints.HORIZONTAL; 
@@ -106,7 +107,7 @@ public class Signup extends JFrame implements ActionListener {
 
         JTextField empresa_nombre = new JTextField();    
         empresa_nombre.setHorizontalAlignment(JTextField.CENTER);
-        empresa_nombre.setFont(new Font("Roboto", Font.PLAIN, 16));
+        empresa_nombre.setFont(fuente2);
         gbc.gridx = 1;
         panel.add(empresa_nombre, gbc);
         
@@ -118,8 +119,8 @@ public class Signup extends JFrame implements ActionListener {
         gbc.gridx = 0;
         panel.add(empresacod, gbc);
 
-        cajon_codigo = new JTextField();
-        cajon_codigo.setFont(new Font("Roboto", Font.PLAIN, 17));
+        cajon_codigo = new JPasswordField();
+        cajon_codigo.setFont(fuente2);
         cajon_codigo.setHorizontalAlignment(JTextField.CENTER);
         gbc.gridx = 1;
         gbc.fill = GridBagConstraints.HORIZONTAL; 
@@ -146,14 +147,14 @@ public class Signup extends JFrame implements ActionListener {
         
         
         
-        crear  = new RoundedButton("      Crear      ");
-        crear.setFont(new Font("Roboto", Font.PLAIN, 18)); 
+        crear  = new RoundedButton("       Crear       ");
+        crear.setFont(new Font("Roboto", Font.PLAIN, 16)); 
         crear.addActionListener(this);
         panelBotones.add(crear);
         panelBotones.add(crear, BorderLayout.WEST);
 
-        volver = new RoundedButton("       Volver      ");
-        volver.setFont(new Font("Roboto", Font.PLAIN, 18)); 
+        volver = new RoundedButton("        Volver       ");
+        volver.setFont(new Font("Roboto", Font.PLAIN, 16)); 
         volver.addActionListener(this);
         panelBotones.add(volver);
         panelBotones.add(volver, BorderLayout.EAST);

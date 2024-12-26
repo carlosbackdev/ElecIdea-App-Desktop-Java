@@ -30,10 +30,18 @@ public class Splash extends JFrame  implements Runnable{
         
         try {
             UIManager.setLookAndFeel(new FlatDarkLaf());
+            UIManager.put( "TextComponent.arc" , 5 );
+            UIManager.put( "Button.arc", 10 );
+            UIManager.put( "TabbedPane.selectedBackground" , Color.WHITE);
+            UIManager.put( "TabbedPane.showTabSeparators" , true );
+            UIManager.put( "PasswordField.showCapsLock" , true );
+            UIManager.put( "PasswordField.showRevealButton" , true );
+            UIManager.put( "Label.font" , new Font("Roboto", Font.PLAIN, 14) );
         } catch (UnsupportedLookAndFeelException e) {
             e.printStackTrace();
         }
-        
+        System.setProperty( "flatlaf.animation", "false" );
+
                 
         setVisible(true);
 

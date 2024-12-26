@@ -6,7 +6,7 @@ import java.awt.*;
 import java.awt.event.*;
 
 public class Project extends JFrame implements ActionListener{
-    JMenuItem cliente,generar,material,factura_detalle,cliente_detalles, factura,cliente_modificar;
+    JMenuItem cliente,generar,material,factura_detalle,cliente_detalles, factura,cliente_modificar,salir;
     String NIF,ID_USER;
     JMenuBar navegador;
     
@@ -14,19 +14,19 @@ public class Project extends JFrame implements ActionListener{
         this.NIF=NIF;
         this.ID_USER=ID_USER;   
         
-        setContentPane(new BackgroundPanel("images/fondo.png"));
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLayout(new BorderLayout()); 
         setExtendedState(JFrame.MAXIMIZED_BOTH);
         setMinimumSize(new Dimension(950, 650));
         Font menufont =new Font("Roboto", Font.PLAIN, 22);
         
+        setContentPane(new BackgroundPanel("images/fondo.png"));
+        
         navegador=new JMenuBar();
-        navegador.setBackground(new Color(205, 205, 205));
         setJMenuBar(navegador);
         
         JMenu mn=new JMenu(">");
         mn.setFont(menufont);
-        mn.setBackground(new Color(205, 205, 205));
         ImageIcon icon3= new ImageIcon(ClassLoader.getSystemResource("images/menu.png"));
         Image image3 = icon3.getImage().getScaledInstance(22, 22, Image.SCALE_DEFAULT);
         mn.setIcon(new ImageIcon(image3));
@@ -34,7 +34,6 @@ public class Project extends JFrame implements ActionListener{
         
         JMenu admin=new JMenu("Administración   ");
         admin.setFont(menufont);
-        admin.setBackground(new Color(205, 205, 205));
         ImageIcon icon1= new ImageIcon(ClassLoader.getSystemResource("images/ADMIN.png"));
         Image image1 = icon1.getImage().getScaledInstance(22, 22, Image.SCALE_DEFAULT);
         admin.setIcon(new ImageIcon(image1));
@@ -69,8 +68,7 @@ public class Project extends JFrame implements ActionListener{
         admin.add(factura);
         
         JMenu info=new JMenu("Datos   ");
-        info.setFont(menufont);
-        info.setBackground(new Color(205, 205, 205));
+        info.setFont(menufont);;
         ImageIcon icon2= new ImageIcon(ClassLoader.getSystemResource("images/datos2.png"));
         Image image2 = icon2.getImage().getScaledInstance(22, 22, Image.SCALE_DEFAULT);
         info.setIcon(new ImageIcon(image2));
@@ -90,7 +88,6 @@ public class Project extends JFrame implements ActionListener{
         
         JMenu accion=new JMenu("Facturas   ");
         accion.setFont(menufont);
-        accion.setBackground(new Color(205, 205, 205));
         ImageIcon icon4= new ImageIcon(ClassLoader.getSystemResource("images/facturas.png"));
         Image image4 = icon4.getImage().getScaledInstance(22, 22, Image.SCALE_DEFAULT);
         accion.setIcon(new ImageIcon(image4));
@@ -118,7 +115,6 @@ public class Project extends JFrame implements ActionListener{
         
         JMenu add_accion=new JMenu("Añadir   ");
         add_accion.setFont(menufont);
-        add_accion.setBackground(new Color(205, 205, 205));
         ImageIcon icon5= new ImageIcon(ClassLoader.getSystemResource("images/add.png"));
         Image image5 = icon5.getImage().getScaledInstance(22, 22, Image.SCALE_DEFAULT);
         add_accion.setIcon(new ImageIcon(image5));
@@ -133,7 +129,6 @@ public class Project extends JFrame implements ActionListener{
         
         JMenu proyectos=new JMenu("Proyecto   ");
         proyectos.setFont(menufont);
-        proyectos.setBackground(new Color(205, 205, 205));
         ImageIcon icon6= new ImageIcon(ClassLoader.getSystemResource("images/proyecto.png"));
         Image image6 = icon6.getImage().getScaledInstance(22, 22, Image.SCALE_DEFAULT);
         proyectos.setIcon(new ImageIcon(image6));
@@ -152,18 +147,18 @@ public class Project extends JFrame implements ActionListener{
         calculo.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_C, ActionEvent.CTRL_MASK));
         proyectos.add(calculo);
         
-        JMenu salir=new JMenu("Salir   ");
+        salir=new JMenuItem("Salir   ");
         salir.setFont(menufont);
-        salir.setBackground(new Color(205, 205, 205));
+        salir.setMnemonic('S');
         ImageIcon icon7= new ImageIcon(ClassLoader.getSystemResource("images/salir.png"));
         Image image7 = icon7.getImage().getScaledInstance(22, 22, Image.SCALE_DEFAULT);
         salir.setIcon(new ImageIcon(image7));
+        salir.addActionListener(this);
         navegador.add(salir);
         
         
-        setLayout(new FlowLayout());
-        
-        
+       
+
         setVisible(true);
         
     }
@@ -189,8 +184,23 @@ public class Project extends JFrame implements ActionListener{
      if(ae.getSource()==cliente_modificar){
      new ClientUpdate(NIF,ID_USER);
      }
+     if(ae.getSource() == salir){
+         int opcion = JOptionPane.showConfirmDialog(null, 
+                "¿Seguro que desea salir de la aplicación?", 
+                "Cerrar aplicación", 
+                JOptionPane.YES_NO_OPTION, 
+                JOptionPane.QUESTION_MESSAGE);
+
+            if (opcion == JOptionPane.YES_OPTION) {
+                try{
+                    System.exit(0);
+                }catch (Exception e){
+                    e.printStackTrace();
+                }
+            }
+        }
     }
-    
+     
     public static void main(String[] args){
         new Project("","");
     }
