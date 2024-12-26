@@ -8,6 +8,7 @@ import java.awt.event.*;
 public class Project extends JFrame implements ActionListener{
     JMenuItem cliente,generar,material,factura_detalle,cliente_detalles, factura,cliente_modificar;
     String NIF,ID_USER;
+    JMenuBar navegador;
     
     Project(String NIF, String ID_USER){
         this.NIF=NIF;
@@ -19,7 +20,7 @@ public class Project extends JFrame implements ActionListener{
         setMinimumSize(new Dimension(950, 650));
         Font menufont =new Font("Roboto", Font.PLAIN, 22);
         
-        JMenuBar navegador=new JMenuBar();
+        navegador=new JMenuBar();
         navegador.setBackground(new Color(205, 205, 205));
         setJMenuBar(navegador);
         

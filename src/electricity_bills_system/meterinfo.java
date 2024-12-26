@@ -11,12 +11,13 @@ import java.sql.*;
 public class meterinfo extends JFrame implements ActionListener {
     
     RoundedButton guardar;
-    Choice tipo,tipo_proyecto,codigo_s,tipo_cliente;
+    JComboBox tipo,tipo_proyecto,tipo_cliente;
     String ID_info;
+    JTextArea codigo_s;
     meterinfo(String ID_info){
         this.ID_info= ID_info;
         
-        setContentPane(new BackgroundPanel("images/Fichas.jpg"));  
+        setContentPane(new BackgroundPanel("images/fichas3.jpg"));  
         
         JPanel panel = new JPanel(new GridBagLayout());
         panel.setOpaque(false); 
@@ -27,7 +28,7 @@ public class meterinfo extends JFrame implements ActionListener {
         Font fuente2=new Font("Roboto", Font.PLAIN, 13);
         gbc.ipadx = 40;
         
-        JLabel head = new JLabel("Informacion Proyecto del Cliente");
+        JLabel head = new JLabel("      Informacion Proyecto del Cliente");
         head.setForeground(Color.WHITE);
         head.setFont(new Font("Roboto", Font.PLAIN, 28));
         gbc.gridx = 0;
@@ -36,7 +37,7 @@ public class meterinfo extends JFrame implements ActionListener {
         gbc.anchor = GridBagConstraints.CENTER;
         panel.add(head, gbc);
         
-        JLabel nombre = new JLabel("Numero de Identficacion del Cliente");
+        JLabel nombre = new JLabel("Nº Identficacion del Cliente");
         nombre.setForeground(Color.WHITE);
         gbc.fill = GridBagConstraints.HORIZONTAL; 
         nombre.setFont(fuente); 
@@ -64,9 +65,9 @@ public class meterinfo extends JFrame implements ActionListener {
         gbc.gridx = 0;
         panel.add(direccion, gbc);
 
-        tipo = new Choice();
-        tipo.add("Interno");
-        tipo.add("Externo");
+        tipo = new JComboBox();
+        tipo.addItem("Interno");
+        tipo.addItem("Externo");
         tipo.setFont(fuente2);
         gbc.gridx = 1;
         gbc.fill = GridBagConstraints.HORIZONTAL; 
@@ -80,34 +81,25 @@ public class meterinfo extends JFrame implements ActionListener {
         gbc.gridx = 0;
         panel.add(proyecto, gbc);
 
-        tipo_proyecto = new Choice();
-        tipo_proyecto.add("Defecto");
-        tipo_proyecto.add("Mantenimiento Electrico");
-        tipo_proyecto.add("Proyecto Solar");
+        tipo_proyecto = new JComboBox();
+        tipo_proyecto.addItem("Defecto");
+        tipo_proyecto.addItem("Mantenimiento Electrico");
+        tipo_proyecto.addItem("Proyecto Solar");
         tipo_proyecto.setFont(fuente2);
         gbc.gridx = 1;
         gbc.fill = GridBagConstraints.HORIZONTAL; 
         gbc.weightx = 0;
         panel.add(tipo_proyecto, gbc);
         
-        JLabel codigo1 = new JLabel("Codigo");
+        JLabel codigo1 = new JLabel("Etiqueta");
         codigo1.setForeground(Color.WHITE);
         codigo1.setFont(fuente); 
         gbc.gridy = 5;
         gbc.gridx = 0;
         panel.add(codigo1, gbc);
         
-        codigo_s = new Choice();
+        codigo_s = new JTextArea("Defecto");
         codigo_s.setFont(fuente2);
-        codigo_s.add("01");
-        codigo_s.add("02");
-        codigo_s.add("03");
-        codigo_s.add("04");
-        codigo_s.add("05");
-        codigo_s.add("06");
-        codigo_s.add("07");
-        codigo_s.add("08");
-        codigo_s.add("09");
         gbc.gridx = 1;
         gbc.fill = GridBagConstraints.HORIZONTAL; 
         gbc.weightx = 0;
@@ -121,42 +113,19 @@ public class meterinfo extends JFrame implements ActionListener {
         gbc.gridx = 0;
         panel.add(cliente_tipo, gbc);
 
-        tipo_cliente=new Choice();
+        tipo_cliente=new JComboBox();
         tipo_cliente.setFont(fuente2);
-        tipo_cliente.add("Emperesa");
-        tipo_cliente.add("Particular");
+        tipo_cliente.addItem("Emperesa");
+        tipo_cliente.addItem("Particular");
         gbc.gridx = 1;
         gbc.fill = GridBagConstraints.HORIZONTAL; 
         gbc.weightx = 0;
-        panel.add(tipo_cliente, gbc);
-        
-        JLabel dias = new JLabel("Dias");
-        dias.setForeground(Color.WHITE);
-        dias.setFont(fuente); 
-        gbc.gridy = 7;
-        gbc.gridx = 0;
-        panel.add(dias, gbc);
-
-        JLabel dias_restantes = new JLabel("30 Dias");
-        dias_restantes.setForeground(Color.WHITE);
-        dias_restantes.setFont(fuente); 
-        gbc.gridx = 1;
-        gbc.fill = GridBagConstraints.CENTER; 
-        gbc.weightx = 0;
-        panel.add(dias_restantes, gbc); 
-        
+        panel.add(tipo_cliente, gbc);        
+              
         JLabel margen = new JLabel();
         gbc.gridy = 8;
         gbc.gridx = 0;
-        panel.add(margen, gbc);
-        
-        JLabel dias_nota = new JLabel("Por defecto se calcula unicamente dentro de los utlimos 30 dias");
-        dias_nota.setForeground(Color.WHITE);
-        dias_nota.setFont(fuente); 
-        gbc.gridy = 9;
-        gbc.gridwidth = 2;
-        gbc.gridx = 0;
-        panel.add(dias_nota, gbc);
+        panel.add(margen, gbc);             
         
         JLabel margen2 = new JLabel();
         gbc.gridy = 10;
@@ -172,8 +141,6 @@ public class meterinfo extends JFrame implements ActionListener {
         gbc.anchor = GridBagConstraints.CENTER; 
         panel.add(panelBotones, gbc);
         
-        
-        
         guardar  = new RoundedButton("Guardar y Enviar");
         guardar.setBackground(new Color(222, 239, 255));
         guardar.setForeground(Color.BLACK);
@@ -184,7 +151,7 @@ public class meterinfo extends JFrame implements ActionListener {
         
         add(panel, BorderLayout.PAGE_START);
         
-        setSize(900, 800);
+        setSize(770, 625);
         setLocationRelativeTo(null);
         setVisible(true);
     
@@ -193,17 +160,18 @@ public class meterinfo extends JFrame implements ActionListener {
     public void actionPerformed(ActionEvent ae){
     if(ae.getSource()==guardar){
         String ID = ID_info;
-        String info_type=tipo.getSelectedItem();
-        String project_type=tipo_proyecto.getSelectedItem().toLowerCase();
-        String codec=codigo_s.getSelectedItem();
-        String client_type=tipo_cliente.getSelectedItem().toLowerCase();
-        String days="30";
+        String info_type=(String) tipo.getSelectedItem();
+        String project_type=(String) tipo_proyecto.getSelectedItem();
+        project_type = project_type.toLowerCase();
+        String codec=codigo_s.getText();
+        String client_type=(String) tipo_cliente.getSelectedItem();
+        client_type = client_type.toLowerCase();
         
        
         
             try {
                 Connect c= new Connect();
-                String query ="insert into meter_info values('"+ID+"', '"+info_type+"', '"+project_type+"', '"+codec+"', '"+client_type+"', '"+days+"')";
+                String query ="insert into meter_info values('"+ID+"', '"+info_type+"', '"+project_type+"', '"+codec+"', '"+client_type+"', '')";
                 c.s.executeUpdate(query);
             
                 JOptionPane.showMessageDialog(null,"Información de Cliente Y Proyecto añadida correctamente");

@@ -14,7 +14,7 @@ public class setup_bill extends JFrame implements ActionListener {
     setup_bill(String bill_true,String NIF) {
         this.bill_true = bill_true;
         this.NIF = NIF;
-        setContentPane(new BackgroundPanel("images/Fichas.jpg"));
+        setContentPane(new BackgroundPanel("images/fichas3.jpg"));
         setLayout(new BorderLayout());
         Color gris=new Color(210,210,210);
 
@@ -24,7 +24,7 @@ public class setup_bill extends JFrame implements ActionListener {
         gbc.insets = new Insets(45, 15, 25, 15);
         gbc.ipadx = 40;
 
-        JLabel head = new JLabel("Configurar Nuevo Parametro de Facturas");
+        JLabel head = new JLabel("     Configurar Nuevo Parametro de Facturas");
         head.setForeground(gris);
         head.setFont(new Font("Roboto", Font.PLAIN, 24));
         gbc.gridx = 0;

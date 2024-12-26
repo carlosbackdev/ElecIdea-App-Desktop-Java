@@ -16,12 +16,12 @@ public class BillSearch extends JFrame implements ActionListener {
     RoundedButton buscar,volver;
     JComboBox<String> nombre_combo;
     JPopupMenu nombre_popup;
-    Choice ID_choice,status_choice,factura_choice,fecha_choice_mes,fecha_choice_year;
+    JComboBox ID_choice,status_choice,factura_choice,fecha_choice_mes,fecha_choice_year;
 BillSearch(String NIF,String ID_USER){
     this.NIF=NIF;
     this.ID_USER=ID_USER;
     
-    setContentPane(new BackgroundPanel("images/Fichas.jpg"));
+    setContentPane(new BackgroundPanel("images/Fichas3.jpg"));
     setLayout(new BorderLayout());
     Font fuente=new Font("Roboto", Font.PLAIN, 20);
     Font fuente2=new Font("Roboto", Font.PLAIN, 15);
@@ -127,7 +127,8 @@ BillSearch(String NIF,String ID_USER){
                         ex.printStackTrace();
                     }
                     if (nombre_popup.getComponentCount() > 0) {
-                        nombre_popup.setPreferredSize(new Dimension(227, nombre_popup.getComponentCount() * 30));
+                        int width = cajon_nombre.getWidth();
+                        nombre_popup.setPreferredSize(new Dimension(width, nombre_popup.getComponentCount() * 30));
                         nombre_popup.show(cajon_nombre, 0, cajon_nombre.getHeight());
                     } else {
                         nombre_popup.setVisible(false);
@@ -144,15 +145,23 @@ BillSearch(String NIF,String ID_USER){
     panel.add(numeroid, gbc);
         
 
-    ID_choice = new Choice();
-    ID_choice.add("seleciona ID");
+    ID_choice = new JComboBox();
+    ID_choice.addItem("seleciona ID");
     ID_choice.setFont(fuente2);
-    ID_choice.setBackground(new Color(70, 73, 75));
-    ID_choice.setForeground(new Color(190, 190, 190));
+    ID_choice.setEnabled(false);
     gbc.gridx = 1;
     gbc.fill = GridBagConstraints.HORIZONTAL; 
     gbc.weightx = 0;
-    panel.add(ID_choice, gbc);   
+    panel.add(ID_choice, gbc);
+    ID_choice.addItemListener(new ItemListener() {
+        @Override
+        public void itemStateChanged(ItemEvent e) {
+            if (e.getStateChange() == ItemEvent.SELECTED) {
+                selectedID =(String) ID_choice.getSelectedItem();
+                update_factura(selectedID);
+            }
+        }
+    });
 
     JLabel nombreusu = new JLabel("Estado Factura:");
     gbc.anchor = GridBagConstraints.WEST;
@@ -162,14 +171,12 @@ BillSearch(String NIF,String ID_USER){
     gbc.gridx = 0;
     panel.add(nombreusu, gbc);
 
-    status_choice = new Choice();
-    status_choice.add("Todos");
-    status_choice.add("Pagado");
-    status_choice.add("Pendiente");
-    status_choice.add("Sin enviar");
+    status_choice = new JComboBox();
+    status_choice.addItem("Todos");
+    status_choice.addItem("Pagado");
+    status_choice.addItem("Pendiente");
+    status_choice.addItem("Sin enviar");
     status_choice.setFont(fuente2);
-    status_choice.setBackground(new Color(70, 73, 75));
-    status_choice.setForeground(new Color(190, 190, 190));
     gbc.gridx = 1;
     gbc.fill = GridBagConstraints.HORIZONTAL; 
     gbc.weightx = 0;
@@ -195,12 +202,10 @@ BillSearch(String NIF,String ID_USER){
    JPanel panelfecha = new JPanel(new GridLayout(1, 2)); 
    panelfecha.setOpaque(false); 
     
-    fecha_choice_mes = new Choice();
+    fecha_choice_mes = new JComboBox();
     for(int i=0;i<meses.length;i++){
-    fecha_choice_mes.add(meses[i]);}
+    fecha_choice_mes.addItem(meses[i]);}
     fecha_choice_mes.setFont(fuente3);
-    fecha_choice_mes.setBackground(new Color(70, 73, 75));
-    fecha_choice_mes.setForeground(new Color(190, 190, 190));
     fecha_choice_mes.addItemListener(new ItemListener() {
         @Override
         public void itemStateChanged(ItemEvent e) {
@@ -211,15 +216,14 @@ BillSearch(String NIF,String ID_USER){
     });
 
 
-    fecha_choice_year = new Choice();
-    fecha_choice_year.add("Todos Años");
-    fecha_choice_year.add("2025");
-    fecha_choice_year.add("2024");
-    fecha_choice_year.add("2023");
-    fecha_choice_year.add("2022");
-    fecha_choice_year.setBackground(new Color(70, 73, 75));
-    fecha_choice_year.setForeground(new Color(190, 190, 190));
-    fecha_choice_year.setFont(fuente3);fecha_choice_year.addItemListener(new ItemListener() {
+    fecha_choice_year = new JComboBox();
+    fecha_choice_year.addItem("Todos Años");
+    fecha_choice_year.addItem("2025");
+    fecha_choice_year.addItem("2024");
+    fecha_choice_year.addItem("2023");
+    fecha_choice_year.addItem("2022");
+    fecha_choice_year.setFont(fuente3);
+    fecha_choice_year.addItemListener(new ItemListener() {
         @Override
         public void itemStateChanged(ItemEvent e) {
             if (e.getStateChange() == ItemEvent.SELECTED) {
@@ -246,10 +250,9 @@ BillSearch(String NIF,String ID_USER){
     gbc.gridx = 0;
     panel.add(nombrecompleto, gbc);
 
-    factura_choice = new Choice();    
+    factura_choice = new JComboBox();    
     factura_choice.setFont(fuente3);
-    factura_choice.setBackground(new Color(70, 73, 75));
-    factura_choice.setForeground(new Color(190,190,190));
+    factura_choice.setEnabled(false);
     gbc.gridx = 1;
     gbc.fill = GridBagConstraints.HORIZONTAL; 
     gbc.weightx = 0;
@@ -289,12 +292,12 @@ BillSearch(String NIF,String ID_USER){
 }
 
 public void updateID_choice(String selectedName) {
-    ID_choice.removeAll();
+    ID_choice.removeAllItems();
     try {
         Connect c = new Connect();
         ResultSet rs = c.s.executeQuery("SELECT ID FROM client WHERE NAME='" + selectedName + "' AND NIF='"+NIF+"'");
         while (rs.next()) {
-            ID_choice.add(rs.getString("ID"));
+            ID_choice.addItem(rs.getString("ID"));
             selectedID = rs.getString("ID"); // Actualizar selectedID
         }
         rs.close();
@@ -303,24 +306,26 @@ public void updateID_choice(String selectedName) {
         ex.printStackTrace();
     }   
     if (ID_choice.getItemCount() == 1) {
-        ID_choice.select(0); // Seleccionar el único ID
-        selectedID = ID_choice.getSelectedItem();  
+        ID_choice.setSelectedIndex(0); 
+        selectedID =(String) ID_choice.getSelectedItem();  
         update_factura(selectedID);
+        ID_choice.setEnabled(false);
     } else if (ID_choice.getItemCount() > 1) {        
-        ID_choice.select(0);
-        selectedID = ID_choice.getSelectedItem();
+        ID_choice.setSelectedIndex(0); 
+        selectedID =(String) ID_choice.getSelectedItem();
         update_factura(selectedID);
+        ID_choice.setEnabled(true);
     }
 }
 public void update_factura(String selectedID) { 
-    factura_choice.removeAll();
+    factura_choice.removeAllItems();
     try {
         Connect c = new Connect();
-        String estado=status_choice.getSelectedItem();
+        String estado=(String) status_choice.getSelectedItem();
         estado=estado.toLowerCase().trim();
-        String mes_elegido=fecha_choice_mes.getSelectedItem();
+        String mes_elegido=(String) fecha_choice_mes.getSelectedItem();
         mes_elegido=mes_elegido.toLowerCase().trim();
-        String year_elegido=fecha_choice_year.getSelectedItem();       
+        String year_elegido=(String) fecha_choice_year.getSelectedItem();       
         String query2="";
         if(!estado.equals("todos")){
             query2=" AND STATUS='"+estado+"'";
@@ -352,14 +357,16 @@ public void update_factura(String selectedID) {
         c.s.executeUpdate("SET lc_time_names = 'es_ES'"); 
         ResultSet rs = c.s.executeQuery(query);
         if(!rs.next()){
-            factura_choice.add("Sin registros");
+            factura_choice.addItem("Sin registros");
+            factura_choice.setEnabled(false);
         }else            
             do {
                String numberfactura = rs.getString("NUMBER_FACTURA");
                String materialDate = rs.getString("MES");
                String ano = rs.getString("ANO");
                String state = rs.getString("STATUS");
-               factura_choice.add("Factura " + numberfactura +", " + materialDate + " de " + ano +", "+state);
+               factura_choice.addItem("Factura " + numberfactura +", " + materialDate + " de " + ano +", "+state);
+               factura_choice.setEnabled(true);
 
             } while (rs.next());
         rs.close();
@@ -367,7 +374,7 @@ public void update_factura(String selectedID) {
         
     } catch (Exception ex) {
         ex.printStackTrace();
-        factura_choice.add("Sin registros");
+        factura_choice.addItem("Sin registros");
     }
 }
 
@@ -377,12 +384,13 @@ public void actionPerformed(ActionEvent ae){
           return;
       }
     String NAME=cajon_nombre.getText();
-    String ID_CLIENT=ID_choice.getSelectedItem();
-    String STATUS=status_choice.getSelectedItem().toLowerCase();
+    String ID_CLIENT=(String) ID_choice.getSelectedItem();
+    String STATUS=(String) status_choice.getSelectedItem();
+    STATUS = STATUS.toLowerCase();
     String ADDRESS = "", HOUR = "", DATE = "", NUMBER_MATERIAL = "", TOTAL_MATERIAL = "", PARAMETROS = "", TOTAL_BILL = "";
-    String NUMBER_FACTURA=factura_choice.getSelectedItem();
+    String NUMBER_FACTURA=(String) factura_choice.getSelectedItem();
     NUMBER_FACTURA=NUMBER_FACTURA.substring(NUMBER_FACTURA.indexOf(" ")+1, NUMBER_FACTURA.indexOf(","));
-    String factura_sinregistro=factura_choice.getSelectedItem();    
+    String factura_sinregistro=(String) factura_choice.getSelectedItem();    
     
     if(!factura_sinregistro.equals("Sin registros")){
           if(ae.getSource()==buscar){

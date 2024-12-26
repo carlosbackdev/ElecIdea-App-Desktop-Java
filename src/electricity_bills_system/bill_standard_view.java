@@ -224,7 +224,6 @@ public class bill_standard_view extends JFrame implements ActionListener {
     add(scrollPane, BorderLayout.CENTER);
     setSize(1200, 800);
     setLocationRelativeTo(null);
-    setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     setVisible(true);
     }
     
@@ -403,7 +402,7 @@ public class bill_standard_view extends JFrame implements ActionListener {
             }
             JOptionPane.showMessageDialog(null, "Factura guardada con éxito!");
             setVisible(false);
-        }                     
+        }               
          
      }
     

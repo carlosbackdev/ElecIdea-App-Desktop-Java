@@ -91,7 +91,7 @@ class BackgroundPanel extends JPanel {
 public class Login extends JFrame implements ActionListener{
     RoundedButton login,signup,signup_empresa;
     JTextField cajon_usuario,cajon_contra;
-    Choice tipousu;
+    JComboBox tipousu;
     String NIF,ID_USER;
     Login(){
     super("Inicio Sesion Usuario");
@@ -154,11 +154,9 @@ public class Login extends JFrame implements ActionListener{
         gbc.gridx = 0;
         panel.add(tipo_usuario, gbc);
 
-        tipousu = new Choice();
-        tipousu.add("cliente");
-        tipousu.add("administrador");
-        tipousu.setBackground(new Color(70, 73, 75));
-        tipousu.setForeground(new Color(190, 190, 190));
+        tipousu = new JComboBox();
+        tipousu.addItem("cliente");
+        tipousu.addItem("administrador");
         tipousu.setFont(new Font("Roboto", Font.PLAIN, 16));
         gbc.gridx = 1;
         gbc.fill = GridBagConstraints.HORIZONTAL; 
@@ -217,7 +215,7 @@ public class Login extends JFrame implements ActionListener{
             username = username.toLowerCase().trim();
             String password= cajon_contra.getText().trim();
             String encrypted_password = contraseña.encryptPassword(password);      
-            String user=tipousu.getSelectedItem();
+            String user=(String) tipousu.getSelectedItem();
             
             try{
                 Connect c=new Connect();

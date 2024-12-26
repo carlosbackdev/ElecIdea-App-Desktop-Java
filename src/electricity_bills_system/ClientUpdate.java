@@ -21,7 +21,7 @@ public class ClientUpdate extends JFrame implements ActionListener{
     JFormattedTextField dateField;
     JComboBox<String> nombre_combo;
     JPopupMenu nombre_popup;
-    Choice ID_choice;
+    JComboBox ID_choice;
     
     ClientUpdate(String NIF, String ID_USER){
         this.NIF=NIF;
@@ -77,7 +77,7 @@ public class ClientUpdate extends JFrame implements ActionListener{
         nombre_popup.setFocusable(false);
 
         cajon_nombre.getDocument().addDocumentListener(new DocumentListener() {
-            private javax.swing.Timer timer = new javax.swing.Timer(400, new ActionListener() { 
+            private javax.swing.Timer timer = new javax.swing.Timer(800, new ActionListener() { 
                 @Override
                 public void actionPerformed(ActionEvent e) {
                     updatePopup();
@@ -152,15 +152,23 @@ public class ClientUpdate extends JFrame implements ActionListener{
         panel.add(numeroid, gbc);
         
 
-        ID_choice = new Choice();
+        ID_choice = new JComboBox();
         ID_choice.setFont(fuente2);
-        ID_choice.add("Seleciona ID");
-        ID_choice.setBackground(new Color(70, 73, 75));
-        ID_choice.setForeground(new Color(165, 166, 167));
+        ID_choice.addItem("Busca nombre y Seleciona ID");
+        ID_choice.setEnabled(false);
         gbc.gridx = 1;
         gbc.fill = GridBagConstraints.HORIZONTAL; 
         gbc.weightx = 0;
         panel.add(ID_choice, gbc);
+        ID_choice.addItemListener(new ItemListener() {
+        @Override
+        public void itemStateChanged(ItemEvent e) {
+            if (e.getStateChange() == ItemEvent.SELECTED) {
+                selectedID =(String) ID_choice.getSelectedItem();
+                update(selectedID);
+            }
+        }
+    });
 
 
         JLabel direccion = new JLabel("Direccion");
@@ -291,12 +299,12 @@ public class ClientUpdate extends JFrame implements ActionListener{
     
     }
      public void updateID_choice(String selectedName) {
-    ID_choice.removeAll();
+    ID_choice.removeAllItems();
     try {
         Connect c = new Connect();
         ResultSet rs = c.s.executeQuery("SELECT ID FROM client WHERE NAME='" + selectedName + "' AND NIF='"+NIF+"'");
         while (rs.next()) {
-            ID_choice.add(rs.getString("ID"));
+            ID_choice.addItem(rs.getString("ID"));
             selectedID = rs.getString("ID");
         }
         rs.close();
@@ -306,13 +314,15 @@ public class ClientUpdate extends JFrame implements ActionListener{
     }  
 
     if (ID_choice.getItemCount() == 1) {
-        ID_choice.select(0); 
-        selectedID = ID_choice.getSelectedItem();
+        ID_choice.setSelectedIndex(0); 
+        selectedID =(String) ID_choice.getSelectedItem();
         update(selectedID);
+        ID_choice.setEnabled(false);
     } else if (ID_choice.getItemCount() > 1) {
-        ID_choice.select(0);
-        selectedID = ID_choice.getSelectedItem();
+        ID_choice.setSelectedIndex(0);
+        selectedID =(String) ID_choice.getSelectedItem();
         update(selectedID);
+        ID_choice.setEnabled(true);
     }
 }   
      public void update(String selectedID) {
@@ -339,7 +349,7 @@ public class ClientUpdate extends JFrame implements ActionListener{
 }
     
     public void actionPerformed(ActionEvent ae){
-        String ID = ID_choice.getSelectedItem();
+        String ID =(String) ID_choice.getSelectedItem();
     if(ae.getSource()==guardar){
         String name =cajon_nombre.getText().toLowerCase().trim();        
         String address=cajon_direccion.getText().toLowerCase().trim();
@@ -416,24 +426,26 @@ public class ClientUpdate extends JFrame implements ActionListener{
         }
        
         if(condicion==0){
+            int opcion = JOptionPane.showConfirmDialog(null, 
+                "¿Seguro que desea modificar los datos del cliente/s?", 
+                "Confirmación de modificaciión", 
+                JOptionPane.YES_NO_OPTION, 
+                JOptionPane.QUESTION_MESSAGE);
+
+            if (opcion == JOptionPane.YES_OPTION) {
             try {
                 Connect c= new Connect();
-                String query ="insert into client values('"+name+"', '"+ID+"', '"+address+"', '"+city+"', '"+postal+"', '"+mail+"', '"+phone+"','"+NIF+"','"+date+"')";
-                String query2 ="insert into login values('"+ID+"', '"+name+"_"+(ID)+"','"+name+"','','cliente','"+NIF+"')";
-                c.s.executeUpdate(query);
-                c.s.executeUpdate(query2);
-            
-                JOptionPane.showMessageDialog(null,"Cliente Añadido Correctamente");
+                String query ="UPDATE CLIENT SET NAME='"+name+"',ADDRESS='"+address+"',CITY='"+city+"', POSTAL='"+postal+"', EMAIL='"+mail+"', PHONE='"+phone+"'";
+                c.s.executeUpdate(query);            
+                JOptionPane.showMessageDialog(null,"Cliente Modificado Correctamente");
                 setVisible(false);
-                
-                new meterinfo(ID);
+                new ClientUpdate(NIF,ID_USER);
             
             }catch(Exception e){
                 e.printStackTrace();
                 }
+            }
         
-            }else if(condicion == 0){
-            setVisible(false);
             }
         }else if(ae.getSource() == eliminar){
             int opcion = JOptionPane.showConfirmDialog(null, 
@@ -454,10 +466,7 @@ public class ClientUpdate extends JFrame implements ActionListener{
                     e.printStackTrace();
                 }
                 
-            } else if (opcion == JOptionPane.NO_OPTION) {
-                
-            }
-            
+            }            
         
         }else{
             setVisible(false);}

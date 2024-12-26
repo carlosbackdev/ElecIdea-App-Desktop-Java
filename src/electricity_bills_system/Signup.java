@@ -7,54 +7,54 @@ import java.sql.*;
 
 public class Signup extends JFrame implements ActionListener {
     RoundedButton volver,crear;
-    Choice tipousu,empresa_nombre;
+    Choice empresa_nombre;
     JTextField cajon_usu,cajon_nombre,cajon_passwd,cajon_empresa,cajon_codigo;
+    JLabel tipousu;
     String NIF;
     Signup(){
         super("Crear Cuenta");
-        setContentPane(new BackgroundPanel("images/login.jpg"));
+        setContentPane(new BackgroundPanel("images/login2.jpg"));
         setLayout(new BorderLayout());
+        Font fuente1=new Font("Roboto", Font.PLAIN, 20);
 
         JPanel panel = new JPanel(new GridBagLayout());
         panel.setOpaque(false);
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.insets = new Insets(30, 10, 25, 15);
         gbc.ipadx = 40;
-        Color gris=new Color(210,210,210);
+        Color gris=new Color(230,230,230);
 
 
         JLabel head = new JLabel("CREAR CUENTA");
         head.setForeground(gris);
-        head.setFont(new Font("Roboto", Font.PLAIN, 24));
+        head.setFont(fuente1);
         gbc.gridx = 0;
         gbc.gridy = 0;
         gbc.gridwidth = 2;
         gbc.anchor = GridBagConstraints.CENTER;
         panel.add(head, gbc);
 
-        JLabel tipo_usuario = new JLabel("Registrarse como:");
+        JLabel tipo_usuario = new JLabel("Registrarse como");
         gbc.anchor = GridBagConstraints.WEST;
         tipo_usuario.setForeground(gris);
-        tipo_usuario.setFont(new Font("Roboto", Font.PLAIN, 24));
+        tipo_usuario.setFont(fuente1);
         gbc.gridy = 1;
         
         gbc.gridwidth = 1;
         gbc.gridx = 0;
         panel.add(tipo_usuario, gbc);
 
-        tipousu = new Choice();
-        tipousu.add("cliente");
-        tipousu.add("administrador");
-        tipousu.setBackground(new Color(70, 73, 75));
-        tipousu.setForeground(new Color(190, 190, 190));
-        tipousu.setFont(new Font("Roboto", Font.PLAIN, 16));
+        tipousu = new JLabel("       Usuario");       
+        tipousu.setFont(fuente1);
+        tipousu.setForeground(gris);
+        gbc.anchor = GridBagConstraints.CENTER;
         gbc.gridx = 1;
         panel.add(tipousu, gbc);
 
         JLabel nombreusu = new JLabel("Usuario");
         gbc.anchor = GridBagConstraints.WEST;
         nombreusu.setForeground(gris);
-        nombreusu.setFont(new Font("Roboto", Font.PLAIN, 24));
+        nombreusu.setFont(fuente1);
         gbc.gridy = 2;
         gbc.gridx = 0;
         panel.add(nombreusu, gbc);
@@ -69,13 +69,13 @@ public class Signup extends JFrame implements ActionListener {
         
         JLabel nombrecompleto = new JLabel("Nombre y Apellido");
         nombrecompleto.setForeground(gris);
-        nombrecompleto.setFont(new Font("Roboto", Font.PLAIN, 24));
+        nombrecompleto.setFont(fuente1);
         gbc.gridy = 3;
         gbc.gridx = 0;
         panel.add(nombrecompleto, gbc);
 
         cajon_nombre = new JTextField();
-        cajon_nombre.setFont(new Font("Roboto", Font.PLAIN, 17));
+        cajon_nombre.setFont(fuente1);
         cajon_nombre.setHorizontalAlignment(JTextField.CENTER);
         gbc.gridx = 1;
         gbc.fill = GridBagConstraints.HORIZONTAL; 
@@ -84,13 +84,13 @@ public class Signup extends JFrame implements ActionListener {
         
         JLabel contraseña = new JLabel("Contraseña");
         contraseña.setForeground(gris);
-        contraseña.setFont(new Font("Roboto", Font.PLAIN, 24));
+        contraseña.setFont(fuente1);
         gbc.gridy = 4;
         gbc.gridx = 0;
         panel.add(contraseña, gbc);
 
         cajon_passwd = new JTextField();
-        cajon_passwd.setFont(new Font("Roboto", Font.PLAIN, 17));
+        cajon_passwd.setFont(fuente1);
         cajon_passwd.setHorizontalAlignment(JTextField.CENTER);
         gbc.gridx = 1;
         gbc.fill = GridBagConstraints.HORIZONTAL; 
@@ -99,7 +99,7 @@ public class Signup extends JFrame implements ActionListener {
         
         JLabel empresa = new JLabel("Nombre de Empresa");
         empresa.setForeground(gris);
-        empresa.setFont(new Font("Roboto", Font.PLAIN, 24));
+        empresa.setFont(fuente1);
         gbc.gridy = 5;
         gbc.gridx = 0;
         panel.add(empresa, gbc);
@@ -113,7 +113,7 @@ public class Signup extends JFrame implements ActionListener {
         
         JLabel empresacod = new JLabel("Codigo de Empresa");
         empresacod.setForeground(gris);
-        empresacod.setFont(new Font("Roboto", Font.PLAIN, 24));
+        empresacod.setFont(fuente1);
         gbc.gridy = 6;
         gbc.gridx = 0;
         panel.add(empresacod, gbc);
@@ -170,7 +170,7 @@ public class Signup extends JFrame implements ActionListener {
     
     public void actionPerformed(ActionEvent ae){
         if(ae.getSource() == crear){
-            String tipo_usuario = tipousu.getSelectedItem();
+            String tipo_usuario = tipousu.getText();
             String nombre_usuario = cajon_usu.getText();
             nombre_usuario=nombre_usuario.toLowerCase().trim();
             int nombre_usuarioleght=nombre_usuario.length();

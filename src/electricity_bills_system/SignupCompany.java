@@ -13,7 +13,7 @@ public class SignupCompany extends JFrame implements ActionListener {
     JTextField cajon_tlf,cajon_iban;
     SignupCompany(){
         super("Registro");
-        setContentPane(new BackgroundPanel("images/login.jpg"));
+        setContentPane(new BackgroundPanel("images/login2.jpg"));
         setLayout(new BorderLayout());
         Font fuente=new Font("Roboto", Font.PLAIN, 24);
         Color gris=new Color(210,210,210);

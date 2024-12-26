@@ -21,7 +21,7 @@ public class calculateBill extends JFrame implements ActionListener {
     JTextField cajon_nombre,cajon_horas;
     JTextArea cajon_direccion;
     RoundedButton guardar,cancelar,configurar,materiales_agregar;
-    Choice ID_choice,parametros, materiales;
+    JComboBox ID_choice,parametros, materiales;
     JComboBox<String> nombre_combo;
     String ID_info,materiales_selected,selectedID,NIF,ID_USER;
     JPopupMenu nombre_popup;
@@ -148,7 +148,8 @@ public class calculateBill extends JFrame implements ActionListener {
                         ex.printStackTrace();
                     }
                     if (nombre_popup.getComponentCount() > 0) {
-                        nombre_popup.setPreferredSize(new Dimension(307, nombre_popup.getComponentCount() * 30));
+                         int width = cajon_nombre.getWidth();
+                        nombre_popup.setPreferredSize(new Dimension(width, nombre_popup.getComponentCount() * 30));
                         nombre_popup.show(cajon_nombre, 0, cajon_nombre.getHeight());
                     } else {
                         nombre_popup.setVisible(false);
@@ -166,13 +167,13 @@ public class calculateBill extends JFrame implements ActionListener {
         panel.add(numeroid, gbc);
         
 
-        ID_choice = new Choice();
+        ID_choice = new JComboBox();
         if(ID_info_update.length()<1){
-        ID_choice.add("seleciona ID");}
-        ID_choice.add(ID_info_update);
+        ID_choice.addItem("seleciona ID");}
+        if(ID_info_update.length()>1){
+        ID_choice.addItem(ID_info_update);}
+        ID_choice.setEnabled(false);
         ID_choice.setFont(fuente2);
-        ID_choice.setBackground(new Color(70, 73, 75));
-        ID_choice.setForeground(new Color(190, 190, 190));
         gbc.gridx = 1;
         gbc.fill = GridBagConstraints.HORIZONTAL; 
         gbc.weightx = 0;
@@ -213,8 +214,8 @@ public class calculateBill extends JFrame implements ActionListener {
         ID_choice.addItemListener(new ItemListener(){
             public void itemStateChanged(ItemEvent ie){
                 if (ie.getStateChange() == ItemEvent.SELECTED) {
-                    selectedID = ID_choice.getSelectedItem();
-                    update_materiales(ID_choice.getSelectedItem());
+                    selectedID =(String) ID_choice.getSelectedItem();
+                    update_materiales(selectedID);
                 }
                 
                 try{
@@ -284,9 +285,7 @@ public class calculateBill extends JFrame implements ActionListener {
         panelBotones3.add(materiales_agregar);
         panelBotones3.add(materiales_agregar, BorderLayout.WEST);
         
-        materiales=new Choice();
-        materiales.setBackground(new Color(70, 73, 75));
-        materiales.setForeground(new Color(190, 190, 190));
+        materiales=new JComboBox();
         materiales.addItemListener(new ItemListener() {
             public void itemStateChanged(ItemEvent e) {
                 if (e.getStateChange() == ItemEvent.SELECTED) {
@@ -297,8 +296,8 @@ public class calculateBill extends JFrame implements ActionListener {
             }
         });
         if (materiales.getItemCount() > 0) {
-            materiales.select(materiales.getItemCount() - 1);
-            String selectedMaterial = materiales.getSelectedItem();
+            materiales.setSelectedIndex(materiales.getItemCount() - 1);
+            String selectedMaterial =(String) materiales.getSelectedItem();
             String materialNumber = extractMaterialNumber(selectedMaterial);
             updateTotal(materialNumber);
         }
@@ -339,8 +338,8 @@ public class calculateBill extends JFrame implements ActionListener {
         panelBotones2.add(configurar);
         panelBotones2.add(configurar, BorderLayout.WEST);
         
-        parametros=new Choice();
-        parametros.add("Añadir Primero Parametros");
+        parametros=new JComboBox();
+        parametros.addItem("Añadir Primero Parametros");
          try {
             int count;
             Connect c = new Connect();
@@ -350,7 +349,7 @@ public class calculateBill extends JFrame implements ActionListener {
             if (rs2.next()) {
                 count = rs2.getInt(1); // Obtener el valor de count
                 if (count > 0) {
-                    parametros.removeAll();
+                    parametros.removeAllItems();
                 }
             }
             rs2.close();
@@ -358,16 +357,14 @@ public class calculateBill extends JFrame implements ActionListener {
             // Ejecutar la consulta para obtener los nombres
             ResultSet rs = c.s.executeQuery("select * from setup_bill WHERE NIF='"+NIF+"'");
             while (rs.next()) {
-                parametros.add(rs.getString("NAME"));
+                parametros.addItem(rs.getString("NAME"));
             }
             rs.close();
             c.s.close();
         } catch (Exception e) {
             e.printStackTrace();
         }
-        
-        parametros.setBackground(new Color(70, 73, 75));
-        parametros.setForeground(new Color(190, 190, 190));
+       
         parametros.setFont(fuente2);
         gbc.gridx = 1;
         gbc.fill = GridBagConstraints.HORIZONTAL; 
@@ -407,11 +404,6 @@ public class calculateBill extends JFrame implements ActionListener {
         panelBotones.add(cancelar, BorderLayout.EAST);
 
         add(panel, BorderLayout.PAGE_START);
-        try {
-            UIManager.setLookAndFeel(new FlatDarkLaf());
-        } catch (UnsupportedLookAndFeelException e) {
-            e.printStackTrace();
-        }
         
         setSize(900, 800);
         setLocationRelativeTo(null);
@@ -422,12 +414,12 @@ public class calculateBill extends JFrame implements ActionListener {
     
     }
     public void updateID_choice(String selectedName) {
-    ID_choice.removeAll();
+    ID_choice.removeAllItems();
     try {
         Connect c = new Connect();
         ResultSet rs = c.s.executeQuery("SELECT ID FROM client WHERE NAME='" + selectedName + "' AND NIF='"+NIF+"'");
         while (rs.next()) {
-            ID_choice.add(rs.getString("ID"));
+            ID_choice.addItem(rs.getString("ID"));
             selectedID = rs.getString("ID"); // Actualizar selectedID
         }
         rs.close();
@@ -438,16 +430,17 @@ public class calculateBill extends JFrame implements ActionListener {
    
 //     Forzar la actualización de la dirección si solo hay un ID
     if (ID_choice.getItemCount() == 1) {
-        ID_choice.select(0); // Seleccionar el único ID
-        selectedID = ID_choice.getSelectedItem();
+        ID_choice.setSelectedIndex(0); 
+        selectedID =(String) ID_choice.getSelectedItem();  
         updateAddress(selectedID); 
         update_materiales(selectedID);
+        ID_choice.setEnabled(false);
     } else if (ID_choice.getItemCount() > 1) {
-        // Si hay más de un ID, seleccionar el primero por defecto
-        ID_choice.select(0);
-        selectedID = ID_choice.getSelectedItem();
+        ID_choice.setSelectedIndex(0); 
+        selectedID =(String) ID_choice.getSelectedItem();  
         updateAddress(selectedID);
         update_materiales(selectedID);
+        ID_choice.setEnabled(true);
     }
 }
 
@@ -470,7 +463,7 @@ public void updateAddress(String selectedID) {
 }
 
 public void update_materiales(String seletedID) { 
-    materiales.removeAll();
+    materiales.removeAllItems();
     if(ID_info_update.length()>1){
         selectedID=ID_info_update;
         }
@@ -486,12 +479,12 @@ public void update_materiales(String seletedID) {
             String materialDate = rs.getString("MES");
             String dia = rs.getString("DIA");
             String ano = rs.getString("ANO");
-            materiales.add("Parte " + materialNumber + ", del " + dia + " de " + materialDate + " de " + ano);
+            materiales.addItem("Parte " + materialNumber + ", del " + dia + " de " + materialDate + " de " + ano);
         }
         rs.close();
         // Actualizar la suma total para el primer material seleccionado
         if (materiales.getItemCount() > 0) {
-            String firstMaterialNumber = extractMaterialNumber(materiales.getItem(0)); // Extraer el número de material
+            String firstMaterialNumber = extractMaterialNumber((String) materiales.getItemAt(0)); // Extraer el número de material
             updateTotal(firstMaterialNumber);
         } else {
             total_materiales.setText("0€"); 
@@ -532,7 +525,7 @@ public void updateTotal(String materialNumber) {
 
     public void actionPerformed(ActionEvent ae){
       String client=cajon_nombre.getText();
-      String ID =ID_choice.getSelectedItem();
+      String ID =(String) ID_choice.getSelectedItem();
       String bill_true="bill";
       
         if(ae.getSource()==materiales_agregar){
@@ -547,7 +540,7 @@ public void updateTotal(String materialNumber) {
         }
         
         if(ae.getSource()==guardar){                        
-            String ID_2 =ID_choice.getSelectedItem();
+            String ID_2 =(String) ID_choice.getSelectedItem();
             if (ID_info_update.length()>1){
                 ID_2=ID_info_update;
             }
@@ -561,9 +554,9 @@ public void updateTotal(String materialNumber) {
             if(!NAME.isBlank()&& ID_2.length()==9 && !HOUR.isBlank()){
                 int h=Integer.parseInt(HOUR);
                 String DATE= dateField.getText();
-                String NUMBER_MATERIAL=materiales.getSelectedItem();
+                String NUMBER_MATERIAL=(String) materiales.getSelectedItem();
                 String TOTAL_MATERIAL=totalSum+"";
-                String PARAMETROS=parametros.getSelectedItem();
+                String PARAMETROS=(String) parametros.getSelectedItem();
                 int num_factura=0;
                 int IVA_int=0;
                 int precio_hora=0;        

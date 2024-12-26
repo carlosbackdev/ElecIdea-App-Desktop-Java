@@ -27,6 +27,7 @@ public class Splash extends JFrame  implements Runnable{
         
         t=new Thread(this);
         t.start();
+        
         try {
             UIManager.setLookAndFeel(new FlatDarkLaf());
         } catch (UnsupportedLookAndFeelException e) {
