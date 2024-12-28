@@ -7,12 +7,15 @@ import java.awt.event.*;
 
 public class Project extends JFrame implements ActionListener{
     JMenuItem cliente,generar,material,factura_detalle,cliente_detalles, factura,cliente_modificar,salir;
+    JMenuItem Finanzas;
     String NIF,ID_USER;
     JMenuBar navegador;
+    boolean visible=true;
     
     Project(String NIF, String ID_USER){
         this.NIF=NIF;
-        this.ID_USER=ID_USER;   
+        this.ID_USER=ID_USER;       
+        
         
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLayout(new BorderLayout()); 
@@ -74,11 +77,12 @@ public class Project extends JFrame implements ActionListener{
         info.setIcon(new ImageIcon(image2));
         navegador.add(info);
         
-        JMenuItem info_ver=new JMenuItem("Ver Información ");
-        info_ver.setFont(menufont);
-        info_ver.setMnemonic('I');
-        info_ver.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_I, ActionEvent.CTRL_MASK));
-        info.add(info_ver);
+        Finanzas=new JMenuItem("Finanzas ");
+        Finanzas.setFont(menufont);
+        Finanzas.setMnemonic('I');
+        Finanzas.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_I, ActionEvent.CTRL_MASK));
+        Finanzas.addActionListener(this);
+        info.add(Finanzas);
         
         JMenuItem info_actualizar=new JMenuItem("Actualizar Información ");
         info_actualizar.setFont(menufont);
@@ -156,12 +160,11 @@ public class Project extends JFrame implements ActionListener{
         salir.addActionListener(this);
         navegador.add(salir);
         
-        
-       
-
         setVisible(true);
-        
+        triggerFinanzasButton();  
+
     }
+    private Finance financeInstance = null;
     public void actionPerformed(ActionEvent ae){
      if(ae.getSource()==cliente){
      new newClient(NIF,ID_USER);
@@ -181,8 +184,13 @@ public class Project extends JFrame implements ActionListener{
      if(ae.getSource()==factura){
      new calculateBill("","",NIF,ID_USER);
      }
-     if(ae.getSource()==cliente_modificar){
-     new ClientUpdate(NIF,ID_USER);
+     if(ae.getSource()==cliente_modificar){      
+     new ClientUpdate(NIF, ID_USER); 
+     }
+     if(ae.getSource()==Finanzas){  
+   
+        financeInstance = new Finance(NIF, ID_USER);
+   
      }
      if(ae.getSource() == salir){
          int opcion = JOptionPane.showConfirmDialog(null, 
@@ -199,6 +207,12 @@ public class Project extends JFrame implements ActionListener{
                 }
             }
         }
+     
+    }
+    
+    public void triggerFinanzasButton() {
+    ActionEvent event = new ActionEvent(Finanzas, ActionEvent.ACTION_PERFORMED, "");
+    actionPerformed(event);
     }
      
     public static void main(String[] args){

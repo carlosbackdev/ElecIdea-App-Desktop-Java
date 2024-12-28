@@ -24,7 +24,7 @@ public class bill_standard_view extends JFrame implements ActionListener {
     JButton agregarButton, guardarButton,enviar;
     Double IVA_int,IVA_resta,PRICE_HOUR_int,TOTAL_BILL_INT,HOUR_INT;
     String NIF,ID_USER,NAME_COMPANY,ADDRESS_COMPANY,EMAIL_COMPANY,PHONE_COMPANY,IBAN_COMPANY;
-    
+    String CODE2;
     bill_standard_view(String ID_2,String NAME,String ADDRESS,String HOUR,String DATE,String NUMBER_MATERIAL,
             String TOTAL_MATERIAL,String PARAMETROS,String NUMBER_FACTURA,String TOTAL_BILL,String NIF,String ID_USER){
     super("Añadir Materiales");
@@ -43,6 +43,7 @@ public class bill_standard_view extends JFrame implements ActionListener {
     this.TOTAL_BILL = TOTAL_BILL;
     this.NIF = NIF;
     this.ID_USER = ID_USER;
+    CODE2=ID_2+NUMBER_FACTURA;
    
     
     try{
@@ -394,7 +395,7 @@ public class bill_standard_view extends JFrame implements ActionListener {
             }
             try{
                 Connect c=new Connect();
-                String query = "INSERT INTO bill_standard VALUES('"+NUMBER_FACTURA+"','"+ID_2+"','"+NAME.toLowerCase()+"','"+ADDRESS.toLowerCase()+"','"+HOUR+"','"+DATE.toLowerCase()+"','"+NUMBER_MATERIAL+"','"+TOTAL_MATERIAL+"','"+PARAMETROS.toLowerCase()+"','"+TOTAL+"','"+NIF+"','"+STATUS+"')";
+                String query = "INSERT INTO bill_standard VALUES('"+NUMBER_FACTURA+"','"+ID_2+"','"+NAME.toLowerCase()+"','"+ADDRESS.toLowerCase()+"','"+HOUR+"','"+DATE.toLowerCase()+"','"+NUMBER_MATERIAL+"','"+TOTAL_MATERIAL+"','"+PARAMETROS.toLowerCase()+"','"+TOTAL+"','"+NIF+"','"+STATUS+"','"+CODE2+"')";
                 c.s.executeUpdate(query);
                 
             } catch(Exception e){

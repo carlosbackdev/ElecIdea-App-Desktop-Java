@@ -228,7 +228,6 @@ public class Login extends JFrame implements ActionListener{
                    ID_USER=rs.getString("ID");
                    setVisible(false);
                    new Project(NIF,ID_USER);
-                   new Finance(NIF,ID_USER);
                } else{
                    JOptionPane.showMessageDialog(null,"Datos incorrectos");
                    cajon_usuario.setText("");

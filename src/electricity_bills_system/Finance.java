@@ -19,12 +19,21 @@ public class Finance extends JFrame implements ActionListener {
     JLabel benefitsLabel, expensesLabel, processedInvoicesLabel, pendingInvoicesLabel;
     JFrame financeFrame;
     RoundedButton updateButton;
-
+    String NIF,ID_USER;
+     
     Finance(String NIF, String ID_USER) {
+        this.NIF=NIF;
+        this.ID_USER=ID_USER;
         financeFrame = new JFrame("Finanzas - Resumen del Mes");
         financeFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-        financeFrame.setSize(900, 600);
-        financeFrame.setLocation(100, 100);
+        
+        Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+        int screenWidth = screenSize.width;
+        int screenHeight = screenSize.height;
+        
+        financeFrame.setSize((screenWidth / 2)-50, screenHeight-200);
+        financeFrame.setLocation(50, 80);
+     
         Font fuente=new Font("Roboto", Font.PLAIN, 20);
         Font fuente2=new Font("Roboto", Font.PLAIN, 15);
         Font fuente3=new Font("Roboto", Font.PLAIN, 12);
@@ -34,8 +43,10 @@ public class Finance extends JFrame implements ActionListener {
         financeFrame.add(mainPanel);
         JPanel dataPanel = new JPanel(new GridLayout(6, 4, 10, 4));
         
+        
+        
         TitledBorder titledBorder = BorderFactory.createTitledBorder("Datos del Mes");
-        titledBorder.setTitleJustification(TitledBorder.CENTER); // Centrar el título
+        titledBorder.setTitleJustification(TitledBorder.CENTER);
         titledBorder.setTitleFont(new Font("Roboto", Font.BOLD, 20));
         titledBorder.setBorder(BorderFactory.createEmptyBorder()); 
         dataPanel.setBorder(titledBorder);
@@ -60,6 +71,7 @@ public class Finance extends JFrame implements ActionListener {
         dataPanel.add(new JLabel("Facturas Pendientes:", SwingConstants.RIGHT));
         pendingInvoicesLabel = new JLabel("3", SwingConstants.LEFT);
         dataPanel.add(pendingInvoicesLabel);
+        
         dataPanel.add(new JLabel("", SwingConstants.RIGHT));
         benefitsLabel = new JLabel("", SwingConstants.LEFT);
         dataPanel.add(benefitsLabel);
@@ -80,6 +92,7 @@ public class Finance extends JFrame implements ActionListener {
         false
         );
         pieChart.getTitle().setFont(new Font("Roboto", Font.BOLD, 18));
+        pieChart.getTitle().setPaint(new Color(200, 200, 200));
         pieChart.setBackgroundPaint(new Color(0, 0, 0, 0));
         
         PiePlot piePlot = (PiePlot) pieChart.getPlot();
@@ -109,8 +122,8 @@ public class Finance extends JFrame implements ActionListener {
 
        
         DefaultCategoryDataset barDataset = new DefaultCategoryDataset();
-        barDataset.addValue(1200, "Finanzas", "Beneficios");
-        barDataset.addValue(800, "Finanzas", "Gastos");
+        barDataset.addValue(1200, "Beneficios", "Beneficios                      Gastos");
+        barDataset.addValue(800, "Gastos", "Beneficios                      Gastos");
 
         JFreeChart barChart = ChartFactory.createBarChart(
                 "Comparación: Beneficios vs Gastos",
@@ -130,13 +143,11 @@ public class Finance extends JFrame implements ActionListener {
         barPlot.setOutlinePaint(null);
 
         BarRenderer renderer = (BarRenderer) barPlot.getRenderer();
-        renderer.setSeriesPaint(0, new Color(156, 39, 176)); 
-        renderer.setSeriesPaint(1, new Color(3, 169, 244)); 
+        renderer.setSeriesPaint(0, new Color(156, 39, 176,95)); 
+        renderer.setSeriesPaint(1, new Color(3, 169, 244,95)); 
 
-        renderer.setDrawBarOutline(false);
-        renderer.setShadowVisible(false); 
-
-        barChart.getTitle().setFont(new Font("SansSerif", Font.BOLD, 18));
+        barChart.getTitle().setFont(new Font("Roboto", Font.BOLD, 18));
+        barChart.getTitle().setPaint(new Color(200, 200, 200));
         barChart.setBackgroundPaint(new Color(0, 0, 0, 0)); 
 
         ChartPanel barChartPanel = new ChartPanel(barChart);
@@ -146,13 +157,16 @@ public class Finance extends JFrame implements ActionListener {
        
         JPanel bottomPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
         
+        
         updateButton = new RoundedButton("Actualizar Datos");
         updateButton.setFont(new Font("Roboto", Font.BOLD, 16));
         updateButton.addActionListener(this);
         bottomPanel.add(updateButton);
         mainPanel.add(bottomPanel, BorderLayout.SOUTH);
-
+        
         financeFrame.setVisible(true);
+        
+
     }
 
 

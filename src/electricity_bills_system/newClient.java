@@ -22,7 +22,7 @@ public class newClient extends JFrame implements ActionListener {
     newClient(String NIF, String ID_USER){
         this.NIF=NIF;
         this.ID_USER=ID_USER;
-        
+
         setContentPane(new BackgroundPanel("images/fichas3.jpg"));  
         
         JPanel panel = new JPanel(new GridBagLayout());
@@ -291,9 +291,10 @@ public class newClient extends JFrame implements ActionListener {
                 }
         
             }else if(condicion == 0){
-            setVisible(false);
+            
+            setVisible(false);            
             }
-        }else if(ae.getSource() == cancelar){
+        }else{            
             setVisible(false);}
     }
     public static void main(String[]args){

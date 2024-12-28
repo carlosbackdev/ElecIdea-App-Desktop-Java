@@ -166,7 +166,7 @@ public class setup_bill extends JFrame implements ActionListener {
                 }
             }
         } else if (ae.getSource() == volver) {
-            setVisible(false);
+            setVisible(false);;
         }
         String billt=bill_true;
         if ("bill".equals(billt)) {            
