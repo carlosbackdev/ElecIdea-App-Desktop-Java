@@ -381,12 +381,10 @@ public class ClientUpdate extends JFrame implements ActionListener{
                    String rs2=rs.getString("PHONE");
                    String rs3=rs.getString("EMAIL");
                    if(rs2.equals(phone)){                      
-                       condicion=1;
-                       tf=1;                      
+                                            
                    }
                    if(rs3.equals(mail)){                       
-                       condicion=1;
-                       ml=1;                      
+                                          
                    }                  
                }
                 rs.close();
@@ -447,7 +445,7 @@ public class ClientUpdate extends JFrame implements ActionListener{
             if (opcion == JOptionPane.YES_OPTION) {
             try {
                 Connect c= new Connect();
-                String query ="UPDATE CLIENT SET NAME='"+name+"',ADDRESS='"+address+"',CITY='"+city+"', POSTAL='"+postal+"', EMAIL='"+mail+"', PHONE='"+phone+"'";
+                String query ="UPDATE CLIENT SET NAME='"+name+"',ADDRESS='"+address+"',CITY='"+city+"', POSTAL='"+postal+"', EMAIL='"+mail+"', PHONE='"+phone+"' where id='"+ID+"'";
                 c.s.executeUpdate(query);            
                 JOptionPane.showMessageDialog(null,"Cliente Modificado Correctamente");
                 setVisible(false);

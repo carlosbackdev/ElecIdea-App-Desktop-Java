@@ -391,7 +391,7 @@ public class bill_standard_view extends JFrame implements ActionListener {
          if(ae.getSource() == guardarButton){
             String STATUS="sin enviar";
             if(enviado){
-            STATUS="pendiente";
+            STATUS="pendiente pago";
             }
             try{
                 Connect c=new Connect();

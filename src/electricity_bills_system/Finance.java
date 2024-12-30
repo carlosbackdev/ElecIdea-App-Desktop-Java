@@ -2,6 +2,9 @@ package electricity_bills_system;
 
 import java.awt.*;
 import java.awt.event.*;
+import java.sql.*;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import javax.swing.*;
 import javax.swing.border.TitledBorder;
 import org.jfree.chart.ChartFactory;
@@ -20,12 +23,47 @@ public class Finance extends JFrame implements ActionListener {
     JFrame financeFrame;
     RoundedButton updateButton;
     String NIF,ID_USER;
+    String beneficios,horas,factura_pendiente,factura_pagada,gastos;
+    SimpleDateFormat dateFormat;
      
     Finance(String NIF, String ID_USER) {
+        dateFormat = new SimpleDateFormat("MM-yyyy");
+        Date fechaActual = new Date();
+        String fecha = dateFormat.format(fechaActual);
+        
+        try{
+            Connect c= new Connect();
+            String query="SELECT COALESCE(SUM(HOUR),0) AS HORAS,COALESCE(ROUND(SUM(TOTAL_BILL),2),0) AS BENEFICIOS FROM bill_standard WHERE NIF='"+NIF+"' AND DATE LIKE '%-"+fecha+"'";
+              ResultSet rs1 = c.s.executeQuery(query);             
+              while(rs1.next()){
+                  beneficios = rs1.getString("BENEFICIOS");
+                  horas = rs1.getString("HORAS");    
+                  horas=horas.substring(0, horas.indexOf("."));
+              }
+              String query4="SELECT COALESCE(COUNT(STATUS),0) AS PENDIENTE FROM bill_standard WHERE NIF='"+NIF+"' AND DATE LIKE '%-"+fecha+"' AND (STATUS LIKE 'sin enviar' OR STATUS LIKE 'pendiente%')";
+              ResultSet rs4 = c.s.executeQuery(query4);
+              while(rs4.next()){
+                  factura_pendiente= rs4.getString("PENDIENTE");
+              }
+              
+              String query2="SELECT COALESCE(COUNT(STATUS),0) AS PAGADA FROM bill_standard WHERE NIF='"+NIF+"' AND DATE LIKE '%-"+fecha+"' AND STATUS LIKE 'pagado'";
+              ResultSet rs2 = c.s.executeQuery(query2);
+              while(rs2.next()){                  
+                  factura_pagada= rs2.getString("PAGADA");
+              }
+              String query3="SELECT COALESCE(SUM(TOTAL_PRICE),0) AS GASTOS FROM material_bill WHERE NIF='"+NIF+"' AND DATE LIKE '%-"+fecha+"'";
+              ResultSet rs3 = c.s.executeQuery(query3);
+              while(rs3.next()){                  
+                  gastos= rs3.getString("GASTOS");
+              }              
+              
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        
         this.NIF=NIF;
         this.ID_USER=ID_USER;
         financeFrame = new JFrame("Finanzas - Resumen del Mes");
-        financeFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
         int screenWidth = screenSize.width;
@@ -41,11 +79,11 @@ public class Finance extends JFrame implements ActionListener {
         JPanel mainPanel = new JPanel();
         mainPanel.setLayout(new BorderLayout());
         financeFrame.add(mainPanel);
-        JPanel dataPanel = new JPanel(new GridLayout(6, 4, 10, 4));
+        JPanel dataPanel = new JPanel(new GridLayout(7, 4, 10, 4));
         
         
         
-        TitledBorder titledBorder = BorderFactory.createTitledBorder("Datos del Mes");
+        TitledBorder titledBorder = BorderFactory.createTitledBorder("Finanzas del Mes");
         titledBorder.setTitleJustification(TitledBorder.CENTER);
         titledBorder.setTitleFont(new Font("Roboto", Font.BOLD, 20));
         titledBorder.setBorder(BorderFactory.createEmptyBorder()); 
@@ -57,32 +95,41 @@ public class Finance extends JFrame implements ActionListener {
         dataPanel.add(benefitsLabel);
         
         dataPanel.add(new JLabel("Beneficios Totales:", SwingConstants.RIGHT));
-        benefitsLabel = new JLabel("1,200 €", SwingConstants.LEFT);
+        benefitsLabel = new JLabel(beneficios+" €", SwingConstants.LEFT);
         dataPanel.add(benefitsLabel);
 
         dataPanel.add(new JLabel("Gastos Totales:", SwingConstants.RIGHT));
-        expensesLabel = new JLabel("800 €", SwingConstants.LEFT);
+        expensesLabel = new JLabel(gastos+" €", SwingConstants.LEFT);
         dataPanel.add(expensesLabel);
+        
+        dataPanel.add(new JLabel("Horas realizadas:", SwingConstants.RIGHT));
+        pendingInvoicesLabel = new JLabel(horas+" h", SwingConstants.LEFT);
+        dataPanel.add(pendingInvoicesLabel);
 
         dataPanel.add(new JLabel("Facturas Procesadas:", SwingConstants.RIGHT));
-        processedInvoicesLabel = new JLabel("15", SwingConstants.LEFT);
+        processedInvoicesLabel = new JLabel(factura_pagada, SwingConstants.LEFT);
         dataPanel.add(processedInvoicesLabel);
 
         dataPanel.add(new JLabel("Facturas Pendientes:", SwingConstants.RIGHT));
-        pendingInvoicesLabel = new JLabel("3", SwingConstants.LEFT);
+        pendingInvoicesLabel = new JLabel(factura_pendiente, SwingConstants.LEFT);
         dataPanel.add(pendingInvoicesLabel);
+        
         
         dataPanel.add(new JLabel("", SwingConstants.RIGHT));
         benefitsLabel = new JLabel("", SwingConstants.LEFT);
         dataPanel.add(benefitsLabel);
-        
-
+      
+        double beneficios_int=Double.parseDouble(beneficios);
+        double gastos_int=Double.parseDouble(gastos);
+        int horas_int=Integer.parseInt(horas);
+        int facturas_pendientes_int=Integer.parseInt(factura_pendiente);
+        int facturas_pagadas_int=Integer.parseInt(factura_pagada);
+         
         mainPanel.add(dataPanel, BorderLayout.NORTH);
 
         DefaultPieDataset pieDataset = new DefaultPieDataset();
-        pieDataset.setValue("Beneficios", 120);
-        pieDataset.setValue("Gastos", 800);
-        pieDataset.setValue("Facturas Pendientes", 1000);
+        pieDataset.setValue("Facturas Finalizadas", facturas_pagadas_int);
+        pieDataset.setValue("Facturas Pendientes", facturas_pendientes_int);
 
         JFreeChart pieChart = ChartFactory.createPieChart(
         "Distribución Financiera del Mes",
@@ -99,11 +146,10 @@ public class Finance extends JFrame implements ActionListener {
         piePlot.setBackgroundPaint(new Color(0, 0, 0, 0));
         piePlot.setOutlinePaint(null);
 
-        piePlot.setSectionPaint("Beneficios", new Color(255, 87, 34,98));
-        piePlot.setSectionPaint("Gastos", new Color(156, 39, 176,98)); 
-        piePlot.setSectionPaint("Facturas Pendientes", new Color(3, 169, 244,98));
+        piePlot.setSectionPaint("Facturas Finalizadas", new Color(255, 87, 34,98));
+        piePlot.setSectionPaint("Facturas Pendientes", new Color(156, 39, 176,98)); 
 
-        piePlot.setLabelFont(fuente2);
+        piePlot.setLabelFont(fuente3);
         piePlot.setLabelPaint(new Color(200, 200, 200));
         piePlot.setLabelBackgroundPaint(new Color(70, 73, 75,0));
         piePlot.setShadowPaint(new Color(70, 73, 75)); 
@@ -122,8 +168,8 @@ public class Finance extends JFrame implements ActionListener {
 
        
         DefaultCategoryDataset barDataset = new DefaultCategoryDataset();
-        barDataset.addValue(1200, "Beneficios", "Beneficios                      Gastos");
-        barDataset.addValue(800, "Gastos", "Beneficios                      Gastos");
+        barDataset.addValue(beneficios_int, "Beneficios", "Beneficios                      Gastos");
+        barDataset.addValue(gastos_int, "Gastos", "Beneficios                      Gastos");
 
         JFreeChart barChart = ChartFactory.createBarChart(
                 "Comparación: Beneficios vs Gastos",
@@ -142,6 +188,10 @@ public class Finance extends JFrame implements ActionListener {
         barPlot.setRangeGridlinePaint(new Color(0, 0, 0, 0));
         barPlot.setOutlinePaint(null);
 
+        barPlot.getDomainAxis().setTickLabelPaint(Color.WHITE);
+        barPlot.getRangeAxis().setTickLabelPaint(Color.WHITE);    
+        barChart.getTitle().setPaint(Color.WHITE);  
+        
         BarRenderer renderer = (BarRenderer) barPlot.getRenderer();
         renderer.setSeriesPaint(0, new Color(156, 39, 176,95)); 
         renderer.setSeriesPaint(1, new Color(3, 169, 244,95)); 
@@ -171,12 +221,12 @@ public class Finance extends JFrame implements ActionListener {
 
 
     public void actionPerformed(ActionEvent ae) {
-        // Simular actualización de datos
-        benefitsLabel.setText("1,500 €");
-        expensesLabel.setText("900 €");
-        processedInvoicesLabel.setText("20");
-        pendingInvoicesLabel.setText("2");
-        JOptionPane.showMessageDialog(financeFrame, "Datos actualizados con éxito", "Actualizar", JOptionPane.INFORMATION_MESSAGE);
+     
+        if(ae.getSource() == updateButton){
+        financeFrame.setVisible(false);
+        new Finance(NIF,ID_USER);
+    }
+      
     }
 
     public static void main(String[] args) {

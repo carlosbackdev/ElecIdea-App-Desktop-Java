@@ -20,7 +20,7 @@ public class PayBill  extends JFrame implements ActionListener {
     JTextField cliente;
     JComboBox<String> nombre_combo;
     JPopupMenu nombre_popup;
-    JComboBox ID_choice,proyecto_tipo,fecha_choice_mes,fecha_choice_year;
+    JComboBox ID_choice,factura_estado,fecha_choice_mes,fecha_choice_year;
     String selectedID,NIF,ID_USER,date;
     JButton buscar, imprimir,salir,eliminar;
     JTable tabla_cliente;
@@ -28,14 +28,15 @@ public class PayBill  extends JFrame implements ActionListener {
     JFormattedTextField dateField;
     SimpleDateFormat dateFormat;
     String[] meses = {"Todos Meses","Enero","Febrero","Marzo","Aril","Mayo","Junio","Julio","Agosto","Septiembre","Octubre","Noviembre","Diciembre"};
+    ArrayList<String> NUMBERa = new ArrayList<>();
     ArrayList<String> NAMEa = new ArrayList<>();
     ArrayList<String> ADDRESSa = new ArrayList<>();
-    ArrayList<String> CITYa = new ArrayList<>();
-    ArrayList<String> POSTALa = new ArrayList<>();
-    ArrayList<String> EMAILa = new ArrayList<>();
-    ArrayList<String> PHONEa = new ArrayList<>();
-    ArrayList<String> PROJECTa = new ArrayList<>();
+    ArrayList<String> HOURa = new ArrayList<>();
+    ArrayList<String> NUMBERPa = new ArrayList<>();
+    ArrayList<String> TOTALMa = new ArrayList<>();
+    ArrayList<String> TOTALa = new ArrayList<>();
     ArrayList<String> IDa = new ArrayList<>();
+    ArrayList<String> CODEa = new ArrayList<>();
     
     PayBill(String NIF,String ID_USER){
     super("Pago de Facturas");    
@@ -63,10 +64,10 @@ public class PayBill  extends JFrame implements ActionListener {
             }
         }
     });
-    proyecto_tipo = new JComboBox();
-    String[] tipos={"Todos","defecto","mantenimiento electrico","proyecto solar"};
+    factura_estado = new JComboBox();
+    String[] tipos={"Todos","sin enviar","pendiente pago"};
     for(int i=0;i<tipos.length;i++){
-        proyecto_tipo.addItem(tipos[i]);
+        factura_estado.addItem(tipos[i]);
     }    
      
     JPanel panelfecha = new JPanel(new GridLayout(1, 2)); 
@@ -88,7 +89,7 @@ public class PayBill  extends JFrame implements ActionListener {
     
     addField(inputPanel, gbc, "Nombre del Cliente:", cliente, 0);
     addField(inputPanel, gbc, "ID del cliente:", ID_choice, 1);
-    addField(inputPanel, gbc, "Estado de la factura:", proyecto_tipo, 2);
+    addField(inputPanel, gbc, "Estado de la factura:", factura_estado, 2);
     addField(inputPanel, gbc, "Fecha de Factura:", panelfecha, 3);
     
     nombre_popup = new JPopupMenu();
@@ -165,7 +166,7 @@ public class PayBill  extends JFrame implements ActionListener {
     buscar = new JButton("  Buscar Factura  ");
     buscar.addActionListener(this);
     buscar.setBounds(50, 10, 50, 10);
-    buscar.setPreferredSize(new Dimension(130, 25)); 
+    buscar.setPreferredSize(new Dimension(190, 25)); 
     gbc.fill = GridBagConstraints.NONE; // No expandir automáticamente
     gbc.anchor = GridBagConstraints.CENTER;
     gbc.gridx = 0;
@@ -175,19 +176,19 @@ public class PayBill  extends JFrame implements ActionListener {
         
     imprimir = new JButton("  Exportar  ");
     imprimir.addActionListener(this);
-    imprimir.setPreferredSize(new Dimension(130, 25)); 
+    imprimir.setPreferredSize(new Dimension(190, 25)); 
     gbc.gridy = 5;
     inputPanel.add(imprimir, gbc);
     
     eliminar = new JButton("Actualizar a Pagadas");
     eliminar.addActionListener(this);
-    eliminar.setPreferredSize(new Dimension(130, 25)); 
+    eliminar.setPreferredSize(new Dimension(190, 25)); 
     gbc.gridy = 6;
     inputPanel.add(eliminar, gbc);
     
     salir = new JButton("   Salir   ");
     salir.addActionListener(this);
-    salir.setPreferredSize(new Dimension(130, 25)); 
+    salir.setPreferredSize(new Dimension(190, 25)); 
     salir.setBounds(50, 10, 50, 10);;
     gbc.gridy = 7;
     inputPanel.add(salir, gbc);
@@ -217,9 +218,9 @@ public class PayBill  extends JFrame implements ActionListener {
     ID_choice.removeAllItems();
     try {
         Connect c = new Connect();
-        ResultSet rs = c.s.executeQuery("SELECT ID FROM bill_search WHERE NAME='" + selectedName + "' AND NIF='"+NIF+"'");
+        ResultSet rs = c.s.executeQuery("SELECT ID_CLIENT FROM bill_standard WHERE NAME='" + selectedName + "' AND NIF='"+NIF+"'");
         while (rs.next()) {
-            ID_choice.addItem(rs.getString("ID"));
+            ID_choice.addItem(rs.getString("ID_CLIENT"));
         }
         rs.close();
         c.s.close();
@@ -242,7 +243,7 @@ public class PayBill  extends JFrame implements ActionListener {
     
     public void actionPerformed(ActionEvent ae) {
     String ID_CLIENT=(String) ID_choice.getSelectedItem();
-    String PROJECT_TYPE=(String) proyecto_tipo.getSelectedItem();
+    String STATUS=(String) factura_estado.getSelectedItem();
     String MES=(String) fecha_choice_mes.getSelectedItem();
     String YEAR=(String) fecha_choice_year.getSelectedItem();
     String NAME=cliente.getText().toLowerCase().trim();
@@ -253,24 +254,25 @@ public class PayBill  extends JFrame implements ActionListener {
               for(int i=longitud-1;i>=0;i--)
             tableModel.removeRow(i);
           }
+          NUMBERa.clear();
           NAMEa.clear();
           ADDRESSa.clear();
-          CITYa.clear();
-          POSTALa.clear();
-          EMAILa.clear();
-          PHONEa.clear();
-          PROJECTa.clear();
+          HOURa.clear();
+          NUMBERPa.clear();
+          TOTALMa.clear();
+          TOTALa.clear();
           IDa.clear();
+          CODEa.clear();
        boolean datos=true;
        try{
         
         Connect c = new Connect();
         String filtro1="",filtro2="",filtro3="",filtro4="";
         if(!ID_CLIENT.equals("Cualquiera")){
-            filtro1=" AND client.ID='"+ID_CLIENT+"'";
+            filtro1=" AND ID_CLIENT='"+ID_CLIENT+"'";
         }
-        if(!PROJECT_TYPE.equals("Todos")){
-            filtro2=" AND PROJECT='"+PROJECT_TYPE+"'";
+        if(!STATUS.equals("Todos")){
+            filtro2=" AND STATUS='"+STATUS+"'";
         }
         if(!MES.equals("Todos Meses")){
             for(int i=1;i<meses.length;i++){                
@@ -286,10 +288,10 @@ public class PayBill  extends JFrame implements ActionListener {
             filtro4=" AND DATE LIKE '%-"+YEAR+"'";
         }
         
-        String query="SELECT NAME,ADDRESS,POSTAL,CITY,EMAIL,PHONE,client.ID AS ID,PROJECT FROM ebs.meter_info JOIN ebs.client ON meter_info.ID=client.ID where NIF='"+NIF+"'"+filtro1+filtro2+filtro3+filtro4;
+        String query="SELECT NUMBER_FACTURA,NAME,ADDRESS,HOUR,NUMBER_MATERIAL,TOTAL_MATERIAL,TOTAL_BILL,ID_CLIENT,CODE FROM bill_standard where NIF='"+NIF+"'"+filtro1+filtro2+filtro3+filtro4;
      
         if(ID_CLIENT.equals("Cualquiera") && !NAME.equals("todos")){
-        query="SELECT NAME,ADDRESS,POSTAL,CITY,EMAIL,PHONE,client.ID AS ID,PROJECT FROM ebs.meter_info JOIN ebs.client ON meter_info.ID=client.ID where NIF='"+NIF+"' AND NAME LIKE '"+NAME+"%'"+filtro2+filtro3+filtro4;
+        query="SELECT NUMBER_FACTURA,NAME,ADDRESS,HOUR,NUMBER_MATERIAL,TOTAL_MATERIAL,TOTAL_BILL,ID_CLIENT,CODE FROM bill_standard where NIF='"+NIF+"' AND NAME LIKE '"+NAME+"%'"+filtro2+filtro3+filtro4;
         ID_choice.setEnabled(true);
         }
         ResultSet rs = c.s.executeQuery(query);
@@ -300,23 +302,25 @@ public class PayBill  extends JFrame implements ActionListener {
             tableModel.addRow(new Object[]{"Sin registros", "", "", "", "", "",""});
         }else
         do {
+            String number_factura = rs.getString("NUMBER_FACTURA");
             String name = rs.getString("NAME");
             String direccion = rs.getString("ADDRESS");
-            String postal = rs.getString("POSTAL");            
-            String ciudad = rs.getString("CITY");
-            String email = rs.getString("EMAIL");
-            String telefono = rs.getString("PHONE");
-            String Proy = rs.getString("PROJECT");
-            String ID_client2=rs.getString("ID");
-
+            String horas = rs.getString("HOUR");
+            String numero_material = rs.getString("NUMBER_MATERIAL");
+            String total_material = rs.getString("TOTAL_MATERIAL");
+            String total = rs.getString("TOTAL_BILL");
+            String idclient = rs.getString("ID_CLIENT");
+            String code2=rs.getString("CODE");
+            
+           NUMBERa.add(number_factura);
            NAMEa.add(name);
            ADDRESSa.add(direccion);
-           CITYa.add(postal);
-           POSTALa.add(ciudad);
-           EMAILa.add(email);
-           PHONEa.add(telefono);
-           PROJECTa.add(Proy);
-           IDa.add(ID_client2);      
+           HOURa.add(horas);
+           NUMBERPa.add(numero_material);
+           TOTALMa.add(total_material);
+           TOTALa.add(total);
+           IDa.add(idclient);
+           CODEa.add(code2);
                  
             } while (rs.next());       
         rs.close();        
@@ -334,21 +338,22 @@ public class PayBill  extends JFrame implements ActionListener {
            }
         if(datos){
             for(int i=0;i<NAMEa.size();i++){
+            String number2="  "+NUMBERa.get(i);
             String nombre2 ="  "+ NAMEa.get(i);
             String direccion2 ="  "+ ADDRESSa.get(i);
-            String ciudad2 ="  "+ CITYa.get(i);            
-            String postal2 ="  "+ POSTALa.get(i);
-            String email2 ="  "+ EMAILa.get(i);
-            String telefono2 ="  "+ PHONEa.get(i);
-            String proyect2 ="  "+ PROJECTa.get(i);
-            tableModel.addRow(new Object[]{nombre2, direccion2, ciudad2, postal2, email2, telefono2,proyect2});
+            String horas2 ="  "+ HOURa.get(i);            
+            String numero_material2 ="  "+ NUMBERPa.get(i);
+            String total_material2 ="  "+ TOTALMa.get(i);
+            String total2 ="  "+ TOTALa.get(i);
+        
+            tableModel.addRow(new Object[]{number2,nombre2, direccion2, horas2, numero_material2, total_material2, total2});
            }
         }
        
       } else if(ae.getSource() == imprimir){
         try{          
          Workbook workbook = new XSSFWorkbook();
-         Sheet sheet = workbook.createSheet("Clientes; "+NAMEa.size()+"de ");
+         Sheet sheet = workbook.createSheet("Facturas sin pagar: "+NAMEa.size());
          int rowIndex = 0;
          
          Row clientesHeadarRow = sheet.createRow(rowIndex++);
@@ -368,7 +373,7 @@ public class PayBill  extends JFrame implements ActionListener {
             }
             dateFormat = new SimpleDateFormat("dd-MM-yyyy");
             date = dateFormat.format(new Date());
-            String filename="Clientes tabla; del "+date+".xlsx";
+            String filename="Facturas pendiente cobro; "+NAMEa.size()+" del "+date+".xlsx";
             FileOutputStream fileOut = new FileOutputStream(filename);
             workbook.write(fileOut);
             fileOut.close();
@@ -381,37 +386,37 @@ public class PayBill  extends JFrame implements ActionListener {
         }catch (IOException e) {
             e.printStackTrace();
         }
-      }else if(ae.getSource() == eliminar && IDa.size()>0){
+      }else if(ae.getSource() == eliminar && CODEa.size()>0){
           int opcion = JOptionPane.showConfirmDialog(null, 
-                "¿Seguro que desea eliminar los datos del cliente/s?", 
-                "Confirmación de eliminación", 
+                "¿Seguro que desea actualizar las facturas como pagadas?", 
+                "Confirmación Facturas", 
                 JOptionPane.YES_NO_OPTION, 
                 JOptionPane.QUESTION_MESSAGE);
-          String ID_eliminar="";
-          if(IDa.size()==1){
-              ID_eliminar=IDa.get(0);
+          String CODE_eliminar="";
+          if(CODEa.size()==1){
+              CODE_eliminar=CODEa.get(0);
           }else{
-              for(int i=0;i<IDa.size();i++){
-                  ID_eliminar+=IDa.get(i)+",";
+              for(int i=0;i<CODEa.size();i++){
+                  CODE_eliminar+=CODEa.get(i)+",";
               }
-              ID_eliminar=ID_eliminar.substring(0, ID_eliminar.length()-1);
+              CODE_eliminar=CODE_eliminar.substring(0, CODE_eliminar.length()-1);
           }
 
             if (opcion == JOptionPane.YES_OPTION) {                
             }
                 try{
                     Connect c = new Connect();
-                    String query="DELETE FROM client WHERE ID in ("+ID_eliminar+")";
+                    String query="UPDATE bill_standard SET STATUS='pagado' WHERE CODE IN ("+CODE_eliminar+")";
                     c.s.executeUpdate(query);
-                    JOptionPane.showMessageDialog(null,"Cliente Eliminado");
+                    JOptionPane.showMessageDialog(null,"Facturas Actualizadas a Pagadas");
                     setVisible(false);
-                    new ClientSearch(NIF,ID_USER);
+                    new PayBill(NIF,ID_USER);
                 }catch (Exception e){
                     e.printStackTrace();
                 }
           
       }else if(ae.getSource() == eliminar && IDa.size()==0){
-          JOptionPane.showMessageDialog(null,"Busca clientes para eliminar");
+          JOptionPane.showMessageDialog(null,"Busca Facturas para Actualizar");
       }else{
           setVisible(false);
       }

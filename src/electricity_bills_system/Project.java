@@ -7,7 +7,7 @@ import java.awt.event.*;
 
 public class Project extends JFrame implements ActionListener{
     JMenuItem cliente,generar,material,factura_detalle,cliente_detalles, factura,cliente_modificar,salir;
-    JMenuItem Finanzas;
+    JMenuItem pago,Finanzas,clientes_grafico;
     String NIF,ID_USER;
     JMenuBar navegador;
     boolean visible=true;
@@ -84,11 +84,12 @@ public class Project extends JFrame implements ActionListener{
         Finanzas.addActionListener(this);
         info.add(Finanzas);
         
-        JMenuItem info_actualizar=new JMenuItem("Actualizar Información ");
-        info_actualizar.setFont(menufont);
-        info_actualizar.setMnemonic('A');
-        info_actualizar.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_A, ActionEvent.CTRL_MASK));
-        info.add(info_actualizar);
+        clientes_grafico=new JMenuItem("Clientes ");
+        clientes_grafico.setFont(menufont);
+        clientes_grafico.setMnemonic('A');
+        clientes_grafico.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_A, ActionEvent.CTRL_MASK));
+        clientes_grafico.addActionListener(this);
+        info.add(clientes_grafico);
         
         JMenu accion=new JMenu("Facturas   ");
         accion.setFont(menufont);
@@ -104,10 +105,11 @@ public class Project extends JFrame implements ActionListener{
         accion.add(generar);
         generar.addActionListener(this);
         
-        JMenuItem pago=new JMenuItem("Pago Facturas ");
+        pago=new JMenuItem("Pago Facturas ");
         pago.setFont(menufont);
         pago.setMnemonic('P');
         pago.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_P, ActionEvent.CTRL_MASK));
+        pago.addActionListener(this);
         accion.add(pago);
         
         factura_detalle=new JMenuItem("Detalles Facturas ");
@@ -187,6 +189,12 @@ public class Project extends JFrame implements ActionListener{
      if(ae.getSource()==cliente_modificar){      
      new ClientUpdate(NIF, ID_USER); 
      }
+     if(ae.getSource()==pago){      
+     new PayBill(NIF, ID_USER); 
+     }
+     if(ae.getSource()==clientes_grafico){      
+     new GraphClient(NIF, ID_USER); 
+     }
      if(ae.getSource()==Finanzas){  
    
         financeInstance = new Finance(NIF, ID_USER);
@@ -212,7 +220,9 @@ public class Project extends JFrame implements ActionListener{
     
     public void triggerFinanzasButton() {
     ActionEvent event = new ActionEvent(Finanzas, ActionEvent.ACTION_PERFORMED, "");
+    ActionEvent event2 = new ActionEvent(clientes_grafico, ActionEvent.ACTION_PERFORMED, "");
     actionPerformed(event);
+    actionPerformed(event2);
     }
      
     public static void main(String[] args){

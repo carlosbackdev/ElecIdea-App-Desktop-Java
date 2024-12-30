@@ -345,7 +345,7 @@ public class ClientSearch extends JFrame implements ActionListener{
       } else if(ae.getSource() == imprimir){
         try{          
          Workbook workbook = new XSSFWorkbook();
-         Sheet sheet = workbook.createSheet("Clientes; "+NAMEa.size()+"de ");
+         Sheet sheet = workbook.createSheet("Clientes; "+NAMEa.size());
          int rowIndex = 0;
          
          Row clientesHeadarRow = sheet.createRow(rowIndex++);
