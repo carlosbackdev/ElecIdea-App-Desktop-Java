@@ -7,7 +7,7 @@ import java.awt.event.*;
 
 public class Project extends JFrame implements ActionListener{
     JMenuItem cliente,generar,material,factura_detalle,cliente_detalles, factura,cliente_modificar,salir;
-    JMenuItem pago,Finanzas,clientes_grafico;
+    JMenuItem pago,Finanzas,clientes_grafico,calculo; 
     String NIF,ID_USER;
     JMenuBar navegador;
     boolean visible=true;
@@ -140,17 +140,18 @@ public class Project extends JFrame implements ActionListener{
         proyectos.setIcon(new ImageIcon(image6));
         navegador.add(proyectos);
         
-        material=new JMenuItem("Material");
+        material=new JMenuItem("Parte de Material");
         material.setFont(menufont);
         material.setMnemonic('C');
         material.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_C, ActionEvent.CTRL_MASK));
         proyectos.add(material);
         material.addActionListener(this);
         
-        JMenuItem calculo=new JMenuItem("Calcular ");
+        calculo=new JMenuItem("Calcular Proyecto");
         calculo.setFont(menufont);
         calculo.setMnemonic('C');
         calculo.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_C, ActionEvent.CTRL_MASK));
+        calculo.addActionListener(this);
         proyectos.add(calculo);
         
         salir=new JMenuItem("Salir   ");
@@ -191,6 +192,9 @@ public class Project extends JFrame implements ActionListener{
      }
      if(ae.getSource()==pago){      
      new PayBill(NIF, ID_USER); 
+     }
+     if(ae.getSource()==calculo){      
+     new SaveProject(NIF, ID_USER); 
      }
      if(ae.getSource()==clientes_grafico){      
      new GraphClient(NIF, ID_USER); 

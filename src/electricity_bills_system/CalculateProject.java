@@ -3,6 +3,7 @@
 package electricity_bills_system;
 
 
+import com.formdev.flatlaf.FlatDarkLaf;
 import javax.swing.*;
 import java.awt.*;
 import java.util.*;
@@ -16,7 +17,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import javax.swing.Timer;
 
-public class calculateBill extends JFrame implements ActionListener {
+public class CalculateProject extends JFrame implements ActionListener {
     JTextField cajon_nombre,cajon_horas,cajon_direccion;
     RoundedButton guardar,cancelar,configurar,materiales_agregar;
     JComboBox ID_choice,parametros, materiales;
@@ -28,14 +29,19 @@ public class calculateBill extends JFrame implements ActionListener {
     JLabel total_materiales;
     JFormattedTextField dateField;
     double totalSum;
-    calculateBill(String ID_info_update, String client_info_update,String NIF, String ID_USER){
+    String[] PROYECTO;
+    CalculateProject(String ID_info_update, String client_info_update,String NIF, String ID_USER,String[] PROYECTO){
         this.ID_info = ID_info;
         this.ID_info_update = ID_info_update;
         this.client_info_update = client_info_update;
         this.NIF = NIF;
         this.ID_USER = ID_USER;
+        this.PROYECTO = PROYECTO;
         setContentPane(new BackgroundPanel("images/Fichas3.png"));   
         
+        for(int i=0;i<PROYECTO.length;i++){
+            System.out.println(PROYECTO[i]);
+        }
         
         JPanel panel = new JPanel(new GridBagLayout());
         panel.setOpaque(false); 
@@ -47,9 +53,9 @@ public class calculateBill extends JFrame implements ActionListener {
         Font fuente3=new Font("Roboto", Font.PLAIN, 18);
         Font fuente4=new Font("Roboto", Font.PLAIN, 14);
         Color gris=new Color(210,210,210);
-        gbc.ipadx = 85;
+        gbc.ipadx = 40;
         
-        JLabel head = new JLabel("                Calcular Factura Eléctrica");
+        JLabel head = new JLabel("Calcular Proyecto");
         head.setForeground(gris);
         head.setFont(new Font("Roboto", Font.PLAIN, 28));
         gbc.gridx = 0;
@@ -58,7 +64,7 @@ public class calculateBill extends JFrame implements ActionListener {
         gbc.anchor = GridBagConstraints.CENTER;
         panel.add(head, gbc);
         
-        JLabel nombre = new JLabel("Busca y selecciona Nombre en clientes");
+        JLabel nombre = new JLabel("Busca y selecciona clientes");
         nombre.setForeground(gris);
         gbc.fill = GridBagConstraints.HORIZONTAL; 
         nombre.setFont(new Font("Roboto", Font.PLAIN, 19)); 
@@ -74,7 +80,7 @@ public class calculateBill extends JFrame implements ActionListener {
         cajon_nombre.setPreferredSize(new Dimension(285, 25));
         gbc.gridx = 1;
         gbc.fill = GridBagConstraints.HORIZONTAL; 
-        gbc.weightx = 1.0;
+        gbc.weightx = 1;
         panel.add(cajon_nombre, gbc);
         
         nombre_combo = new JComboBox<>();
@@ -240,7 +246,7 @@ public class calculateBill extends JFrame implements ActionListener {
             }
         });
         
-        JLabel horas = new JLabel("Horas de mantenimiento");
+        JLabel horas = new JLabel("Horas Estimadas");
         horas.setForeground(gris);
         horas.setFont(fuente); 
         gbc.gridy = 4;
@@ -594,7 +600,7 @@ public void updateTotal(String materialNumber) {
             }
 
             String TOTAL_BILL2=""+TOTAL_BILL;        
-            new bill_standard_view(ID_2,NAME,ADDRESS,HOUR,DATE,NUMBER_MATERIAL2,TOTAL_MATERIAL,PARAMETROS,NUMBER_FACTURA,TOTAL_BILL2,NIF,ID_USER);
+            new ProjectView(ID_2,NAME,ADDRESS,HOUR,DATE,NUMBER_MATERIAL2,TOTAL_MATERIAL,PARAMETROS,NUMBER_FACTURA,TOTAL_BILL2,NIF,ID_USER,PROYECTO);
             setVisible(false);
             
             }else if(NAME.isBlank()){
@@ -613,7 +619,7 @@ public void updateTotal(String materialNumber) {
     }
     
     public static void main(String[]args){
-        new calculateBill("","","","");
+        new CalculateProject("","","","",new String[] {});
     }
     
 }
