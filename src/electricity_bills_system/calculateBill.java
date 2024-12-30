@@ -35,7 +35,7 @@ public class calculateBill extends JFrame implements ActionListener {
         this.client_info_update = client_info_update;
         this.NIF = NIF;
         this.ID_USER = ID_USER;
-        setContentPane(new BackgroundPanel("images/Fichas2.jpg"));   
+        setContentPane(new BackgroundPanel("images/Fichas3.png"));   
         
         
         JPanel panel = new JPanel(new GridBagLayout());

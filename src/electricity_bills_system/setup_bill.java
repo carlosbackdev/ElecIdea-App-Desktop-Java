@@ -14,7 +14,7 @@ public class setup_bill extends JFrame implements ActionListener {
     setup_bill(String bill_true,String NIF) {
         this.bill_true = bill_true;
         this.NIF = NIF;
-        setContentPane(new BackgroundPanel("images/fichas3.jpg"));
+        setContentPane(new BackgroundPanel("images/fichas3.png"));
         setLayout(new BorderLayout());
         Color gris=new Color(210,210,210);
 

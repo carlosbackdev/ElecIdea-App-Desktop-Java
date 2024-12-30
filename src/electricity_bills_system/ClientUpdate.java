@@ -27,7 +27,7 @@ public class ClientUpdate extends JFrame implements ActionListener{
         this.NIF=NIF;
         this.ID_USER=ID_USER;
         
-        setContentPane(new BackgroundPanel("images/Fichas3.jpg"));  
+        setContentPane(new BackgroundPanel("images/Fichas3.png"));  
         
         JPanel panel = new JPanel(new GridBagLayout());
         panel.setOpaque(false); 

@@ -23,6 +23,7 @@ public class GraphClient extends JFrame implements ActionListener {
     String NIF, ID_USER;
     String clientes_totales, clientes_mes, clientes_mes2,clientes_mes3;
     
+    
 
     GraphClient(String NIF, String ID_USER) {
         SimpleDateFormat dateFormat = new SimpleDateFormat("MM-yyyy");
@@ -134,7 +135,7 @@ public class GraphClient extends JFrame implements ActionListener {
 
 
         JFreeChart lineChart = ChartFactory.createLineChart(
-                "Evolución de Clientes",
+                "Evolución de Clientes en los ultimos 3 Meses",
                 "Mes",
                 "Número de Clientes Nuevos",
                 dataset,

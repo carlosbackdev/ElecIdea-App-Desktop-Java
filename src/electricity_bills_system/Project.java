@@ -23,7 +23,7 @@ public class Project extends JFrame implements ActionListener{
         setMinimumSize(new Dimension(950, 650));
         Font menufont =new Font("Roboto", Font.PLAIN, 22);
         
-        setContentPane(new BackgroundPanel("images/fondo.png"));
+        setContentPane(new BackgroundPanel("images/fondo_mosaico.png"));
         
         navegador=new JMenuBar();
         setJMenuBar(navegador);

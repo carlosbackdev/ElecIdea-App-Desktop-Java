@@ -23,7 +23,7 @@ public class newClient extends JFrame implements ActionListener {
         this.NIF=NIF;
         this.ID_USER=ID_USER;
 
-        setContentPane(new BackgroundPanel("images/fichas3.jpg"));  
+        setContentPane(new BackgroundPanel("images/fichas3.png"));  
         
         JPanel panel = new JPanel(new GridBagLayout());
         panel.setOpaque(false); 
