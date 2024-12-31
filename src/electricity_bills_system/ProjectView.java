@@ -28,7 +28,7 @@ public class ProjectView extends JFrame implements ActionListener {
     String[] PROYECTO;
     ProjectView(String ID_2,String NAME,String ADDRESS,String HOUR,String DATE,String NUMBER_MATERIAL,
             String TOTAL_MATERIAL,String PARAMETROS,String NUMBER_FACTURA,String TOTAL_BILL,String NIF,String ID_USER,String [] PROYECTO){
-    super("Projecto");
+    super("Proyecto");
     setContentPane(new BackgroundPanel("images/Fichas.jpg"));
     setLayout(new BorderLayout());
 
@@ -39,7 +39,7 @@ public class ProjectView extends JFrame implements ActionListener {
     this.DATE = DATE;
     this.NUMBER_MATERIAL = NUMBER_MATERIAL;
     this.TOTAL_MATERIAL = TOTAL_MATERIAL;
-    this.PARAMETROS = PARAMETROS; //? como ponerlo
+    this.PARAMETROS = PARAMETROS; 
     this.NUMBER_FACTURA = NUMBER_FACTURA;
     this.TOTAL_BILL = TOTAL_BILL;
     this.NIF = NIF;
@@ -138,7 +138,7 @@ public class ProjectView extends JFrame implements ActionListener {
        
     JPanel buttonPanel = new JPanel();
     buttonPanel.setLayout(new FlowLayout(FlowLayout.CENTER));    
-    agregarButton = new JButton("Exportar Datos a Excel");
+    agregarButton = new JButton("Exportar Proyecto a Excel");
         agregarButton.addActionListener(this);       
         buttonPanel.add(agregarButton, gbc);
         
@@ -383,7 +383,7 @@ public class ProjectView extends JFrame implements ActionListener {
                 String toEmail = EMAIL;  
                 String subject = "Presupuesto Projecto adjunto";
                 String body = "Adjunto encontrarás el presupuesto en formato Excel.";
-                String attachmentPath = "Presupuesto " + NUMBER_FACTURA + " " + NAME + " en " + DATE + ".xlsx";
+                String attachmentPath = "Proyecto "+NUMBER_FACTURA+" "+NAME+" en "+DATE+".xlsx";
                 String email_company=EMAIL_COMPANY;
                 EmailSender.sendEmailWithAttachment(toEmail, subject, body, attachmentPath,email_company);  // Enviar el correo            
                 enviado=true;
@@ -394,17 +394,38 @@ public class ProjectView extends JFrame implements ActionListener {
             String STATUS="sin enviar";
             if(enviado){
             STATUS="pendiente pago";
-            }
             try{
                 Connect c=new Connect();
-                String query = "INSERT INTO bill_standard VALUES('"+NUMBER_FACTURA+"','"+ID_2+"','"+NAME.toLowerCase()+"','"+ADDRESS.toLowerCase()+"','"+HOUR+"','"+DATE.toLowerCase()+"','"+NUMBER_MATERIAL+"','"+TOTAL_MATERIAL+"','"+PARAMETROS.toLowerCase()+"','"+TOTAL+"','"+NIF+"','"+STATUS+"','"+PROYECTO[0]+"')";
+                String query = "INSERT INTO bill_standard VALUES('"+NUMBER_FACTURA+"','"+ID_2+"','"+NAME.toLowerCase()+"','"+ADDRESS.toLowerCase()+"','"+HOUR+"','"+DATE.toLowerCase()+"','"+NUMBER_MATERIAL+"','"+TOTAL_MATERIAL+"','"+PARAMETROS.toLowerCase()+"','"+TOTAL+"','"+NIF+"','"+STATUS+"','"+CODE2+"','"+PROYECTO[0]+"')";
                 c.s.executeUpdate(query);
-                
+                 String query2="UPDATE save_project SET ID_CLIENT='"+ID_2+"' WHERE NAME='"+PROYECTO[0]+"'";
+                c.s.executeUpdate(query2);
             } catch(Exception e){
                 e.printStackTrace();
             }
             JOptionPane.showMessageDialog(null, "Factura guardada con éxito!");
             setVisible(false);
+            }else{
+                 int opcion = JOptionPane.showConfirmDialog(null, 
+                "El proyecto no ha sido enviado al cliente,¿Deseas Guardar y salir?", 
+                "Confirmación", 
+                JOptionPane.YES_NO_OPTION, 
+                JOptionPane.QUESTION_MESSAGE);
+            if (opcion == JOptionPane.YES_OPTION) {    
+            try{
+                Connect c=new Connect();
+                String query = "INSERT INTO bill_standard VALUES('"+NUMBER_FACTURA+"','"+ID_2+"','"+NAME.toLowerCase()+"','"+ADDRESS.toLowerCase()+"','"+HOUR+"','"+DATE.toLowerCase()+"','"+NUMBER_MATERIAL+"','"+TOTAL_MATERIAL+"','"+PARAMETROS.toLowerCase()+"','"+TOTAL+"','"+NIF+"','"+STATUS+"','"+CODE2+"','"+PROYECTO[0]+"')";
+                c.s.executeUpdate(query);
+                String query2="UPDATE save_project SET ID_CLIENT='"+ID_2+"' WHERE NAME='"+PROYECTO[0]+"'";
+                c.s.executeUpdate(query2);
+            } catch(Exception e){
+                e.printStackTrace();
+            }
+            
+            JOptionPane.showMessageDialog(null, "Factura guardada con éxito!");
+            setVisible(false);
+            }
+          }
         }               
          
      }

@@ -531,7 +531,7 @@ public void updateTotal(String materialNumber) {
       String bill_true="bill";
       
         if(ae.getSource()==materiales_agregar){
-         new MaterialFrame(ID,client,NIF,ID_USER);
+         new MaterialFrame(ID,client,NIF,ID_USER,"",new String [0]);
          setVisible(false);
         }
         

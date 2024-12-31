@@ -31,6 +31,7 @@ public class PayBill  extends JFrame implements ActionListener {
     ArrayList<String> NUMBERa = new ArrayList<>();
     ArrayList<String> NAMEa = new ArrayList<>();
     ArrayList<String> ADDRESSa = new ArrayList<>();
+    ArrayList<String> STATUSa = new ArrayList<>();
     ArrayList<String> HOURa = new ArrayList<>();
     ArrayList<String> NUMBERPa = new ArrayList<>();
     ArrayList<String> TOTALMa = new ArrayList<>();
@@ -193,7 +194,7 @@ public class PayBill  extends JFrame implements ActionListener {
     gbc.gridy = 7;
     inputPanel.add(salir, gbc);
     
-    String[] columnNames = {"Nº Factura","Nombre", "Direccion","Horas","Nº Parte Material","Total Material","Total Factura"};
+    String[] columnNames = {"Nº Factura","Nombre", "Direccion","Estado","Horas","Nº Parte Material","Total Material","Total Factura"};
     tableModel = new DefaultTableModel(columnNames, 0);
     tabla_cliente = new JTable(tableModel);
     JScrollPane scrollPane = new JScrollPane(tabla_cliente);
@@ -263,6 +264,7 @@ public class PayBill  extends JFrame implements ActionListener {
           TOTALa.clear();
           IDa.clear();
           CODEa.clear();
+          STATUSa.clear();
        boolean datos=true;
        try{
         
@@ -288,10 +290,10 @@ public class PayBill  extends JFrame implements ActionListener {
             filtro4=" AND DATE LIKE '%-"+YEAR+"'";
         }
         
-        String query="SELECT NUMBER_FACTURA,NAME,ADDRESS,HOUR,NUMBER_MATERIAL,TOTAL_MATERIAL,TOTAL_BILL,ID_CLIENT,CODE FROM bill_standard where NIF='"+NIF+"'"+filtro1+filtro2+filtro3+filtro4;
+        String query="SELECT NUMBER_FACTURA,NAME,ADDRESS,HOUR,NUMBER_MATERIAL,TOTAL_MATERIAL,TOTAL_BILL,ID_CLIENT,CODE,STATUS FROM bill_standard where NIF='"+NIF+"'"+filtro1+filtro2+filtro3+filtro4;
      
         if(ID_CLIENT.equals("Cualquiera") && !NAME.equals("todos")){
-        query="SELECT NUMBER_FACTURA,NAME,ADDRESS,HOUR,NUMBER_MATERIAL,TOTAL_MATERIAL,TOTAL_BILL,ID_CLIENT,CODE FROM bill_standard where NIF='"+NIF+"' AND NAME LIKE '"+NAME+"%'"+filtro2+filtro3+filtro4;
+        query="SELECT NUMBER_FACTURA,NAME,ADDRESS,HOUR,NUMBER_MATERIAL,TOTAL_MATERIAL,TOTAL_BILL,ID_CLIENT,CODE,STATUS FROM bill_standard where NIF='"+NIF+"' AND NAME LIKE '"+NAME+"%'"+filtro2+filtro3+filtro4;
         ID_choice.setEnabled(true);
         }
         ResultSet rs = c.s.executeQuery(query);
@@ -311,6 +313,7 @@ public class PayBill  extends JFrame implements ActionListener {
             String total = rs.getString("TOTAL_BILL");
             String idclient = rs.getString("ID_CLIENT");
             String code2=rs.getString("CODE");
+            String estado2=rs.getString("STATUS");
             
            NUMBERa.add(number_factura);
            NAMEa.add(name);
@@ -321,6 +324,7 @@ public class PayBill  extends JFrame implements ActionListener {
            TOTALa.add(total);
            IDa.add(idclient);
            CODEa.add(code2);
+           STATUSa.add(estado2);
                  
             } while (rs.next());       
         rs.close();        
@@ -341,12 +345,13 @@ public class PayBill  extends JFrame implements ActionListener {
             String number2="  "+NUMBERa.get(i);
             String nombre2 ="  "+ NAMEa.get(i);
             String direccion2 ="  "+ ADDRESSa.get(i);
+            String estado2 ="  "+ STATUSa.get(i);
             String horas2 ="  "+ HOURa.get(i);            
             String numero_material2 ="  "+ NUMBERPa.get(i);
             String total_material2 ="  "+ TOTALMa.get(i);
             String total2 ="  "+ TOTALa.get(i);
         
-            tableModel.addRow(new Object[]{number2,nombre2, direccion2, horas2, numero_material2, total_material2, total2});
+            tableModel.addRow(new Object[]{number2,nombre2, direccion2,estado2, horas2, numero_material2, total_material2, total2});
            }
         }
        

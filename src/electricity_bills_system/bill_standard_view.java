@@ -395,7 +395,7 @@ public class bill_standard_view extends JFrame implements ActionListener {
             }
             try{
                 Connect c=new Connect();
-                String query = "INSERT INTO bill_standard VALUES('"+NUMBER_FACTURA+"','"+ID_2+"','"+NAME.toLowerCase()+"','"+ADDRESS.toLowerCase()+"','"+HOUR+"','"+DATE.toLowerCase()+"','"+NUMBER_MATERIAL+"','"+TOTAL_MATERIAL+"','"+PARAMETROS.toLowerCase()+"','"+TOTAL+"','"+NIF+"','"+STATUS+"','"+CODE2+"')";
+                String query = "INSERT INTO bill_standard VALUES('"+NUMBER_FACTURA+"','"+ID_2+"','"+NAME.toLowerCase()+"','"+ADDRESS.toLowerCase()+"','"+HOUR+"','"+DATE.toLowerCase()+"','"+NUMBER_MATERIAL+"','"+TOTAL_MATERIAL+"','"+PARAMETROS.toLowerCase()+"','"+TOTAL+"','"+NIF+"','"+STATUS+"','"+CODE2+"','')";
                 c.s.executeUpdate(query);
                 
             } catch(Exception e){

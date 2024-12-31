@@ -157,7 +157,7 @@ public class SaveProject extends JFrame implements ActionListener {
             if (action && nombre_existente == 0) {
                 try {
                     Connect c = new Connect();
-                    String query = "insert into save_project values('"+name+"', '"+tipo+"','"+price+"','"+NIF+"')";
+                    String query = "insert into save_project values('"+name+"', '"+tipo+"','"+price+"','"+NIF+"','')";
                  
                     c.s.executeUpdate(query);
 
@@ -166,10 +166,11 @@ public class SaveProject extends JFrame implements ActionListener {
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-            }
-            String[] PROYECTO={name,tipo,price};
+                String[] PROYECTO={name,tipo,price};
             new CalculateProject("","",NIF,ID_USER,PROYECTO);
             setVisible(false);
+            }
+            
             
         } else if (ae.getSource() == volver) {
             setVisible(false);

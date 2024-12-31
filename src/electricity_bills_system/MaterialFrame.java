@@ -25,16 +25,19 @@ public class MaterialFrame extends JFrame implements ActionListener {
     JLabel total_materiales,numero_parte;
     double total_final=0;
     double numero_parte2;
-    String selectedID,ID_info,client_info,NIF,ID_USER;
+    String selectedID,ID_info,client_info,NIF,ID_USER,Clase;
     boolean existe=true;
+    String[] PROYECTO;
 
-    public MaterialFrame(String ID_info, String client_info,String NIF,String ID_USER) {
+    public MaterialFrame(String ID_info, String client_info,String NIF,String ID_USER,String Clase,String[] PROYECTO) {
         super("Añadir Materiales");
         setLayout(new BorderLayout());
         this.ID_info = ID_info;
         this.client_info = client_info;
         this.NIF = NIF;
         this.ID_USER = ID_USER;
+        this.Clase = Clase;
+        this.PROYECTO = PROYECTO;
         Color gris=new Color(210,210,210);
         
         JPanel inputPanel = new JPanel(new GridBagLayout());
@@ -421,8 +424,12 @@ private void updateRowCount() {
             } catch (Exception ea) {
                 ea.printStackTrace();
             }
-            if(ID_info.length()>1){
+            
+            if(ID_info.length()>1 && !Clase.equals("proyecto")){
             new calculateBill(ID_info, client_info,NIF,ID_USER);
+            }
+            if(Clase.equals("proyecto")){
+            new CalculateProject(ID_info, client_info,NIF,ID_USER,PROYECTO);
             }
         }else if (e.getSource() == salir){
          setVisible(false);     
@@ -433,6 +440,6 @@ private void updateRowCount() {
    
 
     public static void main(String[] args) {
-        new MaterialFrame("","","","");
+        new MaterialFrame("","","","","",new String[] {});
     }
 }

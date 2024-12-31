@@ -38,11 +38,7 @@ public class CalculateProject extends JFrame implements ActionListener {
         this.ID_USER = ID_USER;
         this.PROYECTO = PROYECTO;
         setContentPane(new BackgroundPanel("images/Fichas3.png"));   
-        
-        for(int i=0;i<PROYECTO.length;i++){
-            System.out.println(PROYECTO[i]);
-        }
-        
+                
         JPanel panel = new JPanel(new GridBagLayout());
         panel.setOpaque(false); 
         GridBagConstraints gbc = new GridBagConstraints();
@@ -537,7 +533,8 @@ public void updateTotal(String materialNumber) {
       String bill_true="bill";
       
         if(ae.getSource()==materiales_agregar){
-         new MaterialFrame(ID,client,NIF,ID_USER);
+            String clase="proyecto";
+         new MaterialFrame(ID,client,NIF,ID_USER,clase,PROYECTO);
          setVisible(false);
         }
         

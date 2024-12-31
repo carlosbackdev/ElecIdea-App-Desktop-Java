@@ -7,7 +7,7 @@ import java.awt.event.*;
 
 public class Project extends JFrame implements ActionListener{
     JMenuItem cliente,generar,material,factura_detalle,cliente_detalles, factura,cliente_modificar,salir;
-    JMenuItem pago,Finanzas,clientes_grafico,calculo; 
+    JMenuItem pago,Finanzas,clientes_grafico,calculo,buscar_proyecto; 
     String NIF,ID_USER;
     JMenuBar navegador;
     boolean visible=true;
@@ -119,19 +119,7 @@ public class Project extends JFrame implements ActionListener{
         accion.add(factura_detalle);
         factura_detalle.addActionListener(this);
         
-        JMenu add_accion=new JMenu("Añadir   ");
-        add_accion.setFont(menufont);
-        ImageIcon icon5= new ImageIcon(ClassLoader.getSystemResource("images/add.png"));
-        Image image5 = icon5.getImage().getScaledInstance(22, 22, Image.SCALE_DEFAULT);
-        add_accion.setIcon(new ImageIcon(image5));
-        navegador.add(add_accion);        
         
-        
-        JMenuItem nota=new JMenuItem("Añadir notas ");
-        nota.setFont(menufont);
-        nota.setMnemonic('N');
-        nota.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_N, ActionEvent.CTRL_MASK));
-        add_accion.add(nota);
         
         JMenu proyectos=new JMenu("Proyecto   ");
         proyectos.setFont(menufont);
@@ -153,6 +141,13 @@ public class Project extends JFrame implements ActionListener{
         calculo.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_C, ActionEvent.CTRL_MASK));
         calculo.addActionListener(this);
         proyectos.add(calculo);
+        
+        buscar_proyecto=new JMenuItem("Buscar Proyecto");
+        buscar_proyecto.setFont(menufont);
+        buscar_proyecto.setMnemonic('L');
+        buscar_proyecto.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_C, ActionEvent.CTRL_MASK));
+        buscar_proyecto.addActionListener(this);
+        proyectos.add(buscar_proyecto);
         
         salir=new JMenuItem("Salir   ");
         salir.setFont(menufont);
@@ -176,7 +171,7 @@ public class Project extends JFrame implements ActionListener{
      new calculateBill("","",NIF,ID_USER);
      }
      if(ae.getSource()==material){
-     new MaterialFrame("","",NIF,ID_USER);
+     new MaterialFrame("","",NIF,ID_USER,"",new String[0]);
      }
      if(ae.getSource()==factura_detalle){
      new BillSearch(NIF,ID_USER);
@@ -195,6 +190,9 @@ public class Project extends JFrame implements ActionListener{
      }
      if(ae.getSource()==calculo){      
      new SaveProject(NIF, ID_USER); 
+     }
+     if(ae.getSource()==buscar_proyecto){      
+     new ProjectSearch(NIF, ID_USER); 
      }
      if(ae.getSource()==clientes_grafico){      
      new GraphClient(NIF, ID_USER); 

@@ -21,7 +21,7 @@ BillSearch(String NIF,String ID_USER){
     this.NIF=NIF;
     this.ID_USER=ID_USER;
     
-    setContentPane(new BackgroundPanel("images/Fichas3.jpg"));
+    setContentPane(new BackgroundPanel("images/Fichas3.png"));
     setLayout(new BorderLayout());
     Font fuente=new Font("Roboto", Font.PLAIN, 20);
     Font fuente2=new Font("Roboto", Font.PLAIN, 15);
