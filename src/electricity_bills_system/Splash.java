@@ -8,6 +8,9 @@ import java.awt.*;
 public class Splash extends JFrame  implements Runnable{    
     Thread t;
     Splash(){
+        
+        JFrame Splash=new JFrame();
+        setIconImage(new ImageIcon(getClass().getClassLoader().getResource("images/icono_app.png")).getImage());
     
         ImageIcon img1= new ImageIcon(ClassLoader.getSystemResource("images/portada2.jpg"));
         Image i1=img1.getImage().getScaledInstance(1200,800, Image.SCALE_DEFAULT);
