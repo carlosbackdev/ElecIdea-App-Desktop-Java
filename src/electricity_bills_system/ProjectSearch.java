@@ -339,7 +339,7 @@ public void update_factura(String selectedID) {
                String NOMBRE = rs.getString("NAME_PROJECT");
                String materialDate = rs.getString("MES");
                String ano = rs.getString("ANO");
-               if(NOMBRE!=null){
+               if(NOMBRE!=null && !NOMBRE.isBlank()){
                factura_choice.addItem(" " + NOMBRE +", " + materialDate + " de " + ano);
                factura_choice.setEnabled(true);
                registro=true;               
