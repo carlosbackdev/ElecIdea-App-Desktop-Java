@@ -382,7 +382,9 @@ public class ProjectView extends JFrame implements ActionListener {
                 JOptionPane.showMessageDialog(null, "Enviando correo espere a cerrar la pestaña!"); 
                 String toEmail = EMAIL;  
                 String subject = "Presupuesto Projecto adjunto";
-                String body = "Adjunto encontrarás el presupuesto en formato Excel.";
+                String body = "Visualiza el Proyecto html con el codigo"+CODE2+".\n\n"
+                                +"Adjunto encontrarás el Proyecto en formato Excel.\n\n"
+                                + "Si tienes alguna duda, no dudes en contactarnos.";
                 String attachmentPath = "Proyecto "+NUMBER_FACTURA+" "+NAME+" en "+DATE+".xlsx";
                 String email_company=EMAIL_COMPANY;
                 EmailSender.sendEmailWithAttachment(toEmail, subject, body, attachmentPath,email_company);  // Enviar el correo            

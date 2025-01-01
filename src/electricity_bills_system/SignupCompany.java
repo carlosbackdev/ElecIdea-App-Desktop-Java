@@ -263,8 +263,8 @@ public class SignupCompany extends JFrame implements ActionListener {
             }
             boolean noenviar=true;
             if(contador==8 && NIF_VALIDO && correo){
-                String codigo=PasswordGenerate.generarContrasena(14); //se debe pasar al email
-                String CODE=contraseña.encryptPassword(codigo);//se gurda encriptado
+                String codigo=PasswordGenerate.generarContrasena(14); 
+                String CODE=contraseña.encryptPassword(codigo);
                 try{
                     Connect c= new Connect();
                     String query="insert into company values('"+NAME+"','"+NIF+"','"+ADDRESS+"','"+POSTAL+"','"+CITY+"','"+EMAIL+"','"+PHONE+"','"+IBAN+"','','"+CODE+"')";

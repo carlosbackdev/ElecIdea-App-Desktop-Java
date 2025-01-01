@@ -380,7 +380,9 @@ public class bill_standard_view extends JFrame implements ActionListener {
                 JOptionPane.showMessageDialog(null, "Enviando correo espere a cerrar la pestaña!"); 
                 String toEmail = EMAIL;  
                 String subject = "Factura adjunta";
-                String body = "Adjunto encontrarás la factura en formato Excel.";
+                String body = "Visualiza la factura html con el codigo"+CODE2+".\n\n"
+                                +"Adjunto encontrarás la factura en formato Excel.\n\n"
+                                + "Si tienes alguna duda, no dudes en contactarnos.";
                 String attachmentPath = "Factura " + NUMBER_FACTURA + " " + NAME + " en " + DATE + ".xlsx";
                 String email_company=EMAIL_COMPANY;
                 EmailSender.sendEmailWithAttachment(toEmail, subject, body, attachmentPath,email_company);  // Enviar el correo            
