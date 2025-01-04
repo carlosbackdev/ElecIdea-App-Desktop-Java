@@ -5,13 +5,17 @@ import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
 import java.sql.*;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 
 public class SaveProject extends JFrame implements ActionListener {
     RoundedButton volver, crear;
     JTextField cajon_nombre, cajon_precio;
     JComboBox cajon_tipo;
-    String NIF,ID_USER;
+    String NIF,ID_USER,DATE;
+    SimpleDateFormat dateFormat;
+    JFormattedTextField dateField;
     SaveProject(String NIF,String ID_USER) {
         this.NIF = NIF;
         this.ID_USER = ID_USER;
@@ -94,15 +98,11 @@ public class SaveProject extends JFrame implements ActionListener {
         panel.add(panelBotones, gbc);
 
         crear = new RoundedButton("   Continuar   ");
-        crear.setBackground(new Color(222, 239, 255));
-        crear.setForeground(Color.BLACK);
         crear.setFont(new Font("Roboto", Font.PLAIN, 16));
         crear.addActionListener(this);
         panelBotones.add(crear, BorderLayout.WEST);
 
         volver = new RoundedButton("     Volver     ");
-        volver.setBackground(new Color(222, 239, 255));
-        volver.setForeground(Color.BLACK);
         volver.setFont(new Font("Roboto", Font.PLAIN, 16));
         volver.addActionListener(this);
         panelBotones.add(volver, BorderLayout.EAST);
@@ -116,6 +116,8 @@ public class SaveProject extends JFrame implements ActionListener {
 
    
     public void actionPerformed(ActionEvent ae) {
+        dateFormat = new SimpleDateFormat("dd-MM-yyyy");
+        DATE = dateFormat.format(new Date());
         if (ae.getSource() == crear) {
             String name = cajon_nombre.getText().toLowerCase().trim();
             int name_length = name.length();
@@ -123,17 +125,12 @@ public class SaveProject extends JFrame implements ActionListener {
             tipo = tipo.toLowerCase().trim();
             int iva_length = tipo.length();
             String price = cajon_precio.getText().toLowerCase().trim();
-            int price_length = price.length();
             
             boolean action=true;
             if (name_length > 20) {
                 JOptionPane.showMessageDialog(null, "Nombre demasiado largo");
                 action=false;                
             }          
-            if (price_length > 5) {
-                JOptionPane.showMessageDialog(null, "Unidad de precio demasiado grande");
-                action=false;
-            }
 
             int nombre_existente = 0;
             try {
@@ -157,7 +154,7 @@ public class SaveProject extends JFrame implements ActionListener {
             if (action && nombre_existente == 0) {
                 try {
                     Connect c = new Connect();
-                    String query = "insert into save_project values('"+name+"', '"+tipo+"','"+price+"','"+NIF+"','')";
+                    String query = "insert into save_project values('"+name+"', '"+tipo+"','"+price+"','"+NIF+"','','"+DATE+"')";
                  
                     c.s.executeUpdate(query);
 
