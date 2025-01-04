@@ -240,7 +240,7 @@ public class Signup extends JFrame implements ActionListener {
              
             if(ID>0 && passlenght>7 && nombrelenght>2 && nombre_usuarioleght>4 && nombre_exsistente==0 && codigo){
             try{ Connect c = new Connect();
-                 String query = "insert into login values('"+ID+"', '"+nombre_usuario.trim()+"','"+nombre.toLowerCase().trim()+"','"+encrypted_password+"','"+tipo_usuario+"','"+NIF+"')";
+                 String query = "insert into login values('"+ID+"', '"+nombre_usuario.trim()+"','"+nombre.toLowerCase().trim()+"','"+encrypted_password+"','"+tipo_usuario.trim()+"','"+NIF+"')";
                  
                  c.s.executeUpdate(query);
                  

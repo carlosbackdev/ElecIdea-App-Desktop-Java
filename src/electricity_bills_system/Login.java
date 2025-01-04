@@ -156,8 +156,9 @@ public class Login extends JFrame implements ActionListener{
         panel.add(tipo_usuario, gbc);
 
         tipousu = new JComboBox();
-        tipousu.addItem("cliente");
+        tipousu.addItem("usuario");
         tipousu.addItem("administrador");
+        tipousu.addItem("cliente");
         tipousu.setFont(new Font("Roboto", Font.PLAIN, 16));
         gbc.gridx = 1;
         gbc.fill = GridBagConstraints.HORIZONTAL; 
