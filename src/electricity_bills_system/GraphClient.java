@@ -41,6 +41,10 @@ public class GraphClient extends JFrame implements ActionListener {
             mes2=mesint-1;
             mes3=mesint-2;
         }
+        
+        String mesFormateado = String.format("%02d", mesint);
+        String mesFormateado2 = String.format("%02d", mes2);
+        String mesFormateado3 = String.format("%02d", mes3);
 
         try {
             Connect c = new Connect();
@@ -50,19 +54,19 @@ public class GraphClient extends JFrame implements ActionListener {
             while (rs1.next()) {
                 clientes_totales = rs1.getString("CLIENTES");
             }         
-            String query2 = "SELECT COALESCE(COUNT(*),0) AS CLIENTES FROM client WHERE DATE LIKE '%-" + mesint + "-%'";
+            String query2 = "SELECT COALESCE(COUNT(*),0) AS CLIENTES FROM client WHERE DATE LIKE '%-" + mesFormateado + "-%'";
             ResultSet rs2 = c.s.executeQuery(query2);
             while (rs2.next()) {
                 String m = rs2.getString("CLIENTES");
                 mes1_resultado=Integer.parseInt(m);
             }
-            String query3 = "SELECT COALESCE(COUNT(*),0) AS CLIENTES FROM client WHERE DATE LIKE '%-" + mes2 + "-%'";
+            String query3 = "SELECT COALESCE(COUNT(*),0) AS CLIENTES FROM client WHERE DATE LIKE '%-" + mesFormateado2 + "-%'";
             ResultSet rs3 = c.s.executeQuery(query3);
             while (rs3.next()) {
                 String m = rs3.getString("CLIENTES");
                 mes2_resultado=Integer.parseInt(m);
             }
-            String query4 = "SELECT COALESCE(COUNT(*),0) AS CLIENTES FROM client WHERE DATE LIKE '%-" + mes3 + "-%'";
+            String query4 = "SELECT COALESCE(COUNT(*),0) AS CLIENTES FROM client WHERE DATE LIKE '%-" + mesFormateado3 + "-%'";
             ResultSet rs4 = c.s.executeQuery(query4);
             while (rs4.next()) {
                 String m = rs4.getString("CLIENTES");
@@ -128,9 +132,9 @@ public class GraphClient extends JFrame implements ActionListener {
 
         DefaultCategoryDataset dataset = new DefaultCategoryDataset();
 
-        dataset.addValue(mes3_resultado, "Clientes", "Octubre");
-        dataset.addValue(mes2_resultado, "Clientes", "Noviembre");
-        dataset.addValue(mes1_resultado, "Clientes", "Diciembre");
+        dataset.addValue(mes3_resultado, "Clientes", "Noviembre");
+        dataset.addValue(mes2_resultado, "Clientes", "Diciembre");
+        dataset.addValue(mes1_resultado, "Clientes", "Enero");
 
 
 
