@@ -33,7 +33,7 @@ public class Finance extends JFrame implements ActionListener {
         
         try{
             Connect c= new Connect();
-            String query="SELECT COALESCE(SUM(HOUR),0) AS HORAS,COALESCE(ROUND(SUM(TOTAL_BILL),2),0) AS BENEFICIOS FROM bill_standard WHERE NIF='"+NIF+"' AND DATE LIKE '%-"+fecha+"'";
+            String query="SELECT COALESCE(SUM(HOUR),0) AS HORAS,COALESCE(ROUND(SUM(TOTAL_BILL),2),0) AS BENEFICIOS FROM bill_standard WHERE NIF='"+NIF+"' AND DATE LIKE '%-"+fecha+"' AND STATUS='pagado'";
               ResultSet rs1 = c.s.executeQuery(query);             
               while(rs1.next()){
                   beneficios = rs1.getString("BENEFICIOS");
