@@ -30,6 +30,7 @@ public class bill_standard_view extends JFrame implements ActionListener {
     super("Añadir Materiales");
     setContentPane(new BackgroundPanel("images/Fichas.jpg"));
     setLayout(new BorderLayout());
+    setIconImage(new ImageIcon(getClass().getClassLoader().getResource("images/icono_app.png")).getImage());
 
     this.ID_2 = ID_2; 
     this.NAME = NAME;    

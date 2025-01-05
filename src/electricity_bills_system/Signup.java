@@ -24,6 +24,7 @@ public class Signup extends JFrame implements ActionListener {
         gbc.insets = new Insets(30, 10, 25, 15);
         gbc.ipadx = 40;
         Color gris=new Color(230,230,230);
+        setIconImage(new ImageIcon(getClass().getClassLoader().getResource("images/icono_app.png")).getImage());
 
 
         JLabel head = new JLabel("CREAR CUENTA");

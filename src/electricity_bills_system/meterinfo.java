@@ -18,6 +18,7 @@ public class meterinfo extends JFrame implements ActionListener {
         this.ID_info= ID_info;
         
         setContentPane(new BackgroundPanel("images/fichas3.png"));  
+        setIconImage(new ImageIcon(getClass().getClassLoader().getResource("images/icono_app.png")).getImage());
         
         JPanel panel = new JPanel(new GridBagLayout());
         panel.setOpaque(false); 

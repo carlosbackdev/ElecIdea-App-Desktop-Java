@@ -169,6 +169,8 @@ public class GraphClient extends JFrame implements ActionListener {
         mainPanel.add(chartPanel, BorderLayout.CENTER);
 
         JPanel bottomPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
+        
+        setIconImage(new ImageIcon(getClass().getClassLoader().getResource("images/icono_app.png")).getImage());
 
         updateButton = new RoundedButton("Actualizar Datos");
         updateButton.setFont(new Font("Roboto", Font.BOLD, 16));

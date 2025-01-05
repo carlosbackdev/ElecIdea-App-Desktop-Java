@@ -26,6 +26,7 @@ public class ClientUpdate extends JFrame implements ActionListener{
     ClientUpdate(String NIF, String ID_USER){
         this.NIF=NIF;
         this.ID_USER=ID_USER;
+        setIconImage(new ImageIcon(getClass().getClassLoader().getResource("images/icono_app.png")).getImage());
         
         setContentPane(new BackgroundPanel("images/Fichas3.png"));  
         

@@ -14,7 +14,8 @@ public class Project extends JFrame implements ActionListener{
     
     Project(String NIF, String ID_USER){
         this.NIF=NIF;
-        this.ID_USER=ID_USER;       
+        this.ID_USER=ID_USER;
+        setIconImage(new ImageIcon(getClass().getClassLoader().getResource("images/icono_app.png")).getImage());
         
         
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);

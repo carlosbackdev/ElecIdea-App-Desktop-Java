@@ -98,6 +98,7 @@ public class Login extends JFrame implements ActionListener{
     super("Inicio Sesion Usuario");
         setContentPane(new BackgroundPanel("images/inicio.jpg"));    
         setLayout(new BorderLayout());
+        setIconImage(new ImageIcon(getClass().getClassLoader().getResource("images/icono_app.png")).getImage());
 
         JPanel panel = new JPanel(new GridBagLayout());
         panel.setOpaque(false); 

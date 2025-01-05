@@ -17,6 +17,7 @@ public class SignupCompany extends JFrame implements ActionListener {
         setLayout(new BorderLayout());
         Font fuente=new Font("Roboto", Font.PLAIN, 24);
         Color gris=new Color(210,210,210);
+        setIconImage(new ImageIcon(getClass().getClassLoader().getResource("images/icono_app.png")).getImage());
 
         JPanel panel = new JPanel(new GridBagLayout());
         panel.setOpaque(false);

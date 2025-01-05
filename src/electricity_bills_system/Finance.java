@@ -4,6 +4,9 @@ import java.awt.*;
 import java.awt.event.*;
 import java.sql.*;
 import java.text.SimpleDateFormat;
+import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
+import java.util.Locale;   
 import java.util.Date;
 import javax.swing.*;
 import javax.swing.border.TitledBorder;
@@ -16,6 +19,7 @@ import org.jfree.chart.plot.PiePlot;
 import org.jfree.chart.renderer.category.BarRenderer;
 import org.jfree.data.category.DefaultCategoryDataset;
 import org.jfree.data.general.DefaultPieDataset;
+    
 
 public class Finance extends JFrame implements ActionListener {
 
@@ -25,11 +29,13 @@ public class Finance extends JFrame implements ActionListener {
     String NIF,ID_USER;
     String beneficios,horas,factura_pendiente,factura_pagada,gastos;
     SimpleDateFormat dateFormat;
+    double IVA;
      
     Finance(String NIF, String ID_USER) {
         dateFormat = new SimpleDateFormat("MM-yyyy");
         Date fechaActual = new Date();
         String fecha = dateFormat.format(fechaActual);
+        setIconImage(new ImageIcon(getClass().getClassLoader().getResource("images/icono_app.png")).getImage());
         
         try{
             Connect c= new Connect();
@@ -55,11 +61,25 @@ public class Finance extends JFrame implements ActionListener {
               ResultSet rs3 = c.s.executeQuery(query3);
               while(rs3.next()){                  
                   gastos= rs3.getString("GASTOS");
-              }              
+              }
+                String query5="SELECT IVA FROM setup_bill WHERE NIF='"+NIF+"'";
+                 ResultSet rs5 = c.s.executeQuery(query5);
+                 while(rs5.next()){                  
+                   String  ivas= rs5.getString("IVA");
+                   IVA=Integer.parseInt(ivas);
+                 }                 
               
         }catch (Exception e){
             e.printStackTrace();
         }
+        double beneficios_int2=Double.parseDouble(beneficios);
+        beneficios_int2=beneficios_int2-(beneficios_int2*(IVA/100));
+        DecimalFormatSymbols symbols = new DecimalFormatSymbols(Locale.US);
+        symbols.setDecimalSeparator('.');
+        DecimalFormat df = new DecimalFormat("#.00", symbols);
+        String beneficiosFormateados = df.format(beneficios_int2);
+        double beneficios_int=Double.parseDouble(beneficiosFormateados);
+        double gastos_int=Double.parseDouble(gastos);
         
         this.NIF=NIF;
         this.ID_USER=ID_USER;
@@ -95,7 +115,7 @@ public class Finance extends JFrame implements ActionListener {
         dataPanel.add(benefitsLabel);
         
         dataPanel.add(new JLabel("Beneficios Totales:", SwingConstants.RIGHT));
-        benefitsLabel = new JLabel(beneficios+" €", SwingConstants.LEFT);
+        benefitsLabel = new JLabel(beneficios_int+" €", SwingConstants.LEFT);
         dataPanel.add(benefitsLabel);
 
         dataPanel.add(new JLabel("Gastos Totales:", SwingConstants.RIGHT));
@@ -118,9 +138,7 @@ public class Finance extends JFrame implements ActionListener {
         dataPanel.add(new JLabel("", SwingConstants.RIGHT));
         benefitsLabel = new JLabel("", SwingConstants.LEFT);
         dataPanel.add(benefitsLabel);
-      
-        double beneficios_int=Double.parseDouble(beneficios);
-        double gastos_int=Double.parseDouble(gastos);
+    
         int horas_int=Integer.parseInt(horas);
         int facturas_pendientes_int=Integer.parseInt(factura_pendiente);
         int facturas_pagadas_int=Integer.parseInt(factura_pagada);

@@ -22,6 +22,7 @@ public class SaveProject extends JFrame implements ActionListener {
         setContentPane(new BackgroundPanel("images/fichas3.png"));
         setLayout(new BorderLayout());
         Color gris=new Color(210,210,210);
+        setIconImage(new ImageIcon(getClass().getClassLoader().getResource("images/icono_app.png")).getImage());
 
         JPanel panel = new JPanel(new GridBagLayout());
         panel.setOpaque(false);
