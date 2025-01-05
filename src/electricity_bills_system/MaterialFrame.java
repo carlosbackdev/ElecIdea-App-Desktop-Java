@@ -413,10 +413,11 @@ private void updateRowCount() {
                     String unit = (String) tableModel.getValueAt(i, 4);
                     String total_price = (String) tableModel.getValueAt(i, 5);
                     String date = dateField.getText();
+                    String CODE=ID_2+number;
                     if(ID_info.length()>1){
                     ID_2=(String) ID_choice.getSelectedItem();
                     }
-                    String query = "INSERT INTO material_bill VALUES('" + ID_2 + "', '" + number + "','" + nombre_material2.toLowerCase().trim() + "','" + brand.toLowerCase().trim() + "','" + price_unit + "','" + unit + "','" + ref_material.trim() + "','" + date + "','" + total_price + "','"+NIF+"')";
+                    String query = "INSERT INTO material_bill VALUES('" + ID_2 + "', '" + number + "','" + nombre_material2.toLowerCase().trim() + "','" + brand.toLowerCase().trim() + "','" + price_unit + "','" + unit + "','" + ref_material.trim() + "','" + date + "','" + total_price + "','"+NIF+"','"+CODE+"')";
 
                     c.s.executeUpdate(query);
                 }
