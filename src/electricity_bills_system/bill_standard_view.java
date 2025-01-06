@@ -383,7 +383,7 @@ public class bill_standard_view extends JFrame implements ActionListener {
                 String subject = "Factura adjunta";
                 String body = "<p>Estimado/a " + NAME + ",\n\n</p>"
                         + "<p>Le informamos que su factura con código <strong>" + CODE2 + "</strong> está pendiente.\n\n</p>"
-                        + "<p>Por favor, acceda al siguiente enlace para pagarla: http://127.0.0.1:5500/pages/cliente.html?codigo="+CODE2+"\n\n</p>"
+                        + "<p>Por favor, acceda al siguiente enlace para pagarla: https://www.elecidea.com/pages/cliente.html?codigo="+CODE2+"\n\n</p>"
                         + "<p>Saludos cordiales,</p><p>El equipo de ElecIdea</p>";
                 String attachmentPath = "Factura " + NUMBER_FACTURA + " " + NAME + " en " + DATE + ".xlsx";
                 String email_company=EMAIL_COMPANY;

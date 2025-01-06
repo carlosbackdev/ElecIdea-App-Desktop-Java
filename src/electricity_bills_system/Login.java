@@ -9,6 +9,8 @@ import java.awt.Color;
 import java.awt.event.*;
 import java.sql.*;
 import javax.swing.border.EmptyBorder;
+import java.awt.Desktop;
+import java.net.URI;
 
 
 
@@ -89,7 +91,7 @@ class BackgroundPanel extends JPanel {
 }
 
 public class Login extends JFrame implements ActionListener{
-    RoundedButton login,signup,signup_empresa;
+    RoundedButton login,signup,signup_empresa,web;
     JTextField cajon_usuario;
     JComboBox tipousu;
     String NIF,ID_USER;
@@ -166,11 +168,6 @@ public class Login extends JFrame implements ActionListener{
         gbc.weightx = 0;
         panel.add(tipousu, gbc);
         
-        JLabel margen = new JLabel();
-        gbc.gridy = 4;
-        gbc.gridx = 0;
-        panel.add(margen, gbc);
-        
         JPanel panelBotones = new JPanel(new BorderLayout());
         panelBotones.setOpaque(false); 
         gbc.gridx = 0;
@@ -199,6 +196,13 @@ public class Login extends JFrame implements ActionListener{
         gbc.gridx = 0;
         signup_empresa.addActionListener(this);
         panel.add(signup_empresa, gbc);
+        
+        web = new RoundedButton("    Registro Web    ");
+        web.setFont(new Font("Roboto", Font.PLAIN, 18));
+        gbc.gridy = 7;
+        gbc.gridx = 0;
+        web.addActionListener(this);
+        panel.add(web, gbc);
         
         add(panel, BorderLayout.PAGE_START);
         
@@ -245,6 +249,13 @@ public class Login extends JFrame implements ActionListener{
         }else if(ae.getSource() == signup){
             setVisible(false);
             new Signup();
+         }else if(ae.getSource() == web){
+            try {
+            URI url = new URI("http://www.elecidea.com");
+            Desktop.getDesktop().browse(url);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
         }else if(ae.getSource() == signup_empresa){
             setVisible(false);
             new SignupCompany();
