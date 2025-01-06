@@ -14,7 +14,7 @@ public class Connect {
     public Connect() {
         try {
             // Establecer conexión
-           c = DriverManager.getConnection("jdbc:mysql:///ebs", "root", "12345");
+           c = DriverManager.getConnection("jdbc:mysql://104.155.64.232:3306/ebs", "root", "C1TcAh:~Umtj)(4%");
             s = c.createStatement(); // Crear el Statement por defecto
         } catch (Exception e) {
             e.printStackTrace();
