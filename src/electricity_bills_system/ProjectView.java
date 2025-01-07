@@ -29,9 +29,10 @@ public class ProjectView extends JFrame implements ActionListener {
     ProjectView(String ID_2,String NAME,String ADDRESS,String HOUR,String DATE,String NUMBER_MATERIAL,
             String TOTAL_MATERIAL,String PARAMETROS,String NUMBER_FACTURA,String TOTAL_BILL,String NIF,String ID_USER,String [] PROYECTO){
     super("Proyecto");
+    setIconImage(new ImageIcon(getClass().getClassLoader().getResource("images/icono_app.png")).getImage());
     setContentPane(new BackgroundPanel("images/Fichas.jpg"));
     setLayout(new BorderLayout());
-    setIconImage(new ImageIcon(getClass().getClassLoader().getResource("images/icono_app.png")).getImage());
+
 
     this.ID_2 = ID_2; 
     this.NAME = NAME;    

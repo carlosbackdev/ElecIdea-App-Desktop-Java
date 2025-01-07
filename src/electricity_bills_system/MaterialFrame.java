@@ -38,8 +38,9 @@ public class MaterialFrame extends JFrame implements ActionListener {
         this.ID_USER = ID_USER;
         this.Clase = Clase;
         this.PROYECTO = PROYECTO;
-        Color gris=new Color(210,210,210);
         setIconImage(new ImageIcon(getClass().getClassLoader().getResource("images/icono_app.png")).getImage());
+        Color gris=new Color(210,210,210);
+
         
         JPanel inputPanel = new JPanel(new GridBagLayout());
         GridBagConstraints gbc = new GridBagConstraints();

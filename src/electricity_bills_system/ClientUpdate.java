@@ -27,8 +27,7 @@ public class ClientUpdate extends JFrame implements ActionListener{
         this.NIF=NIF;
         this.ID_USER=ID_USER;
         setIconImage(new ImageIcon(getClass().getClassLoader().getResource("images/icono_app.png")).getImage());
-        
-        setContentPane(new BackgroundPanel("images/Fichas3.png"));  
+        setContentPane(new ColorBackgroundPanel(new Color(30, 30, 30))); 
         
         JPanel panel = new JPanel(new GridBagLayout());
         panel.setOpaque(false); 

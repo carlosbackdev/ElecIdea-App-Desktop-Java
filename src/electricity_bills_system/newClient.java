@@ -22,9 +22,9 @@ public class newClient extends JFrame implements ActionListener {
     newClient(String NIF, String ID_USER){
         this.NIF=NIF;
         this.ID_USER=ID_USER;
-
-        setContentPane(new BackgroundPanel("images/fichas3.png"));  
         setIconImage(new ImageIcon(getClass().getClassLoader().getResource("images/icono_app.png")).getImage());
+        setContentPane(new BackgroundPanel("images/fichas3.png"));  
+
         
         JPanel panel = new JPanel(new GridBagLayout());
         panel.setOpaque(false); 

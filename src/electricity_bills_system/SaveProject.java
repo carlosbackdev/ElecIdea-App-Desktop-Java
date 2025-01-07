@@ -19,10 +19,11 @@ public class SaveProject extends JFrame implements ActionListener {
     SaveProject(String NIF,String ID_USER) {
         this.NIF = NIF;
         this.ID_USER = ID_USER;
+        setIconImage(new ImageIcon(getClass().getClassLoader().getResource("images/icono_app.png")).getImage());
         setContentPane(new BackgroundPanel("images/fichas3.png"));
         setLayout(new BorderLayout());
         Color gris=new Color(210,210,210);
-        setIconImage(new ImageIcon(getClass().getClassLoader().getResource("images/icono_app.png")).getImage());
+       
 
         JPanel panel = new JPanel(new GridBagLayout());
         panel.setOpaque(false);

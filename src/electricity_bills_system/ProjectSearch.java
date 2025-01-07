@@ -24,7 +24,8 @@ ProjectSearch(String NIF,String ID_USER){
     this.ID_USER=ID_USER;
     setIconImage(new ImageIcon(getClass().getClassLoader().getResource("images/icono_app.png")).getImage());
     
-    setContentPane(new BackgroundPanel("images/Fichas3.png"));
+    
+    setContentPane(new ColorBackgroundPanel(new Color(30, 30, 30)));
     setLayout(new BorderLayout());
     Font fuente=new Font("Roboto", Font.PLAIN, 20);
     Font fuente2=new Font("Roboto", Font.PLAIN, 15);

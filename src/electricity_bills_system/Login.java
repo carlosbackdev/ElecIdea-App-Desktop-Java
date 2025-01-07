@@ -89,6 +89,21 @@ class BackgroundPanel extends JPanel {
         g.drawImage(backgroundImage, 0, 0, getWidth(), getHeight(), this);
     }
 }
+class ColorBackgroundPanel extends JPanel {
+    private Color backgroundColor;
+
+    public ColorBackgroundPanel(Color color) {
+        this.backgroundColor = color;
+    }
+
+    @Override
+    protected void paintComponent(Graphics g) {
+        super.paintComponent(g);
+        g.setColor(backgroundColor);  // Establece el color de fondo
+        g.fillRect(0, 0, getWidth(), getHeight());  // Rellena todo el panel con ese color
+    }
+}
+
 
 public class Login extends JFrame implements ActionListener{
     RoundedButton login,signup,signup_empresa,web;

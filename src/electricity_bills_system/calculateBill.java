@@ -34,8 +34,8 @@ public class calculateBill extends JFrame implements ActionListener {
         this.client_info_update = client_info_update;
         this.NIF = NIF;
         this.ID_USER = ID_USER;
-        setContentPane(new BackgroundPanel("images/Fichas3.png")); 
         setIconImage(new ImageIcon(getClass().getClassLoader().getResource("images/icono_app.png")).getImage());
+        setContentPane(new ColorBackgroundPanel(new Color(30, 30, 30))); 
         
         
         JPanel panel = new JPanel(new GridBagLayout());
@@ -407,6 +407,7 @@ public class calculateBill extends JFrame implements ActionListener {
         panelBotones.add(cancelar, BorderLayout.EAST);
 
         add(panel, BorderLayout.PAGE_START);
+        
         
         setSize(900, 800);
         setLocationRelativeTo(null);

@@ -28,9 +28,10 @@ public class bill_standard_view extends JFrame implements ActionListener {
     bill_standard_view(String ID_2,String NAME,String ADDRESS,String HOUR,String DATE,String NUMBER_MATERIAL,
             String TOTAL_MATERIAL,String PARAMETROS,String NUMBER_FACTURA,String TOTAL_BILL,String NIF,String ID_USER){
     super("Añadir Materiales");
+    setIconImage(new ImageIcon(getClass().getClassLoader().getResource("images/icono_app.png")).getImage());
     setContentPane(new BackgroundPanel("images/Fichas.jpg"));
     setLayout(new BorderLayout());
-    setIconImage(new ImageIcon(getClass().getClassLoader().getResource("images/icono_app.png")).getImage());
+ 
 
     this.ID_2 = ID_2; 
     this.NAME = NAME;    

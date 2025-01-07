@@ -48,6 +48,7 @@ public class PayBill  extends JFrame implements ActionListener {
     this.ID_USER=ID_USER;
     setIconImage(new ImageIcon(getClass().getClassLoader().getResource("images/icono_app.png")).getImage());
     
+    
      
     JPanel inputPanel = new JPanel(new GridBagLayout());
     GridBagConstraints gbc = new GridBagConstraints();
