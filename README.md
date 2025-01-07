@@ -30,7 +30,7 @@ This application is a CRUD project designed to manage:
 
 ---
 
-### **Download the app [elecida.com](https://elecida.com)**
+### **Download the app [elecIdea.com](https://elecida.com)**
 
 ### Additional Notes:
 This app is built to streamline business processes in the electric industry, offering a comprehensive solution for invoicing, client management, and project tracking. The system allows for easy data management and efficient communication with clients, including the automatic sending of invoices.
