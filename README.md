@@ -45,3 +45,4 @@ An installer has been created to allow for easy deployment of the application as
 ---
 
 ✨ **Stay tuned for more updates!** ✨
+
