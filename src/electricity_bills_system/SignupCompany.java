@@ -282,10 +282,7 @@ public class SignupCompany extends JFrame implements ActionListener {
                 JOptionPane.showMessageDialog(null, "Eviando mail con el codigo de acesso para usuario. Espere...!"); 
                 String toEmail = EMAIL;  
                 String subject = "Registro de empresa completado";
-                String body = "Estimado/a "+NAME+",\n\n"
-                        + "Nos complace informarle que su empresa ha sido registrada con éxito en nuestro sistema.\n\n Para proceder con el registro de usuarios adicionales de su empresa,\n\n "
-                        + " solicitamos que utilice el siguiente código y lo conserve en un lugar seguro: " + codigo + "."
-                        + "Agradecemos su confianza en nuestros servicios.\n\nAtentamente,[ElecIdea]";
+                String body = "Estimado/a "+NAME+",\n\n Nos complace informarle que su empresa ha sido registrada con éxito en nuestro sistema.\n\n Para proceder con el registro de usuarios adicionales de su empresa,\n\n solicitamos que utilice el siguiente código y lo conserve en un lugar seguro: " + codigo + "\n\n Agradecemos su confianza en nuestros servicios.\n\nAtentamente,[ElecIdea]";
                 String attachmentPath = "src/images/logo_oscuro.png";
                 String email_servidor="carlosbackdev@gmail.com"; //cambiar vuando cambie de servidor
                 EmailSender.sendEmailWithAttachment(toEmail, subject, body, attachmentPath,email_servidor);

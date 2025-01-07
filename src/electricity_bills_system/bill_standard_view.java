@@ -25,6 +25,7 @@ public class bill_standard_view extends JFrame implements ActionListener {
     Double IVA_int,IVA_resta,PRICE_HOUR_int,TOTAL_BILL_INT,HOUR_INT;
     String NIF,ID_USER,NAME_COMPANY,ADDRESS_COMPANY,EMAIL_COMPANY,PHONE_COMPANY,IBAN_COMPANY;
     String CODE2;
+    boolean start=true;
     bill_standard_view(String ID_2,String NAME,String ADDRESS,String HOUR,String DATE,String NUMBER_MATERIAL,
             String TOTAL_MATERIAL,String PARAMETROS,String NUMBER_FACTURA,String TOTAL_BILL,String NIF,String ID_USER){
     super("Añadir Materiales");
@@ -382,10 +383,7 @@ public class bill_standard_view extends JFrame implements ActionListener {
                 JOptionPane.showMessageDialog(null, "Enviando correo espere a cerrar la pestaña!"); 
                 String toEmail = EMAIL;  
                 String subject = "Factura adjunta";
-                String body = "<p>Estimado/a " + NAME + ",\n\n</p>"
-                        + "<p>Le informamos que su factura con código <strong>" + CODE2 + "</strong> está pendiente.\n\n</p>"
-                        + "<p>Por favor, acceda al siguiente enlace para pagarla: https://www.elecidea.com/pages/cliente.html?codigo="+CODE2+"\n\n</p>"
-                        + "<p>Saludos cordiales,</p><p>El equipo de ElecIdea</p>";
+                String body = "Estimado/a " + NAME + ",\n\n Le informamos que su factura con código " + CODE2 + " está pendiente.\n\n Por favor, acceda al siguiente enlace para pagarla: https://www.elecidea.com/pages/cliente.html?codigo="+CODE2+"\n\n Saludos cordiales, El equipo de ElecIdea";
                 String attachmentPath = "Factura " + NUMBER_FACTURA + " " + NAME + " en " + DATE + ".xlsx";
                 String email_company=EMAIL_COMPANY;
                 EmailSender.sendEmailWithAttachment(toEmail, subject, body, attachmentPath,email_company);  // Enviar el correo            
@@ -393,18 +391,21 @@ public class bill_standard_view extends JFrame implements ActionListener {
             }
         }
         
-         if(ae.getSource() == guardarButton){
+         if(ae.getSource() == guardarButton || ae.getSource() == enviar){
             String STATUS="sin enviar";
             if(enviado){
             STATUS="pendiente pago";
             }
-            try{
-                Connect c=new Connect();
-                String query = "INSERT INTO bill_standard VALUES('"+NUMBER_FACTURA+"','"+ID_2+"','"+NAME.toLowerCase()+"','"+ADDRESS.toLowerCase()+"','"+HOUR+"','"+DATE.toLowerCase()+"','"+NUMBER_MATERIAL+"','"+TOTAL_MATERIAL+"','"+PARAMETROS.toLowerCase()+"','"+TOTAL+"','"+NIF+"','"+STATUS+"','"+CODE2+"','')";
-                c.s.executeUpdate(query);
-                
-            } catch(Exception e){
-                e.printStackTrace();
+            if(start){
+                try{
+                    Connect c=new Connect();
+                    String query = "INSERT INTO bill_standard VALUES('"+NUMBER_FACTURA+"','"+ID_2+"','"+NAME.toLowerCase()+"','"+ADDRESS.toLowerCase()+"','"+HOUR+"','"+DATE.toLowerCase()+"','"+NUMBER_MATERIAL+"','"+TOTAL_MATERIAL+"','"+PARAMETROS.toLowerCase()+"','"+TOTAL+"','"+NIF+"','"+STATUS+"','"+CODE2+"','')";
+                    c.s.executeUpdate(query);
+
+                } catch(Exception e){
+                    e.printStackTrace();
+                }
+                start=false;
             }
             JOptionPane.showMessageDialog(null, "Factura guardada con éxito!");
             setVisible(false);
