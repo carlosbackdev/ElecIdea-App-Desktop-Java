@@ -596,7 +596,7 @@ public void updateTotal(String materialNumber) {
             }
 
             String TOTAL_BILL2=""+TOTAL_BILL;        
-            new bill_standard_view(ID_2,NAME,ADDRESS,HOUR,DATE,NUMBER_MATERIAL2,TOTAL_MATERIAL,PARAMETROS,NUMBER_FACTURA,TOTAL_BILL2,NIF,ID_USER);
+            new bill_standard_view(ID_2,NAME,ADDRESS,HOUR,DATE,NUMBER_MATERIAL2,TOTAL_MATERIAL,PARAMETROS,NUMBER_FACTURA,TOTAL_BILL2,NIF,ID_USER,true);
             setVisible(false);
             
             }else if(NAME.isBlank()){

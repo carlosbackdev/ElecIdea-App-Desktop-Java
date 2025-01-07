@@ -414,7 +414,7 @@ private void updateRowCount() {
                     String unit = (String) tableModel.getValueAt(i, 4);
                     String total_price = (String) tableModel.getValueAt(i, 5);
                     String date = dateField.getText();
-                    String codigo=PasswordGenerate.generarContrasena(2);
+                    String codigo=PasswordGenerate.generarContrasena(4);
                     String CODE=ref_material+number+codigo;
                     if(ID_info.length()>1){
                     ID_2=(String) ID_choice.getSelectedItem();

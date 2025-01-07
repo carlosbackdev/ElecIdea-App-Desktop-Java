@@ -26,8 +26,9 @@ public class bill_standard_view extends JFrame implements ActionListener {
     String NIF,ID_USER,NAME_COMPANY,ADDRESS_COMPANY,EMAIL_COMPANY,PHONE_COMPANY,IBAN_COMPANY;
     String CODE2;
     boolean start=true;
+    boolean save;
     bill_standard_view(String ID_2,String NAME,String ADDRESS,String HOUR,String DATE,String NUMBER_MATERIAL,
-            String TOTAL_MATERIAL,String PARAMETROS,String NUMBER_FACTURA,String TOTAL_BILL,String NIF,String ID_USER){
+            String TOTAL_MATERIAL,String PARAMETROS,String NUMBER_FACTURA,String TOTAL_BILL,String NIF,String ID_USER,boolean save){
     super("Añadir Materiales");
     setIconImage(new ImageIcon(getClass().getClassLoader().getResource("images/icono_app.png")).getImage());
     setContentPane(new BackgroundPanel("images/Fichas.jpg"));
@@ -41,11 +42,12 @@ public class bill_standard_view extends JFrame implements ActionListener {
     this.DATE = DATE;
     this.NUMBER_MATERIAL = NUMBER_MATERIAL;
     this.TOTAL_MATERIAL = TOTAL_MATERIAL;
-    this.PARAMETROS = PARAMETROS; //? como ponerlo
+    this.PARAMETROS = PARAMETROS;
     this.NUMBER_FACTURA = NUMBER_FACTURA;
     this.TOTAL_BILL = TOTAL_BILL;
     this.NIF = NIF;
     this.ID_USER = ID_USER;
+    this.save = save;
     CODE2=ID_2+NUMBER_FACTURA;
    
     
@@ -396,7 +398,7 @@ public class bill_standard_view extends JFrame implements ActionListener {
             if(enviado){
             STATUS="pendiente pago";
             }
-            if(start){
+            if(start && save){
                 try{
                     Connect c=new Connect();
                     String query = "INSERT INTO bill_standard VALUES('"+NUMBER_FACTURA+"','"+ID_2+"','"+NAME.toLowerCase()+"','"+ADDRESS.toLowerCase()+"','"+HOUR+"','"+DATE.toLowerCase()+"','"+NUMBER_MATERIAL+"','"+TOTAL_MATERIAL+"','"+PARAMETROS.toLowerCase()+"','"+TOTAL+"','"+NIF+"','"+STATUS+"','"+CODE2+"','')";
@@ -414,6 +416,6 @@ public class bill_standard_view extends JFrame implements ActionListener {
      }
     
     public static void main(String[]args){
-        new bill_standard_view("","","","","","","","","","","","");
+        new bill_standard_view("","","","","","","","","","","","",true);
     }
 }

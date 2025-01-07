@@ -429,7 +429,7 @@ public void actionPerformed(ActionEvent ae){
                   e.printStackTrace();
               }
               
-     new bill_standard_view(ID_CLIENT,NAME,ADDRESS,HOUR,DATE,NUMBER_MATERIAL,TOTAL_MATERIAL,PARAMETROS,NUMBER_FACTURA,TOTAL_BILL,NIF,ID_USER);
+     new bill_standard_view(ID_CLIENT,NAME,ADDRESS,HOUR,DATE,NUMBER_MATERIAL,TOTAL_MATERIAL,PARAMETROS,NUMBER_FACTURA,TOTAL_BILL,NIF,ID_USER,false);
      }      
         
     }
