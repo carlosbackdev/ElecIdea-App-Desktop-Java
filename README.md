@@ -1,15 +1,47 @@
-# ⚡¡ELECTRICT SYSTEM APP FOR BUSINESS MANAGEMENT!💻 :electron:
+# ⚡ **ELECTRICT SYSTEM APP FOR BUSINESS MANAGEMENT** 💻 :electric_plug: :electron:
 
-## This App is being create whit Java and MySQL. 
+## This App is being created with Java and MySQL.
 
-App in building, this aplication it tries management:
-- bills.
--  users.
-- clients.
-- proyects.
--  and more, for the electric bussines.
+This application is a CRUD project designed to manage:
+- **Bills** 💸
+- **Users** 👥
+- **Clients** 🧑‍💼
+- **Projects** 📊
+- **And more** for the electric business industry ⚡
 
->more info and details soon!.
+---
 
-![caputra app](https://github.com/user-attachments/assets/7295313b-8400-4a37-ad24-b180b5b611d2)
+### Key Features:
+- Manages client data, including invoices. 📑
+- Automatically exports and sends invoice documents in Excel format to clients. 📧
+- Manages projects and tracks the company's financial progress. 📈
+- Keeps track of client evolution and business growth. 🌱
 
+### Technologies Used:
+- **Java** for core development ☕
+- **MySQL** for the database 💾
+- **Swing** for the graphical user interface (GUI) 🖥️
+- **Flatlaf** for a modern dark theme look 🌙
+- **Apache POI** for generating XLSX documents 📑
+- **JavaMail** for automatic email sending ✉️
+- **Java Ant** for compiling and building the application 🛠️
+- **NetBeans** for development 💻  
+- For more information, you can watch my video tutorials on how to use the app and get more details on the website:
+
+---
+
+### **Download the app [elecida.com](https://elecida.com)**
+
+### Additional Notes:
+This app is built to streamline business processes in the electric industry, offering a comprehensive solution for invoicing, client management, and project tracking. The system allows for easy data management and efficient communication with clients, including the automatic sending of invoices.
+
+An installer has been created to allow for easy deployment of the application as an executable file.
+
+![image](https://github.com/user-attachments/assets/5e92bea9-db5d-4a13-9602-8141d2a910d7)
+![image](https://github.com/user-attachments/assets/49601a7b-6d0a-4c42-bee6-5b5839e3dedc)
+
+
+
+---
+
+✨ **Stay tuned for more updates!** ✨
