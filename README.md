@@ -1,6 +1,6 @@
 # ⚡ **ELECTRICT SYSTEM APP FOR BUSINESS MANAGEMENT** 💻 :electric_plug: :electron:
 
-## This App is being created with Java and MySQL.
+## This App Desktop with Java and MySQL.
 
 This application is a CRUD project designed to manage:
 - **Bills** 💸
