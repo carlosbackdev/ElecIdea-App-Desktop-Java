@@ -40,7 +40,6 @@ An installer has been created to allow for easy deployment of the application as
 ![image](https://github.com/user-attachments/assets/5e92bea9-db5d-4a13-9602-8141d2a910d7)
 ![image](https://github.com/user-attachments/assets/49601a7b-6d0a-4c42-bee6-5b5839e3dedc)
 
-
 ---
 
 ✨ **Stay tuned for more updates!** ✨
